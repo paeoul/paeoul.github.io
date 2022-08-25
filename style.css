@@ -1,9 +1,15 @@
 body {
     margin: 0;
+
+Background: url(img/cones.jpeg) no-repeat 50% center;
+
+background-size: cover!important;
+    width: 100%;
+    height: 100vh;
 }
 
 .front-header-image {
-    background: url(img/cones.jpeg) no-repeat 50% center;
+    
 }
 
 
@@ -13,7 +19,5 @@ body {
 
 
 .front-header-image {
-    background-size: cover!important;
-    width: 100%;
-    height: 100vh;
+   
 }
