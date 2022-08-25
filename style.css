@@ -1,24 +1,19 @@
 body {
     margin: 0;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
 
-Background: url(img/cones.jpeg) no-repeat 50% center;
+    Background: url(img/cones.jpeg) no-repeat 50% center;
 
-background-size: cover!important;
+    background-size: cover!important;
     width: 100%;
     height: 100vh;
 }
-
-.front-header-image {
-    
-}
-
 
 .message {
     text-align: center;
     color: white;
 }
 
-
-.front-header-image {
-   
-}
