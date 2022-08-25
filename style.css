@@ -1,3 +1,7 @@
+body {
+    mardgin: 0;
+}
+
 .front-header-image {
     background: url(img/cones.jpeg) no-repeat 50% center;
 }
