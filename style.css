@@ -31,9 +31,10 @@ body {
 
 
 .link--legal {
+    display: block;
     text-decoration: none;
     text-align: right;
-    color: white;
+    background-color: white;
 }
 
 /* ************ */
