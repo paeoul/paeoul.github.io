@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalorienbedarf Intensivmedizin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .calculator {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      max-width: 400px;
+    }
+
+    .button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 15px 30px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    #results {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .result {
+      margin: 10px 0;
+    }
+
+    .bulleted-list {
+      margin-left: 20px;
+    }
+
+    .phase {
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+
+    #testButton {
+      background-color: #ccc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 15px 30px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .background {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      background-color: #f0f4f8;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Additional CSS for radio buttons */
+    .radio-group {
+      display: flex;
+    }
+
+    .radio-label {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background">
+    <div class="container">
+      <h2 style="text-align: center;">Kalorienbedarf Intensivmedizin</h2>
+      <p style="font-size: 18px; font-weight: bold; color: red; text-align: center;">TESTPHASE, NOCH NICHT ANWENDEN!</p>
+      <label for="height">Körpergröße (cm):</label>
+      <input type="number" id="height" min="1" required><br>
+      <label for="weight">Gewicht (kg):</label>
+      <input type="number" id="weight" min="1" required><br>
+      <label for="propofol">Propofol 2% (mg/h):</label>
+      <input type="number" id="propofol" min="0">
+
+      <!-- Radio buttons for glucose concentration -->
+      <label for="glucose">Glucose (ml/Tag):</label>
+
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="glucose" value="G5%"> G5%
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="glucose" value="G10%"> G10%
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="glucose" value="G20%"> G20%
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="glucose" value="G40%"> G40%
+        </label>
+      </div>
+
+      <input type="number" id="glucose" min="0">
+
+      <button class="button" onclick="calculateCalories()">Berechnen</button>
+      <div id="results">
+        <h3>Ergebnisse:</h3>
+        <div id="bmiResult" class="result"></div>
+        <div id="idealWeightResult" class="result"></div>
+
+        <div class="phase">Frühe Akutphase (ca. Tag 1-3):</div>
+        <ul class="bulleted-list">
+          <li>Zielkalorien/24h: <span id="earlyAcuteResult"></span> kcal</li>
+          <li>Kalorien/Tag durch Propofol 2%: <span id="propofolCaloriesEarly"></span> kcal</li>
+          <li>Kalorien/Tag durch Glucose: <span id="glucoseCaloriesEarly"></span> kcal</li>
+          <li>Kalorienbedarf/24h minus Propofol minus Glucose: <span id="earlyAcuteCaloriesMinusPropofolAndGlucose"></span> kcal</li>
+          <li>Laufrate/22h: <span id="earlyAcuteRateResult"></span> kcal/h</li>
+        </ul>
+
+        <div class="phase">Späte Akutphase (ca. Tag 4-7):</div>
+        <ul class="bulleted-list">
+          <li>Zielkalorien/24h: <span id="lateAcuteResult"></span> kcal</li>
+          <li>Kalorien/Tag durch Propofol 2%: <span id="propofolCaloriesLate"></span> kcal</li>
+          <li>Kalorien/Tag durch Glucose: <span id="glucoseCaloriesLate"></span> kcal</li>
+          <li>Kalorienbedarf/24h minus Propofol minus Glucose: <span id="lateAcuteCaloriesMinusPropofolAndGlucose"></span> kcal</li>
+          <li>Laufrate/22h: <span id="lateAcuteRateResult"></span> kcal/h</li>
+
+        </ul>
+      </div>
+      <button id="testButton" onclick="setTestValues()">Testwerte</button>
+      <p id="disclaimer" style="font-size: 12px; margin-top: 20px;">
+        Hinweis: Dieser Kalorienbedarfsrechner ist ausschließlich für den professionellen Gebrauch durch medizinisches Fachpersonal vorgesehen.
+        Die berechneten Werte dienen nur zu Informationszwecken und stellen keine Therapieempfehlung dar.
+        Die für die jeweilige Berechnung zugrunde gelegten Formeln entstammen publizierten Studien oder Leitlinien. Obwohl sie mit Sorgfalt erstellt wurden, kann für die Ergebnisse der Berechnung keine Haftung übernommen werden.
+      </p>
+      <p style="font-size: 12px; text-align: center;">
+        <a href="impressum.html">Impressum und Datenschutz</a>
+      </p>
+    </div>
+  </div>
+  <script>
+    function calculateCalories() {
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const propofol = parseFloat(document.getElementById('propofol').value);
+      const glucose = parseFloat(document.getElementById('glucose').value);
+      const bmi = weight / ((height / 100) * (height / 100));
+      const idealWeight = 48.4 + 77 * ((height / 100) - 1.50);
+      let calories;
+
+      if (bmi < 30) {
+        calories = 24 * weight;
+      } else if (bmi <= 50) {
+        calories = 12.5 * weight;
+      } else {
+        calories = 23.5 * idealWeight;
+      }
+
+      const earlyAcute = 0.75 * calories;
+      const lateAcute = calories;
+
+
+      // Calculate Propofol calories
+      const propofolCaloriesEarly = (propofol * 24) * (0.05) * (1.03);
+      const propofolCaloriesLate = (propofol * 24) * (0.05) * (1.03);
+
+      // Calculate Glucose calories based on selected concentration
+      const glucoseConcentration = document.querySelector('input[name="glucose"]:checked').value;
+      let glucoseCaloriesPerLiter;
+
+      switch (glucoseConcentration) {
+        case 'G5%':
+          glucoseCaloriesPerLiter = 200;
+          break;
+        case 'G10%':
+          glucoseCaloriesPerLiter = 400;
+          break;
+        case 'G20%':
+          glucoseCaloriesPerLiter = 800;
+          break;
+        case 'G40%':
+          glucoseCaloriesPerLiter = 1600;
+          break;
+        default:
+          glucoseCaloriesPerLiter = 0;
+      }
+
+      const glucoseCaloriesEarly = (glucose * glucoseCaloriesPerLiter) / 1000;
+      const glucoseCaloriesLate = (glucose * glucoseCaloriesPerLiter) / 1000;
+
+
+      // Calculate calories minus Propofol and Glucose
+      const earlyAcuteCaloriesMinusPropofolAndGlucose = earlyAcute - propofolCaloriesEarly - glucoseCaloriesEarly;
+      const lateAcuteCaloriesMinusPropofolAndGlucose = lateAcute - propofolCaloriesLate - glucoseCaloriesLate;
+
+      // Calculate Laufrate
+      const earlyAcuteRate = earlyAcuteCaloriesMinusPropofolAndGlucose / 22;
+      const lateAcuteRate = lateAcuteCaloriesMinusPropofolAndGlucose / 22;
+
+      document.getElementById('bmiResult').innerText = `BMI: ${bmi.toFixed(2)} kg/m²`;
+      document.getElementById('idealWeightResult').innerText = `Idealgewicht: ${idealWeight.toFixed(2)} kg`;
+      document.getElementById('earlyAcuteResult').innerText = Math.round(earlyAcute);
+      document.getElementById('lateAcuteResult').innerText = Math.round(lateAcute);
+      document.getElementById('propofolCaloriesEarly').innerText = propofolCaloriesEarly.toFixed(2);
+      document.getElementById('propofolCaloriesLate').innerText = propofolCaloriesLate.toFixed(2);
+      document.getElementById('glucoseCaloriesEarly').innerText = glucoseCaloriesEarly.toFixed(2);
+      document.getElementById('glucoseCaloriesLate').innerText = glucoseCaloriesLate.toFixed(2);
+      document.getElementById('earlyAcuteCaloriesMinusPropofolAndGlucose').innerText = earlyAcuteCaloriesMinusPropofolAndGlucose.toFixed(2);
+      document.getElementById('lateAcuteCaloriesMinusPropofolAndGlucose').innerText = lateAcuteCaloriesMinusPropofolAndGlucose.toFixed(2);
+      document.getElementById('earlyAcuteRateResult').innerText = earlyAcuteRate.toFixed(2);
+      document.getElementById('lateAcuteRateResult').innerText = lateAcuteRate.toFixed(2);
+
+
+
+      document.getElementById('results').style.display = 'block';
+    }
+
+    function setTestValues() {
+      document.getElementById('height').value = 187;
+      document.getElementById('weight').value = 83;
+      document.getElementById('propofol').value = 10;
+      document.getElementById('glucose').value = 1000;
+      document.querySelector('input[value="G5%"]').checked = true;
+    }
+  </script>
+</body>
+
+</html>
