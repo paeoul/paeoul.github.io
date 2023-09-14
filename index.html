@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
- <!-- v5_propofol and clucose added + Laufrate in kcal/h und ml/h -->
+ <!-- v6_propofol and clucose added + Laufrate in kcal/h und ml/h + set defaults-->
 
 <html lang="de">
 
@@ -186,10 +186,18 @@
     function calculateCalories() {
       const height = parseFloat(document.getElementById('height').value);
       const weight = parseFloat(document.getElementById('weight').value);
-      const propofol = parseFloat(document.getElementById('propofol').value);
-      const glucose = parseFloat(document.getElementById('glucose').value);
+      const propofolInput = document.getElementById('propofol');
+      const glucoseInput = document.getElementById('glucose');
       const bmi = weight / ((height / 100) * (height / 100));
       const idealWeight = 48.4 + 77 * ((height / 100) - 1.50);
+
+      // Check if the propofol input is empty, and assign 0 if it is
+       const propofol = propofolInput.value === '' ? 0 : parseFloat(propofolInput.value);
+
+       // Check if the glucose input is empty, and assign 0 if it is
+       const glucose = glucoseInput.value === '' ? 0 : parseFloat(glucoseInput.value);
+
+
       let calories;
 
       if (bmi < 30) {
