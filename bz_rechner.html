@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blutzuckerkontrolle Intensivmedizin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            max-width: 400px;
+        }
+
+        /* Style for the link button */
+        .link-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #results {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .result {
+            margin: 10px 0;
+        }
+
+        .bulleted-list {
+            margin-left: 20px;
+        }
+
+        .phase {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        #recommendation {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .background {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Additional CSS for radio buttons */
+        .radio-group {
+            display: flex;
+        }
+
+        .radio-label {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background">
+        <div class="container">
+
+          <a href="index.html" class="link-button">Kalorienbedarf Rechner</a>
+          <a href="proteinbedarf.html" class="link-button">Proteinbedarf Rechner</a>
+          <a href="bz_rechner.html" class="link-button">Blutzuckerkontrolle Rechner</a>
+
+            <h2 style="text-align: center;">Blutzuckerkontrolle Intensivmedizin</h2>
+            <p style="font-size: 18px; font-weight: bold; color: red; text-align: center;">TESTPHASE, NICHT BENUTZEN!</p>
+            <p style="font-size: 18px; font-weight: bold; color: red; text-align: center;">nur edukativer Zweck, keine Therapieempfehlung</p>
+
+            <p style="color: black;">
+                - Lebensbedrohlich Erkrankte auf der Intensivstation mit Hyperglykämie. <br>
+                - Nicht bei hyperosmolarem Koma oder bei diabetischer Ketoazidose oder bei Blutglukose > 500 mg/dl. <br>
+                - Nicht anwendbar bei Patienten, die orale Kost aufnehmen.
+            </p>
+
+            <label for="currentBG">Aktuelle Blutglucose (mg/dl):</label>
+            <input type="number" id="currentBG" min="1" required><br>
+            <label for="lastBG">Letzter gemessener Blutglucosewert (mg/dl):</label>
+            <input type="number" id="lastBG" min="1" required><br>
+            <label for="insulinRate">Laufrate Insulinperfusor (IE/h):</label>
+            <input type="number" id="insulinRate" min="0" step="0.1" required><br>
+            <label for="timeInterval">Zeit zwischen Blutglucosemessungen in Stunden:</label>
+            <select id="timeInterval">
+                <option value="1">1 Stunde</option>
+                <option value="2">2 Stunden</option>
+                <option value="3">3 Stunden</option>
+                <option value="4">4 Stunden</option>
+            </select>
+            <button class="button" onclick="calculateRecommendation()">Empfehlung anzeigen</button>
+            <div id="results">
+                <div id="recommendation"></div>
+            </div>
+            <p id="disclaimer" style="font-size: 12px; margin-top: 20px;">
+                Hinweis: Dieser Blutzuckerkontrollrechner ist ausschließlich für den Gebrauch durch medizinisches Fachpersonal vorgesehen.
+                Die berechneten Empfehlungen dienen nur zu edukativen Zwecken und stellen keine Therapieempfehlung dar.
+            </p>
+
+            <p style="font-size: 12px; text-align: center;">
+              <a href="impressum.html">Impressum und Datenschutz</a>
+            </p>
+
+        </div>
+    </div>
+    <script>
+        function calculateRecommendation() {
+            // Get input values
+            const currentBG = parseFloat(document.getElementById('currentBG').value);
+            const lastBG = parseFloat(document.getElementById('lastBG').value);
+            const insulinRate = parseFloat(document.getElementById('insulinRate').value);
+            const timeInterval = parseInt(document.getElementById('timeInterval').value);
+
+            // Calculate change_in_bg and change_in_bg_per_h
+            const change_in_bg = currentBG - lastBG;
+            const change_in_bg_per_h = change_in_bg / timeInterval;
+
+            // Calculate delta_laufrate based on insulinRate
+            let delta_laufrate;
+            if (insulinRate < 3) {
+                delta_laufrate = 0.5;
+            } else if (insulinRate >= 3 && insulinRate <= 6.4) {
+                delta_laufrate = 1;
+            } else if (insulinRate >= 6.5 && insulinRate <= 9.9) {
+                delta_laufrate = 2;
+            }
+
+            // Determine the recommendation based on the provided cases
+            let recommendation;
+            if (currentBG >= 75 && currentBG <= 99) {
+                if (change_in_bg_per_h >= 0) {
+                    recommendation = `Laufrate verringern um ${delta_laufrate} IE/h`;
+                } else if (change_in_bg_per_h >= -25) {
+                    recommendation = `30 Minuten Insulin STOPP, dann Laufrate verringern um ${2 * delta_laufrate} IE/h`;
+                } else {
+                    recommendation = 'Arzt/Ärztin konsultieren';
+                }
+            } else if (currentBG >= 100 && currentBG <= 139) {
+                if (change_in_bg_per_h >= 0) {
+                    recommendation = 'Keine Änderung';
+                } else if (change_in_bg_per_h >= -25) {
+                    recommendation = `Laufrate verringern um ${delta_laufrate} IE/h`;
+                } else {
+                    recommendation = `30 Minuten Insulin STOPP, dann Laufrate verringern um ${2 * delta_laufrate} IE/h`;
+                }
+            } else if (currentBG >= 140 && currentBG <= 180) {
+                if (change_in_bg_per_h > 25) {
+                    recommendation = `Laufrate steigern um ${delta_laufrate} IE/h`;
+                } else if (change_in_bg_per_h >= -25) {
+                    recommendation = 'Keine Änderung';
+                } else if (change_in_bg_per_h >= -50) {
+                    recommendation = `Laufrate verringern um ${delta_laufrate} IE/h`;
+                } else {
+                    recommendation = `30 Minuten Insulin STOPP, dann Laufrate verringern um ${2 * delta_laufrate} IE/h`;
+                }
+            } else if (currentBG > 180 && currentBG < 500) {
+                if (change_in_bg_per_h > 50) {
+                    recommendation = `Laufrate steigern um ${2 * delta_laufrate} IE/h`;
+                } else if (change_in_bg_per_h >= 0) {
+                    recommendation = `Laufrate steigern um ${delta_laufrate} IE/h`;
+                } else if (change_in_bg_per_h >= -50) {
+                    recommendation = 'Keine Änderung';
+                } else if (change_in_bg_per_h >= -75) {
+                    recommendation = `Laufrate verringern um ${delta_laufrate} IE/h`;
+                } else {
+                    recommendation = `30 Minuten Insulin STOPP, dann Laufrate verringern um ${2 * delta_laufrate} IE/h`;
+                }
+
+            } else if (currentBG >= 500) {
+                  recommendation = 'BZ außerhalb der Empfehlungen';
+            } else if (currentBG < 75 && currentBG >= 50) {
+                  recommendation = 'STOPP Insulinperfusor, 30 ml Glukose 40 % (12 g) i.v. BG-Kontrolle alle 15 Minuten. Bei BG > 120 mg (6,7 mmol/l) nach 1 Stunde erneuter Start des Insulinperfusors mit 75 % der vorher angewandten Infusionsrate.';
+            } else if (currentBG < 50) {
+                recommendation = 'STOPP Insulinperfusor, 60 ml Glukose 40 % (24 g) i.v. BG-Kontrolle alle 15 Minuten. Bei BG > 170 mg nach 1 Stunde erneuter Start des Insulinperfusors mit 50 % der vorher angewandten Infusionsrate';
+            }
+
+
+            // Display the recommendation
+            document.getElementById('recommendation').textContent = `Empfehlung: ${recommendation}`;
+
+            // Show the results
+            document.getElementById('results').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
