@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projekt: Speed Doku</title>
+  <style>
+    body {
+      font-family: 'Helvetica', sans-serif;
+      background-color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+
+    }
+
+    .doku-box {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 40vw;
+      background-color: #fff;
+      padding: 2px;
+      box-shadow: -6px 0px 20px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      border-radius: 0px;
+      border-left: solid 1px #0f4067;
+      background-color: #FFFFFF;
+    }
+
+    .header {
+      top: 0;
+      right: 0;
+      width: 40vw;
+      background-color: #FFFFFF;
+      color: #008dca;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    #result-textarea {
+      height: 85vh;
+      width: 96%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      border: 0px;
+      border-radius: 0px;
+      resize: none;
+      display: block;
+      margin-top: auto;
+      margin-bottom: auto;
+      background-color: #FFFFFF;
+      border: solid 0.5px #0f4067;
+      border-top: solid 0.5px #0f4067;
+      border-bottom: solid 0.5px #0f4067;
+      font-family: 'Helvetica', sans-serif;
+    }
+
+    .copy-button {
+      display: block;
+      margin-top: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 150px;
+      background-color: #008DCA;
+      color: #FFFFFF;
+      border-color: #008DCA;
+    }
+
+
+
+
+    /*  Navbar Styles */
+
+    .navbar {
+      background-color: #FFFFFF;
+      color: #ecf0f1;
+      border-right: solid 1px #0f4067;
+      padding: 0px;
+      position: fixed;
+      top: 0px;
+      left: 0;
+      bottom: 0px;
+      width: 120px;
+      overflow-y: auto;
+      box-shadow: 6px 0px 20px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .nav-item-outer {
+      padding: 15px;
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    .nav-item-outer:not(:last-child):after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 1px;
+      width: 80%;
+      background-color: #0f4067;
+    }
+
+    .nav-item-outer:hover {
+      background-color: #CDE4F6;
+      /* Darker background on hover */
+      color: #E85A4F;
+      /* Highlight text on hover */
+    }
+
+    .nav-item-inner {
+      color: #0f4067;
+    }
+
+
+    .main-content {
+      margin-left: 140px;
+      width: 47vw;
+      background-color: #FFFFFF;
+      color: #3e3e3e;
+    }
+
+
+    .survey-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      background-color: #fff;
+      margin: 5px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 5px;
+      border-radius: 0px;
+      box-sizing: border-box;
+      /* Adjust the margin to accommodate the navbar width */
+      background-color: #FFFFFF;
+    }
+
+    #grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* Creates two columns of equal width */
+      gap: 10px;
+      /* Adds space between the columns */
+      padding: 10px;
+      /* Adds padding around the content within the container */
+    }
+
+
+    .grid-container .aspect-container {
+      flex: 1 1 48%;
+      /* Combines flex-grow, flex-shrink, and flex-basis */
+      box-sizing: border-box;
+      /* Includes padding and border in width */
+      margin: 5px;
+      /* Ensures there is space between flex items */
+    }
+
+    #stuhlgang-container {
+      padding-top: 10px;
+    }
+
+
+    .aspect-container {
+      margin-bottom: 0px;
+      margin-left: 20px;
+      margin-top: 5px;
+      padding: 2px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      flex-direction: column;
+      background-color: #FFFFFF;
+    }
+
+    .checkbox-group {
+      margin-bottom: 5px;
+      margin-left: 20px;
+      display: flex;
+      flex-direction: column;
+      /* Updated to make checkboxes appear vertically */
+      align-items: flex-start;
+      /* Align checkboxes to the start of the container */
+    }
+
+    .checkbox-group label {
+      display: block;
+      /* Makes the label behave like a block element */
+      width: 100%;
+      /* Optional: Ensures the label takes full width of its container */
+    }
+
+
+    label {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      /* Added margin-bottom for spacing between labels and checkboxes */
+      white-space: nowrap;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 3px;
+      color: #008dca;
+    }
+
+    input[type="text"] {
+      margin-right: 5px;
+      width: 100px;
+      padding: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    h1 {
+      margin-top: 6px;
+      font-size: 2.4vw;
+
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      color: #0F4067;
+    }
+
+    h3 {
+      margin-right: 10px;
+      margin-top: 0px;
+      margin-bottom: 10px;
+      /* Smaller bottom margin for moderate spacing */
+      color: #008DCA;
+    }
+
+    ::selection {
+      background: #0f4067;
+    }
+
+    input:focus {
+      outline: transparent;
+      border-color: #0f4067;
+      box-shadow: 0 0 1px #0f4067;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #0f4067;
+      box-shadow: 0 0 3px #0f4067;
+    }
+
+    input[type=checkbox]:checked {
+      accent-color: #CDE4F6;
+    }
+
+    /* individual styling to input field of 'Schilderung' */
+    #Schilderung-container {
+      width: 88%;
+      /* Maintains full width within parent, including padding and borders */
+    }
+
+    #Schilderung-group {
+      width: 100%;
+      /* Maintains full width within parent, including padding and borders */
+    }
+
+    #Schilderung_AText {
+      box-sizing: border-box;
+      width: 100%;
+      /* Maintains full width within parent, including padding and borders */
+    }
+
+    /*
+#Schilderung_BText {
+    box-sizing: border-box;
+    width: 100%; /* Maintains full width within parent, including padding and borders */
+
+    /*
+#Schilderung_CText{
+    box-sizing: border-box;
+    width: 100%; /* Maintains full width within parent, including padding and borders */
+
+
+    /* ((((((((((SCROLLBAR)))))))))) */
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #CDE4F6;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #99D1EA;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0f4067;
+    }
+
+    .item-name {
+      position: sticky;
+      top: 0;
+      background-color: #FFFFFF;
+      text-align: left;
+      border-bottom: solid 0.5px #0f4067;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <!---->
+
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-item-outer" href="#item1"><span class="nav-item-inner">Aktuelle Anamnese</span></div>
+    <div class="nav-item-outer" href="#item2"><span class="nav-item-inner">Vorgeschichte</span></div>
+    <div class="nav-item-outer" href="#item3"><span class="nav-item-inner">Vegetative Anamnese</span></div>
+    <div class="nav-item-outer" href="#item4"><span class="nav-item-inner">Sucht-anamnese</span></div>
+    <div class="nav-item-outer" href="#item5"><span class="nav-item-inner">Gyn-Anamnese</span></div>
+    <div class="nav-item-outer" href="#item6"><span class="nav-item-inner">Sozial</span></div>
+  </nav>
+
+  <div class="main-content" id="scrollcontainer">
+    <!-- container 1 -->
+
+    <h2 class="item-name" id="item1">Aktuelle Anamnese</h2>
+    <div class="survey-container">
+      <div class="aspect-container">
+        <h3>Vorstellung</h3>
+        <div class="checkbox-group">
+          <label for="Vorstellung_A"><input type="checkbox" id="Vorstellung_A">rettungsdienstliche Zubringung</label>
+          <label for="Vorstellung_B"><input type="checkbox" id="Vorstellung_B">in Notarztbegleitung</label>
+          <label for="Vorstellung_C"><input type="checkbox" id="Vorstellung_C">Rettungsdienst verständigt durch <input type="text" id="Vorstellung_CText" disabled></label>
+          <label for="Vorstellung_D"><input type="checkbox" id="Vorstellung_D">selbstständig</label>
+          <label for="Vorstellung_E"><input type="checkbox" id="Vorstellung_E">in Begleitung von <input type="text" id="Vorstellung_EText" disabled></label>
+          <label for="Vorstellung_F"><input type="checkbox" id="Vorstellung_F">mit hausärztlicher Einweisung <input type="text" id="Vorstellung_FText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Vorstellungsgrund</h3>
+        <div class="checkbox-group">
+          <label for="Vorstellungsgrund_A"><input type="checkbox" id="Vorstellungsgrund_A"> Dyspnoe</label>
+          <label for="Vorstellungsgrund_B"><input type="checkbox" id="Vorstellungsgrund_B"> abdomineller Schmerz</label>
+          <label for="Vorstellungsgrund_C"><input type="checkbox" id="Vorstellungsgrund_C"> thorakaler Schmerz</label>
+          <label for="Vorstellungsgrund_D"><input type="checkbox" id="Vorstellungsgrund_D"> AZ-Minderung</label>
+          <label for="Vorstellungsgrund_E"><input type="checkbox" id="Vorstellungsgrund_E"> Übelkeit</label>
+          <label for="Vorstellungsgrund_F"><input type="checkbox" id="Vorstellungsgrund_F"> Erbrechen</label>
+          <label for="Vorstellungsgrund_G"><input type="checkbox" id="Vorstellungsgrund_G"> Fieber</label>
+          <label for="Vorstellungsgrund_H"><input type="checkbox" id="Vorstellungsgrund_H"><input type="text" id="Vorstellungsgrund_HText" disabled></label>
+          <label for="Vorstellungsgrund_I"><input type="checkbox" id="Vorstellungsgrund_I">Beschwerden bestehend seit <input type="text" id="Vorstellungsgrund_IText" disabled></label>
+          <label for="Vorstellungsgrund_J"><input type="checkbox" id="Vorstellungsgrund_J"><input type="text" id="Vorstellungsgrund_JText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container" id="Schilderung-container">
+        <h3>Schilderung</h3>
+        <div class="checkbox-group" id="Schilderung-group">
+          <label for="Schilderung_A"><input type="checkbox" id="Schilderung_A"><input type="text" id="Schilderung_AText" disabled></label>
+        </div>
+      </div>
+
+
+      <div class="aspect-container">
+        <h3>Schmerzen</h3>
+        <div class="checkbox-group">
+          <label for="Schmerzen_A"><input type="checkbox" id="Schmerzen_A">keine</label>
+          <label for="Schmerzen_B"><input type="checkbox" id="Schmerzen_B">Lokalisation: <input type="text" id="Schmerzen_BText" disabled></label>
+          <label for="Schmerzen_C"><input type="checkbox" id="Schmerzen_C">Schmerzcharakter: <input type="text" id="Schmerzen_CText" disabled></label>
+          <label for="Schmerzen_D"><input type="checkbox" id="Schmerzen_D">Beginn: <input type="text" id="Schmerzen_DText" disabled></label>
+          <label for="Schmerzen_E"><input type="checkbox" id="Schmerzen_E">Verlauf: <input type="text" id="Schmerzen_EText" disabled></label>
+          <label for="Schmerzen_F"><input type="checkbox" id="Schmerzen_F">Ausstrahlung: <input type="text" id="Schmerzen_FText" disabled></label>
+          <label for="Schmerzen_G"><input type="checkbox" id="Schmerzen_G">Trigger: <input type="text" id="Schmerzen_GText" disabled></label>
+          <label for="Schmerzen_H"><input type="checkbox" id="Schmerzen_H"><input type="text" id="Schmerzen_HText" disabled></label>
+        </div>
+      </div>
+
+      <div class="grid-container" id="grid-container">
+
+
+        <div class="aspect-container">
+          <h3>Dyspnoe</h3>
+          <div class="checkbox-group">
+            <label for="Dyspnoe_A"><input type="checkbox" id="Dyspnoe_A">keine</label>
+            <label for="Dyspnoe_B"><input type="checkbox" id="Dyspnoe_B">Belastungsdyspnoe</label>
+            <label for="Dyspnoe_C"><input type="checkbox" id="Dyspnoe_C">Ruhedyspnoe</label>
+            <label for="Dyspnoe_D"><input type="checkbox" id="Dyspnoe_D">Sprechdyspnoe</label>
+            <label for="Dyspnoe_E"><input type="checkbox" id="Dyspnoe_E">Tachypnoe<input type="text" id="Dyspnoe_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>AP-Beschwerden</h3>
+          <div class="checkbox-group">
+            <label for="AP-Beschwerden_A"><input type="checkbox" id="AP-Beschwerden_A">keine</label>
+            <label for="AP-Beschwerden_B"><input type="checkbox" id="AP-Beschwerden_B">bei leichter Belastung<input type="text" id="AP-Beschwerden_BText" disabled></label>
+            <label for="AP-Beschwerden_C"><input type="checkbox" id="AP-Beschwerden_C">bei schwerer Belastung<input type="text" id="AP-Beschwerden_CText" disabled></label>
+            <label for="AP-Beschwerden_D"><input type="checkbox" id="AP-Beschwerden_D">in Ruhe</label>
+            <label for="AP-Beschwerden_E"><input type="checkbox" id="AP-Beschwerden_E">Ausstrahlung <input type="text" id="AP-Beschwerden_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Husten</h3>
+          <div class="checkbox-group">
+            <label for="Husten_A"><input type="checkbox" id="Husten_A">kein</label>
+            <label for="Husten_B"><input type="checkbox" id="Husten_B">trocken</label>
+            <label for="Husten_C"><input type="checkbox" id="Husten_C">produktiv, Sputumfarbe <input type="text" id="Husten_CText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Reiseanamnese</h3>
+          <div class="checkbox-group">
+            <label for="Reiseanamnese_A"><input type="checkbox" id="Reiseanamnese_A">leer</label>
+            <label for="Reiseanamnese_B"><input type="checkbox" id="Reiseanamnese_B"><input type="text" id="Reiseanamnese_BText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Eigenanamnese</h3>
+          <div class="checkbox-group">
+            <label for="Eigenanamnese_A"><input type="checkbox" id="Eigenanamnese_A">problemlos möglich</label>
+            <label for="Eigenanamnese_B"><input type="checkbox" id="Eigenanamnese_B">erschwert bei Sprachbarriere</label>
+            <label for="Eigenanamnese_C"><input type="checkbox" id="Eigenanamnese_C">Muttersprache: <input type="text" id="Eigenanamnese_CText" disabled></label>
+            <label for="Eigenanamnese_D"><input type="checkbox" id="Eigenanamnese_D">Übersetzung durch <input type="text" id="Eigenanamnese_DText" disabled></label>
+            <label for="Eigenanamnese_E"><input type="checkbox" id="Eigenanamnese_E">erschwert durch <input type="text" id="Eigenanamnese_EText" disabled></label>
+            <label for="Eigenanamnese_F"><input type="checkbox" id="Eigenanamnese_F">unmöglich aufgrund von <input type="text" id="Eigenanamnese_FText" disabled></label>
+            <label for="Eigenanamnese_G"><input type="checkbox" id="Eigenanamnese_G">Fremdanamnese durch <input type="text" id="Eigenanamnese_GText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Orientierung</h3>
+          <div class="checkbox-group">
+            <label for="Orientierung_A"><input type="checkbox" id="Orientierung_A">4-fach orientiert</label>
+            <label for="Orientierung_B"><input type="checkbox" id="Orientierung_B">voll orientiert zu <input type="text" id="Orientierung_BText" disabled></label>
+            <label for="Orientierung_C"><input type="checkbox" id="Orientierung_C">teilorientiert zu <input type="text" id="Orientierung_CText" disabled></label>
+            <label for="Orientierung_D"><input type="checkbox" id="Orientierung_D">nicht orientiert zu <input type="text" id="Orientierung_DText" disabled></label>
+            <label for="Orientierung_E"><input type="checkbox" id="Orientierung_E">nicht prüfbar <input type="text" id="Orientierung_EText" disabled></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- container 2 -->
+    <h2 class="item-name" id="item2">Vorgeschichte</h2>
+    <div class="survey-container">
+
+      <div class="aspect-container">
+        <h3>Vorerkrankungen</h3>
+        <div class="checkbox-group">
+          <label for="Vorerkrankungen_A"><input type="checkbox" id="Vorerkrankungen_A"> keine Vorerkrankungen</label>
+          <label for="Vorerkrankungen_B"><input type="checkbox" id="Vorerkrankungen_B"> Arterielle Hypertonie</label>
+          <label for="Vorerkrankungen_C"><input type="checkbox" id="Vorerkrankungen_C"> Diabetes mellitus Typ 2, OAD<input type="text" id="Vorerkrankungen_CText" disabled></label>
+          <label for="Vorerkrankungen_D"><input type="checkbox" id="Vorerkrankungen_D"> Diabetes mellitus Typ 2, Insulintherapie <input type="text" id="Vorerkrankungen_DText" disabled></label>
+          <label for="Vorerkrankungen_E"><input type="checkbox" id="Vorerkrankungen_E"> KHK</label>
+          <label for="Vorerkrankungen_F"><input type="checkbox" id="Vorerkrankungen_F"> COPD <input type="text" id="Vorerkrankungen_FText" disabled></label>
+          <label for="Vorerkrankungen_G"><input type="checkbox" id="Vorerkrankungen_G"> COPD mit LTOT <input type="text" id="Vorerkrankungen_GText" disabled></label>
+          <label for="Vorerkrankungen_H"><input type="checkbox" id="Vorerkrankungen_H"> siehe Vorbrief(e) <input type="text" id="Vorerkrankungen_HText" disabled></label>
+          <label for="Vorerkrankungen_I"><input type="checkbox" id="Vorerkrankungen_I"><input type="text" id="Vorerkrankungen_IText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Voroperationen</h3>
+        <div class="checkbox-group">
+          <label for="Voroperationen_A"><input type="checkbox" id="Voroperationen_A"> keine Voroperationen</label>
+          <label for="Voroperationen_B"><input type="checkbox" id="Voroperationen_B"> Z.n. Cholezystektomie<input type="text" id="Voroperationen_BText" disabled></label>
+          <label for="Voroperationen_C"><input type="checkbox" id="Voroperationen_C"> Z.n. Appendektomie<input type="text" id="Voroperationen_CText" disabled></label>
+          <label for="Voroperationen_D"><input type="checkbox" id="Voroperationen_D"><input type="text" id="Voroperationen_DText" disabled></label>
+          <label for="Voroperationen_E"><input type="checkbox" id="Voroperationen_E"><input type="text" id="Voroperationen_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Endoskopie-Historie</h3>
+        <div class="checkbox-group">
+          <label for="Endoskopie_A"><input type="checkbox" id="Endoskopie_A"> noch nie Gastroskopie</label>
+          <label for="Endoskopie_B"><input type="checkbox" id="Endoskopie_B"> noch nie Coloskopie</label>
+          <label for="Endoskopie_C"><input type="checkbox" id="Endoskopie_C"> letzte Gastroskopie: <input type="text" id="Endoskopie_CText" disabled></label>
+          <label for="Endoskopie_D"><input type="checkbox" id="Endoskopie_D"> letzte Coloskopie: <input type="text" id="Endoskopie_DText" disabled></label>
+          <label for="Endoskopie_E"><input type="checkbox" id="Endoskopie_E"><input type="text" id="Endoskopie_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Dauermedikation</h3>
+        <div class="checkbox-group">
+          <label for="Dauermedikation_A"><input type="checkbox" id="Dauermedikation_A"> keine Dauermedikation</label>
+          <label for="Dauermedikation_B"><input type="checkbox" id="Dauermedikation_B"> siehe Medikamentenplan anbei</label>
+          <label for="Dauermedikation_C"><input type="checkbox" id="Dauermedikation_C"> Antikoagulation mit <input type="text" id="Dauermedikation_CText" disabled></label>
+          <label for="Dauermedikation_D"><input type="checkbox" id="Dauermedikation_D"> Grund der AK: <input type="text" id="Dauermedikation_DText" disabled></label>
+          <label for="Dauermedikation_E"><input type="checkbox" id="Dauermedikation_E"> Medikamentenplan nicht dabei</label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Allergien</h3>
+        <div class="checkbox-group">
+          <label for="Allergien_A"><input type="checkbox" id="Allergien_A"> keine Medikamentenallergien bekannt</label>
+          <label for="Allergien_B"><input type="checkbox" id="Allergien_B"> Penicillin <input type="text" id="Allergien_BText" disabled></label>
+          <label for="Allergien_C"><input type="checkbox" id="Allergien_C"> Kontrastmittel <input type="text" id="Allergien_CText" disabled></label>
+          <label for="Allergien_D"><input type="checkbox" id="Allergien_D"><input type="text" id="Allergien_DText" disabled></label>
+          <label for="Allergien_E"><input type="checkbox" id="Allergien_E"> Reaktion: <input type="text" id="Allergien_EText" disabled></label>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <!-- container 3 -->
+    <h2 class="item-name" id="item3">Vegetative Anamnese</h2>
+    <div class="survey-container">
+
+      <div class="grid-container" id="grid-container">
+
+        <div class="aspect-container">
+          <h3>Fieber</h3>
+          <div class="checkbox-group">
+            <label for="Fieber_A"><input type="checkbox" id="Fieber_A"> keines</label>
+            <label for="Fieber_B"><input type="checkbox" id="Fieber_B"> ja: <input type="text" id="Fieber_BText" disabled></label>
+            <label for="Fieber_C"><input type="checkbox" id="Fieber_C"> seit <input type="text" id="Fieber_CText" disabled></label>
+            <label for="Fieber_D"><input type="checkbox" id="Fieber_D"> bis <input type="text" id="Fieber_DText" disabled></label>
+            <label for="Fieber_E"><input type="checkbox" id="Fieber_E"><input type="text" id="Fieber_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Nachtschweiß</h3>
+          <div class="checkbox-group">
+            <label for="Nachtschweiß_A"><input type="checkbox" id="Nachtschweiß_A"> nein</label>
+            <label for="Nachtschweiß_B"><input type="checkbox" id="Nachtschweiß_B"> ja <input type="text" id="Nachtschweiß_BText" disabled></label>
+            <label for="Nachtschweiß_C"><input type="checkbox" id="Nachtschweiß_C"> seit <input type="text" id="Nachtschweiß_CText" disabled></label>
+            <label for="Nachtschweiß_D"><input type="checkbox" id="Nachtschweiß_D"> mit Wäschewechsel <input type="text" id="Nachtschweiß_DText" disabled></label>
+            <label for="Nachtschweiß_E"><input type="checkbox" id="Nachtschweiß_E"><input type="text" id="Nachtschweiß_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Aktuelles Gewicht</h3>
+          <div class="checkbox-group">
+            <label for="AktuellesGewicht_A"><input type="checkbox" id="AktuellesGewicht_A"><input type="text" id="AktuellesGewicht_AText" disabled></label>
+            <label for="AktuellesGewicht_B"><input type="checkbox" id="AktuellesGewicht_B">nicht bekannt </label>
+            <label for="AktuellesGewicht_C"><input type="checkbox" id="AktuellesGewicht_C"><input type="text" id="AktuellesGewicht_CText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Gewichtsverlauf</h3>
+          <div class="checkbox-group">
+            <label for="Gewichtsverlust_A"><input type="checkbox" id="Gewichtsverlust_A"> stabil</label>
+            <label for="Gewichtsverlust_B"><input type="checkbox" id="Gewichtsverlust_B"> Gewichtsverlust: -<input type="text" id="Gewichtsverlust_BText" disabled></label>
+            <label for="Gewichtsverlust_C"><input type="checkbox" id="Gewichtsverlust_C"> Gewichtszunahme: +<input type="text" id="Gewichtsverlust_CText" disabled></label>
+            <label for="Gewichtsverlust_D"><input type="checkbox" id="Gewichtsverlust_D"> seit: <input type="text" id="Gewichtsverlust_DText" disabled></label>
+            <label for="Gewichtsverlust_E"><input type="checkbox" id="Gewichtsverlust_E"><input type="text" id="Gewichtsverlust_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Miktion</h3>
+          <div class="checkbox-group">
+            <label for="Miktion_A"><input type="checkbox" id="Miktion_A"> unauffällig</label>
+            <label for="Miktion_B"><input type="checkbox" id="Miktion_B"> Algurie <input type="text" id="Miktion_BText" disabled></label>
+            <label for="Miktion_C"><input type="checkbox" id="Miktion_C"> Makrohämaturie <input type="text" id="Miktion_CText" disabled></label>
+            <label for="Miktion_D"><input type="checkbox" id="Miktion_D"> Harninkontinenz <input type="text" id="Miktion_DText" disabled></label>
+            <label for="Miktion_E"><input type="checkbox" id="Miktion_E"><input type="text" id="Miktion_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Trinkmenge</h3>
+          <div class="checkbox-group">
+            <label for="Trinkmenge_A"><input type="checkbox" id="Trinkmenge_A">täglich circa <input type="text" id="Trinkmenge_AText" disabled></label>
+            <label for="Trinkmenge_B"><input type="checkbox" id="Trinkmenge_B">nicht bekannt </label>
+            <label for="Trinkmenge_C"><input type="checkbox" id="Trinkmenge_C"><input type="text" id="Trinkmenge_CText" disabled></label>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="aspect-container" id="stuhlgang-container">
+        <h3>Stuhlgang</h3>
+        <div class="checkbox-group">
+          <label for="Stuhlgang_A"><input type="checkbox" id="Stuhlgang_A"> unauffällig</label>
+          <label for="Stuhlgang_B"><input type="checkbox" id="Stuhlgang_B"> Diarrhoe <input type="text" id="Stuhlgang_BText" disabled></label>
+          <label for="Stuhlgang_C"><input type="checkbox" id="Stuhlgang_C"> Obstipation <input type="text" id="Stuhlgang_CText" disabled></label>
+          <label for="Stuhlgang_D"><input type="checkbox" id="Stuhlgang_D"> Obstipationsneigung <input type="text" id="Stuhlgang_DText" disabled></label>
+          <label for="Stuhlgang_E"><input type="checkbox" id="Stuhlgang_E"> Teerstuhl (Meläna) <input type="text" id="Stuhlgang_EText" disabled></label>
+          <label for="Stuhlgang_F"><input type="checkbox" id="Stuhlgang_F"> frisches Blut im Stuhl (Hämatochezie) <input type="text" id="Stuhlgang_FText" disabled></label>
+          <label for="Stuhlgang_G"><input type="checkbox" id="Stuhlgang_G"> letzter Stuhlgang: <input type="text" id="Stuhlgang_GText" disabled></label>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <!-- container 4 -->
+    <h2 class="item-name" id="item4">Suchtanamnese</h2>
+    <div class="survey-container" id="grid-container">
+      <div class="aspect-container">
+        <h3>Alkohol</h3>
+        <div class="checkbox-group">
+          <label for="Alkohol_A"><input type="checkbox" id="Alkohol_A"> nie</label>
+          <label for="Alkohol_B"><input type="checkbox" id="Alkohol_B"> selten</label>
+          <label for="Alkohol_C"><input type="checkbox" id="Alkohol_C"> gelegentlich</label>
+          <label for="Alkohol_D"><input type="checkbox" id="Alkohol_D"> täglich <input type="text" id="Alkohol_DText" disabled></label>
+          <label for="Alkohol_E"><input type="checkbox" id="Alkohol_E"><input type="text" id="Alkohol_EText" disabled></label>
+
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Nikotin</h3>
+        <div class="checkbox-group">
+          <label for="Nikotin_A"><input type="checkbox" id="Nikotin_A"> nie</label>
+          <label for="Nikotin_B"><input type="checkbox" id="Nikotin_B"> Zigaretten/d circa: <input type="text" id="Nikotin_BText" disabled></label>
+          <label for="Nikotin_C"><input type="checkbox" id="Nikotin_C"> Nikotinkonsum bis: <input type="text" id="Nikotin_CText" disabled></label>
+          <label for="Nikotin_D"><input type="checkbox" id="Nikotin_D"> p.y. kummulativ circa: <input type="text" id="Nikotin_DText" disabled></label>
+          <label for="Nikotin_E"><input type="checkbox" id="Nikotin_E"><input type="text" id="Nikotin_EText" disabled></label>
+
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Weitere Drogen</h3>
+        <div class="checkbox-group">
+          <label for="weitereDrogenA"><input type="checkbox" id="weitereDrogenA"> keine</label>
+          <label for="weitereDrogenB"><input type="checkbox" id="weitereDrogenB"><input type="text" id="weitereDrogenBText" disabled></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- container 5 -->
+    <h2 class="item-name" id="item5">Gyn-Anamnese</h2>
+    <div class="survey-container" id="grid-container">
+
+      <div class="aspect-container">
+        <h3>Orale Kontrazeption</h3>
+        <div class="checkbox-group">
+          <label for="OraleKontrazeption_A"><input type="checkbox" id="OraleKontrazeption_A"> nein</label>
+          <label for="OraleKontrazeption_B"><input type="checkbox" id="OraleKontrazeption_B"> ja <input type="text" id="OraleKontrazeption_BText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Schwangerschaften</h3>
+        <div class="checkbox-group">
+          <label for="Schwangerschaften_A"><input type="checkbox" id="Schwangerschaften_A"> Nulligravida, Nullipara</label>
+          <label for="Schwangerschaften_B"><input type="checkbox" id="Schwangerschaften_B"><input type="text" id="Schwangerschaften_BText" disabled></label>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- container 6 -->
+    <h2 class="item-name" id="item6">Familien-/Sozialanamnese</h2>
+    <div class="survey-container" id="grid-container">
+
+      <div class="aspect-container">
+        <h3>Wohnsituation</h3>
+        <div class="checkbox-group">
+          <label for="Wohnsituation_A"><input type="checkbox" id="Wohnsituation_A">alleine lebend</label>
+          <label for="Wohnsituation_B"><input type="checkbox" id="Wohnsituation_B">lebt mit Ehefrau </label>
+          <label for="Wohnsituation_C"><input type="checkbox" id="Wohnsituation_C">lebt mit Ehemann </label>
+          <label for="Wohnsituation_D"><input type="checkbox" id="Wohnsituation_D">lebt mit Familie </label>
+          <label for="Wohnsituation_E"><input type="checkbox" id="Wohnsituation_E">lebt in betreutem Wohnen </label>
+          <label for="Wohnsituation_F"><input type="checkbox" id="Wohnsituation_F">lebt in Pflegeheim </label>
+          <label for="Wohnsituation_G"><input type="checkbox" id="Wohnsituation_G">lebt in Männerwohnheim </label>
+          <label for="Wohnsituation_H"><input type="checkbox" id="Wohnsituation_H">ohne festen Wohnsitz </label>
+          <label for="Wohnsituation_I"><input type="checkbox" id="Wohnsituation_I"><input type="text" id="Wohnsituation_IText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Versorgungssituation</h3>
+        <div class="checkbox-group">
+          <label for="Versorgungssituation_A"><input type="checkbox" id="Versorgungssituation_A">selbstversorgend</label>
+          <label for="Versorgungssituation_B"><input type="checkbox" id="Versorgungssituation_B">Pflege durch Partner/Familie </label>
+          <label for="Versorgungssituation_C"><input type="checkbox" id="Versorgungssituation_C">Pflegedienst </label>
+          <label for="Versorgungssituation_D"><input type="checkbox" id="Versorgungssituation_D">Pflegesituation als unzureichend geschildert </label>
+          <label for="Versorgungssituation_E"><input type="checkbox" id="Versorgungssituation_E"><input type="text" id="Versorgungssituation_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Beruf</h3>
+        <div class="checkbox-group">
+          <label for="Beruf_A"><input type="checkbox" id="Beruf_A">tätig als<input type="text" id="Beruf_AText" disabled></label>
+          <label for="Beruf_B"><input type="checkbox" id="Beruf_B">momentan nicht berufstätig </label>
+          <label for="Beruf_C"><input type="checkbox" id="Beruf_C">Student/-in </label>
+          <label for="Beruf_D"><input type="checkbox" id="Beruf_D">im Ruhestand </label>
+          <label for="Beruf_E"><input type="checkbox" id="Beruf_E"><input type="text" id="Beruf_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Familie</h3>
+        <div class="checkbox-group">
+          <label for="Familie_A"><input type="checkbox" id="Familie_A">alleinstehend<input type="text" id="Familie_AText" disabled></label>
+          <label for="Familie_B"><input type="checkbox" id="Familie_B">verheiratet </label>
+          <label for="Familie_C"><input type="checkbox" id="Familie_C">hat Partner/in </label>
+          <label for="Familie_D"><input type="checkbox" id="Familie_D">Kinder: keine </label>
+          <label for="Familie_E"><input type="checkbox" id="Familie_E">Kinder: <input type="text" id="Familie_EText" disabled></label>
+          <label for="Familie_F"><input type="checkbox" id="Familie_F"><input type="text" id="Familie_FText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Betreuung/Vorsorge</h3>
+        <div class="checkbox-group">
+          <label for="BetreuungVorsorge_A"><input type="checkbox" id="BetreuungVorsorge_A">gesetzliche Betreuung besteht nicht</label>
+          <label for="BetreuungVorsorge_B"><input type="checkbox" id="BetreuungVorsorge_B">PV/VVM nicht vorhanden</label>
+          <label for="BetreuungVorsorge_C"><input type="checkbox" id="BetreuungVorsorge_C">gesetzliche Betreuung durch <input type="text" id="BetreuungVorsorge_CText" disabled></label>
+          <label for="BetreuungVorsorge_D"><input type="checkbox" id="BetreuungVorsorge_D">PV/VVM vorhanden </label>
+          <label for="BetreuungVorsorge_E"><input type="checkbox" id="BetreuungVorsorge_E">Dokumente in Kopie anbei</label>
+          <label for="BetreuungVorsorge_F"><input type="checkbox" id="BetreuungVorsorge_F">Dokumente nicht vorliegend</label>
+          <label for="BetreuungVorsorge_G"><input type="checkbox" id="BetreuungVorsorge_G"><input type="text" id="BetreuungVorsorge_GText" disabled></label>
+          <label for="BetreuungVorsorge_H"><input type="checkbox" id="BetreuungVorsorge_H">Therapielimitation: <input type="text" id="BetreuungVorsorge_HText" disabled></label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  </div>
+
+  <div class="doku-box" id="result-container">
+    <div class="header">
+      <h1>Projekt: Speed Doku</h1>
+    </div>
+    <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
+    <button class="copy-button" onclick="copyToClipboard()">in Zwischenablage kopieren</button>
+  </div>
+
+
+
+
+
+  <script>
+    function updateResult() {
+      const surveyContainers = document.querySelectorAll('.survey-container');
+      const h2Elements = document.querySelectorAll('.item-name');
+
+      const resultText = Array.from(surveyContainers)
+        .map((container, index) => {
+          const itemName = h2Elements[index].textContent;
+          const aspectContainers = container.querySelectorAll('.aspect-container');
+
+          const aspectText = Array.from(aspectContainers)
+            .map(aspectContainer => {
+              const aspectName = aspectContainer.querySelector('h3').textContent;
+              const checkboxes = aspectContainer.querySelectorAll('input[type="checkbox"]');
+              const textInputs = aspectContainer.querySelectorAll('input[type="text"]');
+
+              if (checkboxes.length > 0) {
+                const checkedOptions = Array.from(checkboxes)
+                  .map(checkbox => {
+                    if (checkbox.type === 'checkbox' && checkbox.checked) {
+                      const label = checkbox.closest('label');
+                      const customTextInput = label.querySelector('input[type="text"]');
+                      return customTextInput ? `${label.textContent} ${customTextInput.value}` : `${label.textContent}`;
+                    }
+                    return '';
+                  })
+                  .filter(Boolean)
+                  .join(', ');
+
+                return checkedOptions ? `${aspectName}: ${checkedOptions}` : '';
+              } else if (textInputs.length > 0) {
+                const textInputValues = Array.from(textInputs)
+                  .map(textInput => {
+                    if (textInput.value.trim() !== '') {
+                      return `${textInput.labels[0].textContent}: ${textInput.value}`;
+                    }
+                    return '';
+                  })
+                  .filter(Boolean)
+                  .join(', ');
+
+                return textInputValues ? `${aspectName}: ${textInputValues}` : '';
+              }
+
+              return '';
+            })
+            .filter(Boolean)
+            .join('\n');
+
+          return aspectText ? `${itemName}\n${aspectText}` : '';
+        })
+        .filter(Boolean)
+        .join('\n\n');
+
+      document.getElementById('result-textarea').value = resultText;
+    }
+
+
+
+    // Attach the updateResult function to the change/input event of checkboxes and text input fields
+    const inputs = document.querySelectorAll('input[type="checkbox"], input[type="text"]');
+    inputs.forEach(input => {
+      // Add a 'change' event listener to each input
+      input.addEventListener('change', () => {
+        // Call the updateResult function when the input changes
+        updateResult();
+
+        // If the input is a checkbox, check if there is a corresponding text input
+        if (input.type === 'checkbox') {
+          const customTextInput = document.getElementById(input.id + 'Text');
+
+          // Disable the text input if the checkbox is not checked
+          if (customTextInput) {
+            customTextInput.disabled = !input.checked;
+          }
+        }
+      });
+
+      // Add an 'input' event listener to each input
+      input.addEventListener('input', updateResult);
+    });
+
+
+
+
+    // SCROLLING PART /////////////////////////////////////////////////////
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const headerHeight = document.querySelector('.header').offsetHeight; // Get the height of the header.
+
+      document.querySelectorAll('.navbar div').forEach((anchor, index) => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          const clickedIndex = index;
+
+          if (clickedIndex === 0) { // Special case for the first heading
+            // Scroll directly to the top of the page
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          } else {
+            // Find the corresponding section by index
+            const targetSection = document.querySelectorAll('.main-content h2')[clickedIndex];
+            // Attempt to get the previous element to base the scroll position off of its bottom
+            const previousElement = targetSection.previousElementSibling;
+
+            let targetOffsetTop;
+            if (previousElement) {
+              // Calculate the target offset using the bottom of the previous element
+              targetOffsetTop = previousElement.getBoundingClientRect().bottom + window.pageYOffset + 20;
+            } else {
+              // If no previous element (fallback, though logically unnecessary given the 'if' for first item)
+              targetOffsetTop = targetSection.offsetTop - headerHeight;
+            }
+
+            // Ensure that the scroll position never goes below zero
+            targetOffsetTop = Math.max(targetOffsetTop, 0);
+
+            window.scrollTo({
+              top: targetOffsetTop,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
+
+
+
+
+
+
+
+
+    // COPY TO CLIPBOARD PART /////////////////////////////////////////////////////
+    // Function to copy the text from the textarea to the clipboard
+    function copyToClipboard() {
+      const resultText = document.getElementById('result-textarea');
+      resultText.select();
+      document.execCommand('copy');
+
+      // Show a temporary alert
+      const alertMessage = document.createElement('div');
+      alertMessage.textContent = 'in Zwischenablage kopiert!';
+      alertMessage.style.position = 'fixed';
+      alertMessage.style.top = '70px';
+      alertMessage.style.left = '50%';
+      alertMessage.style.transform = 'translateX(-50%)';
+      alertMessage.style.padding = '10px';
+      alertMessage.style.backgroundColor = '#E85A4F';
+      alertMessage.style.color = 'white';
+      alertMessage.style.borderRadius = '5px';
+      alertMessage.style.zIndex = '1000';
+      document.body.appendChild(alertMessage);
+
+      // Hide the alert after 2 seconds (adjust the timeout as needed)
+      setTimeout(() => {
+        alertMessage.style.display = 'none';
+      }, 1200);
+    };
+  </script>
+
+</body>
+
+</html>
