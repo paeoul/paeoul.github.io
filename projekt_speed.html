@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projekt: DokuSwift</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">  <style>
+  <style>
     body {
       font-family: 'Helvetica', sans-serif;
       background-color: #FFFFFF;
@@ -18,17 +18,21 @@
     }
 
     .montserrat {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 300;
-        position: relative;
-        z-index: 0; /* Ensure it stays below */
-        color: black;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      position: relative;
+      z-index: 0;
+      /* Ensure it stays below */
+      color: black;
     }
+
     .great-vibes {
-        font-family: 'Great Vibes', cursive;
-        position: relative;
-        left: -18px; /* Adjust this value to control the overlap */
-        z-index: 1; /* Ensure it stays above */
+      font-family: 'Great Vibes', cursive;
+      position: relative;
+      left: -18px;
+      /* Adjust this value to control the overlap */
+      z-index: 1;
+      /* Ensure it stays above */
     }
 
     .doku-box {
@@ -44,6 +48,9 @@
       border-radius: 0px;
       border-left: solid 1px #0f4067;
       background-color: #FFFFFF;
+
+      display: flex; /* Enables flexbox layout */
+flex-direction: column; /* Arranges children in a column */
     }
 
     .header {
@@ -54,10 +61,13 @@
       color: #008dca;
       text-align: center;
       z-index: 1000;
+
+      flex: 0 0 auto; /* Prevents flex-grow and flex-shrink */
     }
 
     #result-textarea {
-      height: 82vh;
+     /*  height: 82vh; */
+       flex: 1 1 auto; /* Allows the textarea to grow and shrink */
       width: 96%;
       margin-left: auto;
       margin-right: auto;
@@ -80,6 +90,8 @@
       margin-right: auto;
       display: flex;
       justify-content: flex-end;
+
+      flex: 0 0 auto; /* Prevents flex-grow and flex-shrink */
     }
 
     .copy-button {
@@ -91,6 +103,8 @@
       background-color: #008DCA;
       color: #FFFFFF;
       border-color: #008DCA;
+
+       flex: 0 0 auto;
     }
 
 
@@ -779,7 +793,7 @@
 
   <div class="doku-box" id="result-container">
     <div class="header">
-      <h1><span class="montserrat">Doku</span><span class="great-vibes">Swift</span></h1>
+      <img src="/finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
     </div>
     <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
     <button class="copy-button" onclick="copyToClipboard()">in Zwischenablage kopieren</button>
