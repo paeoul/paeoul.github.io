@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projekt: DokuSwift</title>
+  <title>DokuSwift</title>
   <style>
     body {
       font-family: 'Helvetica', sans-serif;
@@ -552,6 +552,8 @@ flex-direction: column; /* Arranges children in a column */
           <label for="Dauermedikation_C"><input type="checkbox" id="Dauermedikation_C"> Antikoagulation mit <input type="text" id="Dauermedikation_CText" disabled></label>
           <label for="Dauermedikation_D"><input type="checkbox" id="Dauermedikation_D"> Grund der AK: <input type="text" id="Dauermedikation_DText" disabled></label>
           <label for="Dauermedikation_E"><input type="checkbox" id="Dauermedikation_E"> Medikamentenplan nicht dabei</label>
+          <label for="Dauermedikation_F"><input type="checkbox" id="Dauermedikation_F"><input type="text" id="Dauermedikation_FText" disabled></label>
+
         </div>
       </div>
 
@@ -651,6 +653,8 @@ flex-direction: column; /* Arranges children in a column */
           <label for="Stuhlgang_E"><input type="checkbox" id="Stuhlgang_E"> Teerstuhl (Meläna) <input type="text" id="Stuhlgang_EText" disabled></label>
           <label for="Stuhlgang_F"><input type="checkbox" id="Stuhlgang_F"> frisches Blut im Stuhl (Hämatochezie) <input type="text" id="Stuhlgang_FText" disabled></label>
           <label for="Stuhlgang_G"><input type="checkbox" id="Stuhlgang_G"> letzter Stuhlgang: <input type="text" id="Stuhlgang_GText" disabled></label>
+          <label for="Stuhlgang_H"><input type="checkbox" id="Stuhlgang_H"><input type="text" id="Stuhlgang_HText" disabled></label>
+
         </div>
       </div>
 
@@ -662,9 +666,9 @@ flex-direction: column; /* Arranges children in a column */
     <h2 class="item-name" id="item4">Suchtanamnese</h2>
     <div class="survey-container" id="grid-container">
       <div class="aspect-container">
-        <h3>Alkohol</h3>
+        <h3>Alkoholkonsum</h3>
         <div class="checkbox-group">
-          <label for="Alkohol_A"><input type="checkbox" id="Alkohol_A"> nie</label>
+          <label for="Alkohol_A"><input type="checkbox" id="Alkohol_A"> verneint</label>
           <label for="Alkohol_B"><input type="checkbox" id="Alkohol_B"> selten</label>
           <label for="Alkohol_C"><input type="checkbox" id="Alkohol_C"> gelegentlich</label>
           <label for="Alkohol_D"><input type="checkbox" id="Alkohol_D"> täglich <input type="text" id="Alkohol_DText" disabled></label>
@@ -674,9 +678,9 @@ flex-direction: column; /* Arranges children in a column */
       </div>
 
       <div class="aspect-container">
-        <h3>Nikotin</h3>
+        <h3>Nikotinkonsum</h3>
         <div class="checkbox-group">
-          <label for="Nikotin_A"><input type="checkbox" id="Nikotin_A"> nie</label>
+          <label for="Nikotin_A"><input type="checkbox" id="Nikotin_A"> verneint</label>
           <label for="Nikotin_B"><input type="checkbox" id="Nikotin_B"> Zigaretten/d circa: <input type="text" id="Nikotin_BText" disabled></label>
           <label for="Nikotin_C"><input type="checkbox" id="Nikotin_C"> Nikotinkonsum bis: <input type="text" id="Nikotin_CText" disabled></label>
           <label for="Nikotin_D"><input type="checkbox" id="Nikotin_D"> p.y. kummulativ circa: <input type="text" id="Nikotin_DText" disabled></label>
@@ -793,7 +797,7 @@ flex-direction: column; /* Arranges children in a column */
 
   <div class="doku-box" id="result-container">
     <div class="header">
-      <img src="/finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
+      <img src="/Users/paul/Documents/Programming/project streamline/Icon/finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
     </div>
     <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
     <button class="copy-button" onclick="copyToClipboard()">in Zwischenablage kopieren</button>
