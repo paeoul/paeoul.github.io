@@ -473,7 +473,21 @@
         padding-bottom: 4px;
         padding-left: 4px;
         border-top: solid 1px #0f4067;
+        border-bottom: none;
       }
+
+      .item-name::after {
+        content: "";
+        display: block;
+        width: 99%;
+        height: 0.5px;
+        background-color: #0f4067;
+        margin: 0 auto; /* Centers the border */
+      }
+
+
+
+
 
       body {
         flex-direction: column;
