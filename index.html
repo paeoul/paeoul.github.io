@@ -50,8 +50,10 @@
       border-left: solid 1px #0f4067;
       background-color: #FFFFFF;
 
-      display: flex; /* Enables flexbox layout */
-flex-direction: column; /* Arranges children in a column */
+      display: flex;
+      /* Enables flexbox layout */
+      flex-direction: column;
+      /* Arranges children in a column */
     }
 
     .header {
@@ -63,12 +65,14 @@ flex-direction: column; /* Arranges children in a column */
       text-align: center;
       z-index: 1000;
 
-      flex: 0 0 auto; /* Prevents flex-grow and flex-shrink */
+      flex: 0 0 auto;
+      /* Prevents flex-grow and flex-shrink */
     }
 
     #result-textarea {
-     /*  height: 82vh; */
-       flex: 1 1 auto; /* Allows the textarea to grow and shrink */
+      /*  height: 82vh; */
+      flex: 1 1 auto;
+      /* Allows the textarea to grow and shrink */
       width: 96%;
       margin-left: auto;
       margin-right: auto;
@@ -92,7 +96,8 @@ flex-direction: column; /* Arranges children in a column */
       display: flex;
       justify-content: flex-end;
 
-      flex: 0 0 auto; /* Prevents flex-grow and flex-shrink */
+      flex: 0 0 auto;
+      /* Prevents flex-grow and flex-shrink */
     }
 
     .copy-button {
@@ -113,8 +118,8 @@ flex-direction: column; /* Arranges children in a column */
     }
 
     .copy-button:hover {
-        background-color: #0f4067;
-        border-color: #0f4067;
+      background-color: #0f4067;
+      border-color: #0f4067;
     }
 
 
@@ -285,8 +290,7 @@ flex-direction: column; /* Arranges children in a column */
     h3 {
       margin-right: 10px;
       margin-top: 0px;
-      margin-bottom: 10px;
-      /* Smaller bottom margin for moderate spacing */
+      margin-bottom: 10px;  /* Smaller bottom margin for moderate spacing */
       color: #008DCA;
     }
 
@@ -365,30 +369,32 @@ flex-direction: column; /* Arranges children in a column */
       background-color: #FFFFFF;
       text-align: left;
       border-bottom: solid 0.5px #0f4067;
+      padding-top: 0.4em;
 
     }
 
     .floating-button {
-        position: fixed;
-        bottom: 20px;
-        left: 35px;
-        width: 50px;
-        height: 50px;
-        background-color: #008DCA;
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 50px;
-        font-size: 10px;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
-        z-index: 1000; /* Ensure the button stays on top */
+      position: fixed;
+      bottom: 20px;
+      left: 35px;
+      width: 50px;
+      height: 50px;
+      background-color: #008DCA;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 50px;
+      font-size: 10px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+      z-index: 1000;
+      /* Ensure the button stays on top */
     }
 
     .floating-button:hover {
-        background-color: #0f4067;
+      background-color: #0f4067;
     }
 
 
@@ -433,6 +439,11 @@ flex-direction: column; /* Arranges children in a column */
         z-index: 2000;
       }
 
+      .copy-button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
       .main-content {
         margin-left: 0px;
         margin-top: 33vh;
@@ -450,12 +461,24 @@ flex-direction: column; /* Arranges children in a column */
         /* Keep padding around the content */
       }
 
+      .item-name {
+        position: sticky;
+        top: 33vh;
+        z-index: 2000;
+      }
+
       body {
         flex-direction: column;
         /* Stack main-content and doku-box vertically */
       }
+
+      input[type="checkbox"] {
+        transform: scale(1.5); /* Adjust the scale as needed */
+        margin-right: 7px;
+      }
+
+
     }
-    
   </style>
 </head>
 
@@ -465,7 +488,8 @@ flex-direction: column; /* Arranges children in a column */
 
   <!-- Floating_button -->
   <button class="floating-button" onclick="window.open('Anamnesebogen.pdf','_blank')">
-      PDF &#8681; <!-- Unicode character for download arrow -->
+    PDF &#8681;
+    <!-- Unicode character for download arrow -->
   </button>
 
   <!-- Navbar -->
@@ -895,17 +919,16 @@ flex-direction: column; /* Arranges children in a column */
   </div>
 
 
-  </div>
 
   <div class="doku-box" id="result-container">
     <div class="header">
-      <img src="finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
+      <img src="/Users/paul/Documents/Programming/project streamline/Icon/finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
     </div>
     <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
     <button class="copy-button" onclick="copyToClipboard()">kopieren</button>
     <div class="impressum-container">
       <p style="font-size: 9px; text-align: right; cursor: default; color: black;">
-        <a href="impressum.html" style="text-decoration: none; color: black;">Impressum und Datenschutz</a>
+        <a href="impressum.html" style="text-decoration: none; color: black;">Impressum</a>
       </p>
     </div>
   </div>
@@ -915,6 +938,11 @@ flex-direction: column; /* Arranges children in a column */
 
 
   <script>
+  function scrollToBottom(textarea) {
+    textarea.scrollTop = textarea.scrollHeight;
+  }
+
+
     function updateResult() {
       const surveyContainers = document.querySelectorAll('.survey-container');
       const h2Elements = document.querySelectorAll('.item-name');
@@ -968,7 +996,9 @@ flex-direction: column; /* Arranges children in a column */
         .filter(Boolean)
         .join('\n\n');
 
-      document.getElementById('result-textarea').value = resultText;
+        const resultTextarea = document.getElementById('result-textarea');
+        resultTextarea.value = resultText;
+        scrollToBottom(resultTextarea);
     }
 
 
