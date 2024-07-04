@@ -290,7 +290,8 @@
     h3 {
       margin-right: 10px;
       margin-top: 0px;
-      margin-bottom: 10px;  /* Smaller bottom margin for moderate spacing */
+      margin-bottom: 10px;
+      /* Smaller bottom margin for moderate spacing */
       color: #008DCA;
     }
 
@@ -428,14 +429,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        position: relative;   /* Needed for positioning the impressum-container */
+        position: relative;
+        /* Needed for positioning the impressum-container */
       }
 
       .impressum-container {
         position: absolute;
         top: 0;
         right: 5px;
-        margin: 0;         /* Adjust margin as needed */
+        margin: 0;
+        /* Adjust margin as needed */
         z-index: 2000;
       }
 
@@ -465,6 +468,11 @@
         position: sticky;
         top: 33vh;
         z-index: 2000;
+        margin-top: 0px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 4px;
+        border-top: solid 1px #0f4067;
       }
 
       body {
@@ -473,7 +481,8 @@
       }
 
       input[type="checkbox"] {
-        transform: scale(1.5); /* Adjust the scale as needed */
+        transform: scale(1.5);
+        /* Adjust the scale as needed */
         margin-right: 7px;
       }
 
@@ -938,9 +947,9 @@
 
 
   <script>
-  function scrollToBottom(textarea) {
-    textarea.scrollTop = textarea.scrollHeight;
-  }
+    function scrollToBottom(textarea) {
+      textarea.scrollTop = textarea.scrollHeight;
+    }
 
 
     function updateResult() {
@@ -996,9 +1005,9 @@
         .filter(Boolean)
         .join('\n\n');
 
-        const resultTextarea = document.getElementById('result-textarea');
-        resultTextarea.value = resultText;
-        scrollToBottom(resultTextarea);
+      const resultTextarea = document.getElementById('result-textarea');
+      resultTextarea.value = resultText;
+      scrollToBottom(resultTextarea);
     }
 
 
