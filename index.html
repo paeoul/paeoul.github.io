@@ -101,13 +101,21 @@ flex-direction: column; /* Arranges children in a column */
       margin-left: auto;
       margin-right: auto;
       width: 150px;
+      height: 35px;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
       background-color: #008DCA;
       color: #FFFFFF;
       border-color: #008DCA;
-
-       flex: 0 0 auto;
+      flex: 0 0 auto;
     }
 
+    .copy-button:hover {
+        background-color: #0f4067;
+        border-color: #0f4067;
+    }
 
 
 
@@ -359,6 +367,30 @@ flex-direction: column; /* Arranges children in a column */
       border-bottom: solid 0.5px #0f4067;
 
     }
+
+    .floating-button {
+        position: fixed;
+        bottom: 20px;
+        left: 35px;
+        width: 50px;
+        height: 50px;
+        background-color: #008DCA;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 50px;
+        font-size: 10px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+        z-index: 1000; /* Ensure the button stays on top */
+    }
+
+    .floating-button:hover {
+        background-color: #0f4067;
+    }
+
   </style>
 </head>
 
@@ -366,6 +398,10 @@ flex-direction: column; /* Arranges children in a column */
 
   <!---->
 
+  <!-- Floating_button -->
+  <button class="floating-button" onclick="window.open('Anamnesebogen.pdf','_blank')">
+      PDF &#8681; <!-- Unicode character for download arrow -->
+  </button>
 
   <!-- Navbar -->
   <nav class="navbar">
@@ -801,7 +837,7 @@ flex-direction: column; /* Arranges children in a column */
       <img src="finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
     </div>
     <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
-    <button class="copy-button" onclick="copyToClipboard()">in Zwischenablage kopieren</button>
+    <button class="copy-button" onclick="copyToClipboard()">kopieren</button>
     <div class="impressum-container">
       <p style="font-size: 9px; text-align: right; cursor: default; color: black;">
         <a href="impressum.html" style="text-decoration: none; color: black;">Impressum und Datenschutz</a>
