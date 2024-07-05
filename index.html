@@ -400,6 +400,12 @@
 
 
     @media (max-width: 767px) {
+      body {
+        flex-direction: column;
+        /* Stack main-content and doku-box vertically */
+        overscroll-behavior: none;
+      }
+
       .navbar {
         display: none;
       }
@@ -482,17 +488,10 @@
         width: 99%;
         height: 0.5px;
         background-color: #0f4067;
-        margin: 0 auto; /* Centers the border */
+        margin: 0 auto;
+        /* Centers the border */
       }
 
-
-
-
-
-      body {
-        flex-direction: column;
-        /* Stack main-content and doku-box vertically */
-      }
 
       input[type="checkbox"] {
         transform: scale(1.5);
@@ -500,6 +499,34 @@
         margin-right: 7px;
       }
 
+      .survey-container {
+      overflow-x: hidden;
+      /* Prevent horizontal scrolling */
+      white-space: normal;
+      /* Allow text to wrap */
+    }
+
+    .checkbox-group {
+      margin-left:20px;
+    }
+
+    .checkbox-group label {
+      white-space: normal;
+      /* Ensure labels wrap to the next line */
+      text-indent: -23px;
+      padding-left: 28px;
+      width: 90%;
+    }
+
+    .aspect-container {
+      margin-left: 15px;
+    }
+
+    #Schilderung_AText {
+      box-sizing: border-box;
+      width: 90%;
+      /* Maintains full width within parent, including padding and borders */
+    }
 
     }
   </style>
