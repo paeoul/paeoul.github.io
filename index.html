@@ -8,25 +8,24 @@
   <title>DokuSwift</title>
   <link rel="icon" href="DS_resize.png" type="image/png">
   <style>
+    :root {
+      --body-font-family: 'Helvetica', sans-serif;
 
-  :root {
-    --body-font-family: 'Helvetica', sans-serif;
-
-    --primary-color: #008DCA;
-    --secondary-color: #0f4067;
-    --accent-color: #CDE4F6;
-    --background-color: #FFFFFF;
-    --text-color: #333333;
+      --primary-color: #008DCA;
+      --secondary-color: #0f4067;
+      --accent-color: #CDE4F6;
+      --background-color: #FFFFFF;
+      --text-color: #333333;
 
 
-    --heading-font-size:;
-    --subheading-font-size:;
-    --body-font-size: 16px;
-    --small-font-size: ;
-    --border-radius: 4px;
-    --box-shadow: ;
-    --transition-duration: ;
-  }
+      --heading-font-size: ;
+      --subheading-font-size: ;
+      --body-font-size: 16px;
+      --small-font-size: ;
+      --border-radius: 4px;
+      --box-shadow: ;
+      --transition-duration: ;
+    }
 
 
     body {
@@ -91,6 +90,12 @@
       /* Prevents flex-grow and flex-shrink */
     }
 
+    /* Responsive Image of logo*/
+    .logo-img {
+      width: 250px;
+      height: auto;
+    }
+
     #result-textarea {
       /*  height: 82vh; */
       /* flex: 1 1 auto; */
@@ -119,9 +124,10 @@
     }
 
     #result-textarea::placeholder {
-  color: #aaa;
-  opacity: 1; /* Ensures the placeholder text is visible in all browsers */
-}
+      color: #aaa;
+      opacity: 1;
+      /* Ensures the placeholder text is visible in all browsers */
+    }
 
 
 
@@ -578,6 +584,13 @@
         /* Needed for positioning the impressum-container */
       }
 
+      .logo-img {
+        width: 150px;
+        /* Adjust width as needed for smaller screens */
+        height: auto;
+        /* Maintain aspect ratio */
+      }
+
       .impressum-container {
         position: absolute;
         top: 0;
@@ -587,9 +600,22 @@
         z-index: 2000;
       }
 
+      #result-textarea {
+        /*  height: 82vh; */
+        /* flex: 1 1 auto; */
+        /* Allows the textarea to grow and shrink */
+        width: 96%;
+        height: 80vh;
+        margin: 10px auto;
+        margin-top: 5px;
+        padding: 7px;
+        font-size: 10px;
+      }
+
       .copy-button {
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        width: 50vw;
       }
 
       .main-content {
@@ -614,8 +640,9 @@
         top: 33vh;
         z-index: 2000;
         margin-top: 0px;
+        margin-bottom: 0px;
         padding-top: 4px;
-        padding-bottom: 4px;
+        padding-bottom: 6px;
         padding-left: 4px;
         border-top: solid 1px var(--secondary-color);
         border-bottom: none;
@@ -626,16 +653,22 @@
         display: block;
         width: 99%;
         height: 0.5px;
-        background-color: var(--secondary-color);
+        background-color: none;
         margin: 0 auto;
         /* Centers the border */
       }
 
 
       input[type="checkbox"] {
-        transform: scale(1.5);
+        transform: scale(1.7);
         /* Adjust the scale as needed */
         margin-right: 7px;
+      }
+
+      .survey-container:first-of-type {
+        margin-top: 0;
+        padding-top: 0;
+
       }
 
       .survey-container {
@@ -713,11 +746,11 @@
         <h3>Vorstellungsgrund</h3>
         <div class="checkbox-group">
           <label for="Vorstellungsgrund_A"><input type="checkbox" id="Vorstellungsgrund_A">Dyspnoe</label>
-          <label for="Vorstellungsgrund_B"><input type="checkbox" id="Vorstellungsgrund_B">abdomineller Schmerz</label>
-          <label for="Vorstellungsgrund_C"><input type="checkbox" id="Vorstellungsgrund_C">thorakaler Schmerz</label>
-          <label for="Vorstellungsgrund_D"><input type="checkbox" id="Vorstellungsgrund_D">AZ-Minderung</label>
-          <label for="Vorstellungsgrund_E"><input type="checkbox" id="Vorstellungsgrund_E">Übelkeit</label>
-          <label for="Vorstellungsgrund_F"><input type="checkbox" id="Vorstellungsgrund_F">Erbrechen</label>
+          <label for="Vorstellungsgrund_B"><input type="checkbox" id="Vorstellungsgrund_B">thorakaler Schmerz</label>
+          <label for="Vorstellungsgrund_C"><input type="checkbox" id="Vorstellungsgrund_C">abdominaler Schmerz</label>
+          <label for="Vorstellungsgrund_D"><input type="checkbox" id="Vorstellungsgrund_D">Übelkeit</label>
+          <label for="Vorstellungsgrund_E"><input type="checkbox" id="Vorstellungsgrund_E">Erbrechen</label>
+          <label for="Vorstellungsgrund_F"><input type="checkbox" id="Vorstellungsgrund_F">AZ-Minderung</label>
           <label for="Vorstellungsgrund_G"><input type="checkbox" id="Vorstellungsgrund_G">Fieber</label>
           <label for="Vorstellungsgrund_H"><input type="checkbox" id="Vorstellungsgrund_H"><input type="text" id="Vorstellungsgrund_HText" disabled></label>
           <label for="Vorstellungsgrund_I"><input type="checkbox" id="Vorstellungsgrund_I">Beschwerden bestehend seit <input type="text" id="Vorstellungsgrund_IText" disabled></label>
@@ -1109,7 +1142,7 @@
 
   <div class="doku-box" id="result-container">
     <div class="header">
-      <img src="finished_icon.png" alt="DokuSwift Logo" style="width: 250px; height: auto;">
+      <img src="finished_icon.png" alt="DokuSwift Logo" class="logo-img">
     </div>
     <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
     <button class="copy-button" onclick="copyToClipboard()">kopieren</button>
@@ -1305,7 +1338,7 @@
 
 
 
-  // NAVBAR STATE PART /////////////////////////////////////////////////////
+    // NAVBAR STATE PART /////////////////////////////////////////////////////
 
     document.addEventListener('DOMContentLoaded', function() {
       const navbarItems = document.querySelectorAll('.navbar .nav-item-outer');
