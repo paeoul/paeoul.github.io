@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Antibiotic Resistance Table</title>
+  <style>
+    /* Existing CSS Styles */
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f9fa; /* Light background for the page */
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #343a40; /* Dark text for the heading */
+    }
+
+    #table-container {
+      overflow-x: auto;
+      display: flex;
+      justify-content: center; /* Center the table horizontally */
+    }
+
+    table {
+      border-collapse: collapse;
+      width: auto;
+      table-layout: fixed;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      border-radius: 8px; /* Rounded corners */
+      overflow: hidden; /* Clip the border-radius */
+      background-color: #ffffff; /* White background for the table */
+    }
+
+    th, td {
+      border-style: solid;
+      border-width: 1px;
+      border-color: #fff;
+      padding: 5px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    /* Style for the group names */
+    td.group-name {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000; /* Ensure group names are black */
+      text-align: left;
+      vertical-align: middle; /* Center text vertically */
+    }
+
+    /* Style for the antibiotic names */
+    td.antibiotic-name {
+      font-size: 14px;
+      color: #000; /* Ensure antibiotic names are black */
+      text-align: left;
+      cursor: pointer; /* Indicate that the cell is interactive */
+    }
+
+    /* Style for the bacteria group headers */
+    th.bacteria-group {
+      background-color: #e2e3e5; /* This will be overridden by inline styles */
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Style for the table headers (bacterium names) */
+    th.bacterium {
+      writing-mode: vertical-rl; /* Vertical writing mode right to left */
+      text-orientation: mixed;
+      white-space: normal; /* Allow wrapping */
+      padding: 5px;
+      vertical-align: middle;
+      width: 30px; /* Adjust as needed */
+      height: 150px; /* Adjust as needed */
+      overflow: visible;
+      text-align: left;
+      cursor: pointer; /* Indicate that the cell is interactive */
+    }
+
+    /* Data cell styles */
+    td.sensitivity-high {
+      background-color: #a7dca7; /* Light green */
+      color: #fff; /* White text */
+    }
+
+    td.sensitivity-medium {
+      background-color: #ffe594; /* Light yellow */
+      color: #000; /* Black text */
+    }
+
+    td.sensitivity-low {
+      background-color: #ffb4b4; /* Light red */
+      color: #fff; /* White text */
+    }
+
+    /* Highlighted row styles */
+    .highlighted-row td.sensitivity-high {
+      filter: brightness(108%);
+    }
+
+    .highlighted-row td.sensitivity-medium {
+      filter: brightness(105%);
+    }
+
+    .highlighted-row td.sensitivity-low {
+      filter: brightness(108%);
+    }
+
+    /* Antibiotic name cell hover style */
+    .antibiotic-name-hover {
+      filter: brightness(120%);
+      box-shadow:
+        inset 2px 0 0 0 #000,   /* Left border */
+        inset 0 2px 0 0 #000,   /* Top border */
+        inset 0 -2px 0 0 #000;  /* Bottom border */
+    }
+
+    /* Apply text color only to data cells */
+    td.data-cell {
+      /* The text color is set in the sensitivity classes */
+    }
+
+    /* Style for visual separation */
+
+    /* Thicker border-top for the first row of each antibiotic group */
+    tr.antibiotic-group-start td {
+      border-top-width: 4px;
+      border-top-color: #fff;
+    }
+
+    /* Thicker border-left for the first column of each bacterial group */
+    th.bacterial-group-start,
+    td.bacterial-group-start {
+      border-left-width: 4px;
+      border-left-color: #fff;
+    }
+
+    /* New CSS class for bacterium header cells with low sensitivity */
+    .bacterium-low-sensitivity {
+      background-color: lightgrey !important;
+    }
+
+    /* New CSS class for bacterium header cells with intermediate sensitivity */
+    .bacterium-intermedium-sensitivity {
+      filter: brightness(150%) !important;
+    }
+
+    /* Style for bacterium name cell hover */
+    .bacterium-name-hover {
+      filter: brightness(120%);
+      box-shadow:
+        inset 2px 0 0 0 #000,   /* Left border */
+        inset 0 2px 0 0 #000,   /* Top border */
+        inset -2px 0 0 0 #000;  /* Right border */
+    }
+
+    /* Highlighted column styles */
+    .highlighted-column.sensitivity-high {
+      filter: brightness(108%);
+    }
+
+    .highlighted-column.sensitivity-medium {
+      filter: brightness(105%);
+    }
+
+    .highlighted-column.sensitivity-low {
+      filter: brightness(108%);
+    }
+
+    /* New CSS class for antibiotic index cells with low sensitivity */
+    .antibiotic-low-sensitivity {
+      background-color: lightgrey !important;
+    }
+
+    /* New CSS class for antibiotic index cells with intermediate sensitivity */
+    .antibiotic-intermedium-sensitivity {
+      filter: brightness(130%) !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>Antibiotic Resistance Data</h1>
+  <div id="table-container"></div>
+
+  <!-- Include D3.js library -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- JavaScript code -->
+  <script>
+    // Desired order of antibiotics
+    const desiredOrderAntibiotics = [
+      "Penicillin G",
+      "Flucloxacillin",
+      "Ampicillin",
+      "Ampicillin Sulbactam",
+      "Piperacillin Tazobactam",
+      "Cefazolin",
+      "Cefuroxim",
+      "Ceftriaxon",
+      "Ceftazidim",
+      "Cefepim",
+      "Ceftazidime_Avibactam",
+      "Ceftaroline",
+      "Ceftolozane_Tazobactam",
+      "Cefiderocol",
+      "Imipenem",
+      "Meropenem",
+      "Ertapenem",
+      "Ciprofloxacin",
+      "Levofloxacin",
+      "Moxifloxacin",
+      "Azithromycin",
+      "Clarithromycin",
+      "Vancomycin",
+      "Teicoplanin",
+      "Gentamicin",
+      "Doxycycline",
+      "Clindamycin",
+      "Cotrimoxazole",
+      "Metronidazole",
+      "Tigecycline",
+      "Linezolid",
+      "Daptomycin",
+      "Rifampicin",
+      "Fosfomycin",
+      "Colistin"
+    ];
+
+    // Desired order of bacteria
+    const desiredOrderBacteria = [
+      "Streptococcus pneumoniae",
+      "Streptococcus pyogenes",
+      "Methicillinsensibler Staph. aureus (MSSA)",
+      "Methicillinresistenter Staph. aureus (MRSA)",
+      "Koagulasenegative Staphylokokken",
+      "Enterococcus faecalis",
+      "Enterococcus faecium",
+      "Listeria monocytogenes",
+      "Escherichia coli",
+      "Enterobacter cloacae",
+      "Klebsiella spp.",
+      "Proteus mirabilis",
+      "Proteus vulgaris",
+      "Citrobacter spp.",
+      "Morganella morganii",
+      "Serratia spp.",
+      "Acinetobacter spp.",
+      "Pseudomonas aeruginosa",
+      "Stenotrophomonas maltophilia",
+      "Salmonella spp.",
+      "Shigella spp.",
+      "Neisseria gonorrhoeae (Gonokokken)",
+      "Neisseria meningitidis (Meningokokken)",
+      "Haemophilus influenzae",
+      "Bacteroides spp.",
+      "Clostridioides difficile",
+      "Chlamydophila pneumoniae",
+      "Legionella spp.",
+      "Mycoplasma pneumoniae"
+    ];
+
+    // Bacterial group data
+    const bacteriaGroups = {
+      "Streptococcus pneumoniae": "grampositiv",
+      "Streptococcus pyogenes": "grampositiv",
+      "Methicillinsensibler Staph. aureus (MSSA)": "grampositiv",
+      "Methicillinresistenter Staph. aureus (MRSA)": "grampositiv",
+      "Koagulasenegative Staphylokokken": "grampositiv",
+      "Enterococcus faecalis": "grampositiv",
+      "Enterococcus faecium": "grampositiv",
+      "Listeria monocytogenes": "grampositiv",
+      "Escherichia coli": "gramnegativ",
+      "Enterobacter cloacae": "gramnegativ",
+      "Klebsiella spp.": "gramnegativ",
+      "Proteus mirabilis": "gramnegativ",
+      "Proteus vulgaris": "gramnegativ",
+      "Citrobacter spp.": "gramnegativ",
+      "Morganella morganii": "gramnegativ",
+      "Serratia spp.": "gramnegativ",
+      "Acinetobacter spp.": "gramnegativ",
+      "Pseudomonas aeruginosa": "gramnegativ",
+      "Stenotrophomonas maltophilia": "gramnegativ",
+      "Salmonella spp.": "gramnegativ",
+      "Shigella spp.": "gramnegativ",
+      "Neisseria gonorrhoeae (Gonokokken)": "gramnegativ",
+      "Neisseria meningitidis (Meningokokken)": "gramnegativ",
+      "Haemophilus influenzae": "gramnegativ",
+      "Bacteroides spp.": "Anaerobier",
+      "Clostridioides difficile": "Anaerobier",
+      "Chlamydophila pneumoniae": "Atypiker",
+      "Legionella spp.": "Atypiker",
+      "Mycoplasma pneumoniae": "Atypiker"
+    };
+
+    // Define a fixed mapping of antibiotic groups to colors
+    const groupToColor = {
+      'Penicilline': '#a9c4c0',
+      'Cephalosporine': '#6c9d9c',
+      'Carbapeneme': '#95b7b3',
+      'Chinolone': '#a4d8da',
+      'Makrolide': '#8fa5c9',
+      'Glykopeptide': '#aed7bf',
+      'Sonstige': '#97c2ac',
+    };
+
+    // Define a fixed mapping of bacterial groups to colors
+    const bacteriaGroupColors = {
+      'grampositiv': '#92d0d5',
+      'gramnegativ': '#eea49a',
+      'Anaerobier': '#9a89d6',
+      'Atypiker': '#b9b8b7'
+    };
+
+    // Load the antibiotic data
+    d3.json('antibiotics_data.json').then(function(antibioticsData) {
+      // Proceed to create the table
+      createTable(antibioticsData);
+    });
+
+    function createTable(data) {
+      // Get the table container
+      const container = d3.select('#table-container');
+
+      // Prepare data for table
+      const bacteriaSet = new Set();
+
+      // Map antibiotic name to group
+      const antibioticToGroup = {};
+
+      // Collect all bacteria
+      for (const group in data) {
+        for (const antibiotic in data[group]) {
+          antibioticToGroup[antibiotic] = group;
+          for (const bacterium in data[group][antibiotic]) {
+            bacteriaSet.add(bacterium);
+          }
+        }
+      }
+
+      // Convert the set to an array
+      let bacteria = Array.from(bacteriaSet);
+
+      // Sort bacteria based on desiredOrderBacteria
+      bacteria.sort((a, b) => {
+        const indexA = desiredOrderBacteria.indexOf(a);
+        const indexB = desiredOrderBacteria.indexOf(b);
+        if (indexA === -1 && indexB === -1) return 0; // Both not found
+        if (indexA === -1) return 1; // a comes after
+        if (indexB === -1) return -1; // a comes before
+        return indexA - indexB; // Sort based on desired order
+      });
+
+      // Map bacteria to their groups and determine where groups start
+      let bacteriaGroupsOrdered = [];
+      let currentGroup = null;
+
+      bacteria.forEach((bacterium, index) => {
+        const group = bacteriaGroups[bacterium] || 'Unknown'; // Handle bacteria not in bacteriaGroups
+        const isGroupStart = group !== currentGroup;
+        if (isGroupStart) {
+          currentGroup = group;
+        }
+        bacteriaGroupsOrdered.push({
+          name: bacterium,
+          group: group,
+          isGroupStart: isGroupStart
+        });
+      });
+
+      // Compute the spans for each group
+      let groupSpans = [];
+      currentGroup = null;
+      let currentSpan = 0;
+
+      bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
+        if (bacteriumData.group !== currentGroup) {
+          if (currentGroup !== null) {
+            groupSpans.push({ group: currentGroup, span: currentSpan });
+          }
+          currentGroup = bacteriumData.group;
+          currentSpan = 1;
+        } else {
+          currentSpan++;
+        }
+        // If it's the last element, push the last group
+        if (index === bacteriaGroupsOrdered.length - 1) {
+          groupSpans.push({ group: currentGroup, span: currentSpan });
+        }
+      });
+
+      // Create a flat list of antibiotics sorted according to desiredOrderAntibiotics
+      const antibiotics = desiredOrderAntibiotics.map(antibiotic => {
+        const group = antibioticToGroup[antibiotic];
+        if (group && data[group][antibiotic]) {
+          return {
+            group: group,
+            antibiotic: antibiotic,
+            sensitivities: data[group][antibiotic]
+          };
+        } else {
+          // Antibiotic not found in data
+          return null;
+        }
+      }).filter(entry => entry !== null);
+
+      // Calculate the number of antibiotics in each group
+      const groupCounts = {};
+      antibiotics.forEach(entry => {
+        if (groupCounts[entry.group]) {
+          groupCounts[entry.group]++;
+        } else {
+          groupCounts[entry.group] = 1;
+        }
+      });
+
+      // Create the table element
+      const table = container.append('table');
+
+      // Create the table header
+      const thead = table.append('thead');
+
+      // First row: bacterial groups
+      const groupHeaderRow = thead.append('tr');
+
+      // The first two cells are empty (for 'Group' and 'Antibiotic')
+      groupHeaderRow.append('th').attr('colspan', 2);
+
+      // Add group headers with colspan
+      groupHeaderRow.selectAll('th.bacteria-group')
+        .data(groupSpans)
+        .enter()
+        .append('th')
+        .attr('class', (d, i) => {
+          let classes = 'bacteria-group';
+          if (i === 0 || i > 0) {
+            classes += ' bacterial-group-start';
+          }
+          return classes;
+        })
+        .attr('colspan', d => d.span)
+        .style('background-color', d => bacteriaGroupColors[d.group] || '#e2e3e5') // Apply background color
+        .text(d => d.group);
+
+      // Map to store references to bacterium header cells
+      const bacteriumHeaderCells = {};
+
+      // Map to store data cells by bacterium
+      const dataCellsByBacterium = {};
+
+      // Map to store antibiotic name cells
+      const antibioticNameCells = {};
+
+      // Second row: bacteria names
+      const headerRow = thead.append('tr');
+
+      // Add 'Group' and 'Antibiotic' headers
+      headerRow.append('th').text('Group');
+      headerRow.append('th').text('Antibiotic');
+
+      // Add bacteria names as headers
+      headerRow.selectAll('th.bacterium')
+        .data(bacteriaGroupsOrdered)
+        .enter()
+        .append('th')
+        .attr('class', d => {
+          let classes = 'bacterium';
+          if (d.isGroupStart) {
+            classes += ' bacterial-group-start';
+          }
+          return classes;
+        })
+        .style('background-color', d => bacteriaGroupColors[d.group] || '#f2f2f2') // Apply background color
+        .text(d => d.name)
+        .each(function(d) {
+          // Store reference to the header cell
+          bacteriumHeaderCells[d.name] = d3.select(this);
+        })
+        .on('mouseover', function(event, d) {
+          const bacterium = d.name;
+          const bacteriumCell = d3.select(this);
+          bacteriumCell.classed('bacterium-name-hover', true);
+
+          // Highlight the column
+          const dataCells = dataCellsByBacterium[bacterium];
+          if (dataCells) {
+            dataCells.forEach(cellData => {
+              cellData.cell.classed('highlighted-column', true);
+            });
+          }
+
+          // For each antibiotic, modify the antibiotic name cells based on the sensitivity
+          antibiotics.forEach(entry => {
+            const sensitivity = entry.sensitivities[bacterium];
+            const antibioticNameCell = antibioticNameCells[entry.antibiotic];
+            if (sensitivity === 0.0) {
+              antibioticNameCell.classed('antibiotic-low-sensitivity', true);
+            } else if (sensitivity === 0.5) {
+              antibioticNameCell.classed('antibiotic-intermedium-sensitivity', true);
+            }
+          });
+        })
+        .on('mouseout', function(event, d) {
+          const bacterium = d.name;
+          const bacteriumCell = d3.select(this);
+          bacteriumCell.classed('bacterium-name-hover', false);
+
+          // Remove highlight from the column
+          const dataCells = dataCellsByBacterium[bacterium];
+          if (dataCells) {
+            dataCells.forEach(cellData => {
+              cellData.cell.classed('highlighted-column', false);
+            });
+          }
+
+          // Remove styles from antibiotic name cells
+          antibiotics.forEach(entry => {
+            const antibioticNameCell = antibioticNameCells[entry.antibiotic];
+            antibioticNameCell.classed('antibiotic-low-sensitivity', false);
+            antibioticNameCell.classed('antibiotic-intermedium-sensitivity', false);
+          });
+        });
+
+      // Create the table body
+      const tbody = table.append('tbody');
+
+      // Initialize previous group tracker
+      let previousGroup = null;
+
+      // Add rows for each antibiotic
+      antibiotics.forEach(entry => {
+        const row = tbody.append('tr');
+
+        // If the group is different from the previous, insert the group cell with rowspan
+        if (entry.group !== previousGroup) {
+          row.classed('antibiotic-group-start', true); // Add class to indicate start of a new group
+
+          row.append('td')
+            .attr('class', 'group-name')
+            .attr('rowspan', groupCounts[entry.group])
+            .style('background-color', groupToColor[entry.group]) // Set background color
+            .text(entry.group);
+
+          // Update the previousGroup
+          previousGroup = entry.group;
+        }
+
+        // Add antibiotic name with event listeners for hover effect
+        const antibioticNameCell = row.append('td')
+          .attr('class', 'antibiotic-name')
+          .style('background-color', groupToColor[entry.group]) // Set background color
+          .text(entry.antibiotic)
+          .on('mouseover', function() {
+            d3.select(this).classed('antibiotic-name-hover', true);
+            d3.select(this.parentNode).classed('highlighted-row', true);
+
+            // Highlight bacterium headers based on sensitivity
+            const sensitivities = entry.sensitivities;
+            for (const bacterium in sensitivities) {
+              if (sensitivities[bacterium] === 0.0) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', true);
+                }
+              } else if (sensitivities[bacterium] === 0.5) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', true);
+                }
+              }
+            }
+          })
+          .on('mouseout', function() {
+            d3.select(this).classed('antibiotic-name-hover', false);
+            d3.select(this.parentNode).classed('highlighted-row', false);
+
+            // Remove highlight from bacterium headers
+            const sensitivities = entry.sensitivities;
+            for (const bacterium in sensitivities) {
+              if (sensitivities[bacterium] === 0.0) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', false);
+                }
+              } else if (sensitivities[bacterium] === 0.5) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', false);
+                }
+              }
+            }
+          });
+
+        // Store reference to the antibiotic name cell
+        antibioticNameCells[entry.antibiotic] = antibioticNameCell;
+
+        // Add cells for each bacterium
+        bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
+          const bacterium = bacteriumData.name;
+          const isGroupStart = bacteriumData.isGroupStart;
+
+          const sensitivity = entry.sensitivities[bacterium];
+          const cell = row.append('td')
+            .attr('class', () => {
+              let classes = 'data-cell';
+              if (isGroupStart) {
+                classes += ' bacterial-group-start';
+              }
+              if (sensitivity === 1.0) {
+                classes += ' sensitivity-high';
+              } else if (sensitivity === 0.5) {
+                classes += ' sensitivity-medium';
+              } else if (sensitivity === 0.0) {
+                classes += ' sensitivity-low';
+              }
+              return classes;
+            });
+
+          // Remove the text from the cell
+          cell.text(''); // Set cell text to empty string
+
+          // Store reference to the data cell
+          if (!dataCellsByBacterium[bacterium]) {
+            dataCellsByBacterium[bacterium] = [];
+          }
+          dataCellsByBacterium[bacterium].push({
+            cell: cell,
+            sensitivity: sensitivity,
+            antibiotic: entry.antibiotic,
+          });
+        });
+      });
+    }
+  </script>
+</body>
+</html>
