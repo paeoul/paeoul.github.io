@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Antibiotic Resistance Table</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa; /* Light background for the page */
+    }
+
+    h1 {
+      font-size: 20px;
+      text-align: center;
+      margin: 20px 0;
+      color: #343a40; /* Dark text for the heading */
+    }
+
+    /* Dashboard Layout */
+    #dashboard {
+      display: flex;
+      height: 100vh; /* Full viewport height */
+    }
+
+    #header_table_container {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto; /* Enable vertical scrolling */
+      overflow-x: auto; /* Enable horizontal scrolling if needed */
+      display: flex;
+      flex-direction: column; /* Stack items vertically */
+      align-items: center;
+    }
+
+    /* Sidebar Styles */
+    #sidebar {
+      width: 200px; /* Fixed width for the sidebar */
+      padding: 20px;
+      background-color: #ffffff;
+      border-right: 1px solid #dee2e6;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      /* Ensure sidebar doesn't shrink */
+      flex: 0 0 200px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center contents horizontally */
+    }
+
+    /* Button Styles */
+    #cap-filter-button {
+      background-color: #007bff; /* Blue background */
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 16px;
+      width: 100%;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    #cap-filter-button.pressed {
+      background-color: #0056b3; /* Darker blue when pressed */
+    }
+
+    /* Severity Header */
+    #severity-header {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #343a40;
+      display: none; /* Hidden by default */
+    }
+
+    /* Severity Buttons */
+    .severity-button {
+      background-color: #28a745; /* Green background */
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-size: 14px;
+      width: 100%;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+      text-align: left;
+    }
+
+    .severity-button.pressed {
+      background-color: #1e7e34; /* Darker green when pressed */
+    }
+
+    .severity-button:hover {
+      opacity: 0.9;
+    }
+
+    /* Table Container */
+    #table-container {
+      width: 100%; /* Take full width of the container */
+      overflow-x: auto;
+      display: flex;
+      justify-content: center; /* Center the table horizontally */
+    }
+
+    /* Table Styles */
+    table {
+      border-collapse: collapse;
+      width: auto; /* Allows the table to take its natural width */
+      /* min-width: 1000px; */ /* Set to original table width; adjust as needed */
+      table-layout: fixed;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      border-radius: 8px; /* Rounded corners */
+      overflow: hidden; /* Clip the border-radius */
+      background-color: #ffffff; /* White background for the table */
+    }
+
+    th, td {
+      border-style: solid;
+      border-width: 1px;
+      border-color: #fff;
+      padding: 5px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    /* Style for the group names */
+    td.group-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000; /* Ensure group names are black */
+      text-align: left;
+      vertical-align: middle; /* Center text vertically */
+      width: 150px; /* Fixed width */
+    }
+
+    /* Style for the antibiotic names */
+    td.antibiotic-name {
+      font-size: 12px;
+      color: #000; /* Ensure antibiotic names are black */
+      text-align: left;
+      cursor: pointer; /* Indicate that the cell is interactive */
+      width: 150px; /* Fixed width */
+    }
+
+    /* Style for the bacteria group headers */
+    th.bacteria-group {
+      background-color: #e2e3e5; /* This will be overridden by inline styles */
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Style for the table headers (bacterium names) */
+    th.bacterium {
+      writing-mode: vertical-rl; /* Vertical writing mode right to left */
+      text-orientation: mixed;
+      white-space: normal; /* Allow wrapping */
+      padding: 5px;
+      vertical-align: middle;
+      height: 150px; /* Adjust as needed */
+      overflow: visible;
+      text-align: left;
+      cursor: pointer; /* Indicate that the cell is interactive */
+      /* Remove width property to allow dynamic sizing */
+    }
+
+    /* Data cell styles */
+    td.sensitivity-high {
+      background-color: #a7dca7; /* Light green */
+      color: #fff; /* White text */
+    }
+
+    td.sensitivity-medium {
+      background-color: #ffe594; /* Light yellow */
+      color: #000; /* Black text */
+    }
+
+    td.sensitivity-low {
+      background-color: #ffb4b4; /* Light red */
+      color: #fff; /* White text */
+    }
+
+    /* Antibiotic name cell hover style */
+    .antibiotic-name-hover {
+      filter: brightness(120%);
+      box-shadow:
+        inset 2px 0 0 0 #000,   /* Left border */
+        inset 0 2px 0 0 #000,   /* Top border */
+        inset 0 -2px 0 0 #000;  /* Bottom border */
+    }
+
+    /* Apply text color only to data cells */
+    td.data-cell {
+      /* The text color is set in the sensitivity classes */
+    }
+
+    /* Style for visual separation */
+
+    /* Thicker border-top for the first row of each antibiotic group */
+    tr.antibiotic-group-start td {
+      border-top-width: 4px;
+      border-top-color: #fff;
+    }
+
+    /* Thicker border-left for the first column of each bacterial group */
+    th.bacterial-group-start,
+    td.bacterial-group-start {
+      border-left-width: 4px;
+      border-left-color: #fff;
+    }
+
+    /* New CSS class for bacterium header cells with low sensitivity */
+    .bacterium-low-sensitivity {
+      /* background-color: lightgrey !important; */
+      background-color: #ffb4b4 !important; /* Light red */
+    }
+
+    /* New CSS class for bacterium header cells with intermediate sensitivity */
+    .bacterium-intermedium-sensitivity {
+      background-color: #ffe594 !important; /* Light yellow */
+      /*  filter: brightness(140%) !important; */
+    }
+
+    /* Bacterium header cell styles for high sensitivity */
+    .bacterium-high-sensitivity {
+      background-color: #a7dca7 !important; /* Light green */
+    }
+
+
+    /* Style for bacterium name cell hover */
+    .bacterium-name-hover {
+      filter: brightness(120%);
+      box-shadow:
+        inset 2px 0 0 0 #000,   /* Left border */
+        inset 0 2px 0 0 #000,   /* Top border */
+        inset -2px 0 0 0 #000;  /* Right border */
+    }
+
+    /* Highlighted column styles */
+    .highlighted-column.sensitivity-high {
+      filter: brightness(108%);
+    }
+
+    .highlighted-column.sensitivity-medium {
+      filter: brightness(105%);
+    }
+
+    .highlighted-column.sensitivity-low {
+      filter: brightness(108%);
+    }
+
+    /* Highlighted row styles */
+    .highlighted-row td.sensitivity-high {
+      filter: brightness(108%);
+    }
+
+    .highlighted-row td.sensitivity-medium {
+      filter: brightness(105%);
+    }
+
+    .highlighted-row td.sensitivity-low {
+      filter: brightness(108%);
+    }
+
+    /* New CSS class for antibiotic index cells with low sensitivity */
+    .antibiotic-low-sensitivity {
+      /* background-color: lightgrey !important; */
+      background-color: #ffb4b4 !important; /* Light red */
+    }
+
+    /* New CSS class for antibiotic index cells with intermediate sensitivity */
+    .antibiotic-intermedium-sensitivity {
+      background-color: #ffe594 !important; /* Light yellow */
+      /*  filter: brightness(140%) !important; */
+    }
+
+    /* New CSS class for antibiotic index cells with high sensitivity */
+    .antibiotic-high-sensitivity {
+      background-color: #a7dca7 !important; /* Light green */
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1000; /* Sit on top */
+      padding-top: 60px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 4px;
+    }
+
+    /* Caption (optional) */
+    #caption {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+    }
+
+    /* Close Button */
+    .close {
+      position: absolute;
+      top: 30px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Optional: Style the "Einteilung" link as a button */
+    .einteilung-button {
+      display: block;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      background-color: #17a2b8; /* Bootstrap info color */
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .einteilung-button:hover {
+      background-color: #117a8b;
+    }
+
+    /* New CSS to center the toggle-container within the sidebar */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%; /* Ensure it takes full width of the container */
+    }
+
+    /* Toggle Switch Styles */
+    .toggle-switch {
+      position: relative;
+      display: flex; /* Flex to align children */
+      align-items: center; /* Center vertically */
+      width: 60px;
+      height: 34px;
+      margin-top: 10px; /* Space above the toggle */
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s ease;
+      border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #28a745; /* Green when checked */
+    }
+
+    .toggle-switch input:focus + .toggle-slider {
+      box-shadow: 0 0 1px #28a745;
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(25px);
+    }
+
+    /* Style for the toggle label */
+    .toggle-label {
+      margin-left: 10px; /* Added margin to prevent overlap */
+      font-size: 14px;
+      color: #343a40;
+      vertical-align: middle;
+    }
+
+    /* Primary Recommendations - Green Background and Border */
+    .primary-recommendation {
+      background-color: #28a745 !important; /* Solid green background */
+      color: white; /* White text for contrast */
+      font-weight: bold; /* Bold text */
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle inset shadow for depth */
+    }
+
+    /* Secondary Recommendations - Yellow Background and Border */
+    .secondary-recommendation {
+      background-color: #ffc107 !important; /* Solid yellow background */
+      color: #212529; /* Dark text for readability */
+      font-weight: bold; /* Bold text */
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle inset shadow for depth */
+    }
+
+    /* Tertiary Recommendations - Orange Background and Border */
+    .tertiary-recommendation {
+      background-color: #fd7e14 !important; /* Solid orange background */
+      color: white; /* White text for contrast */
+      font-weight: bold; /* Bold text */
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle inset shadow for depth */
+    }
+
+    /* Optional: Add transition for smooth visual effect */
+    .antibiotic-name {
+      transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
+    }
+
+
+
+  </style>
+</head>
+<body>
+  <div id="dashboard">
+    <div id="sidebar">
+      <button id="cap-filter-button">Filter: ambulant erworbene Pneumonie</button>
+      <div id="severity-container" style="display: none;">
+        <!-- "Schweregrad" header, "Einteilung" link, severity buttons, and toggle will be added dynamically -->
+      </div>
+    </div>
+    <div id="header_table_container">
+      <!-- <h1>Antibiotic Resistance Data</h1> -->
+      <div id="table-container">
+        <!-- Table will be generated here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Structure -->
+  <div id="image-modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modal-image">
+    <div id="caption">Schweregradeinteilung</div>
+  </div>
+
+  <!-- Include D3.js library -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- JavaScript code -->
+  <script>
+    // Desired order of antibiotics
+    const desiredOrderAntibiotics = [
+      "Penicillin G",
+      "Flucloxacillin",
+      "Amoxicillin",
+      "Ampicillin",
+      "Ampicillin Sulbactam",
+      "Piperacillin Tazobactam",
+      "Cefazolin",
+      "Cefuroxim",
+      "Ceftriaxon",
+      "Cefotaxim",
+      "Ceftazidim",
+      "Cefepim",
+      "Ceftazidime_Avibactam",
+      "Ceftaroline",
+      "Ceftolozane_Tazobactam",
+      "Cefiderocol",
+      "Imipenem",
+      "Meropenem",
+      "Ertapenem",
+      "Ciprofloxacin",
+      "Levofloxacin",
+      "Moxifloxacin",
+      "Azithromycin",
+      "Clarithromycin",
+      "Vancomycin",
+      "Teicoplanin",
+      "Gentamicin",
+      "Doxycycline",
+      "Clindamycin",
+      "Cotrimoxazole",
+      "Metronidazole",
+      "Tigecycline",
+      "Linezolid",
+      "Daptomycin",
+      "Rifampicin",
+      "Fosfomycin",
+      "Colistin"
+    ];
+
+    // Desired order of bacteria
+    const desiredOrderBacteria = [
+      "Streptococcus pneumoniae",
+      "Streptococcus pyogenes",
+      "Methicillinsensibler Staph. aureus (MSSA)",
+      "Methicillinresistenter Staph. aureus (MRSA)",
+      "Koagulasenegative Staphylokokken",
+      "Enterococcus faecalis",
+      "Enterococcus faecium",
+      "Listeria monocytogenes",
+      "Escherichia coli",
+      "Enterobacter cloacae",
+      "Klebsiella spp.",
+      "Proteus mirabilis",
+      "Proteus vulgaris",
+      "Citrobacter spp.",
+      "Morganella morganii",
+      "Serratia spp.",
+      "Acinetobacter spp.",
+      "Pseudomonas aeruginosa",
+      "Stenotrophomonas maltophilia",
+      "Salmonella spp.",
+      "Shigella spp.",
+      "Neisseria gonorrhoeae (Gonokokken)",
+      "Neisseria meningitidis (Meningokokken)",
+      "Haemophilus influenzae",
+      "Bacteroides spp.",
+      "Clostridioides difficile",
+      "Chlamydophila pneumoniae",
+      "Legionella spp.",
+      "Mycoplasma pneumoniae"
+    ];
+
+    // Bacterial group data
+    const bacteriaGroups = {
+      "Streptococcus pneumoniae": "grampositiv",
+      "Streptococcus pyogenes": "grampositiv",
+      "Methicillinsensibler Staph. aureus (MSSA)": "grampositiv",
+      "Methicillinresistenter Staph. aureus (MRSA)": "grampositiv",
+      "Koagulasenegative Staphylokokken": "grampositiv",
+      "Enterococcus faecalis": "grampositiv",
+      "Enterococcus faecium": "grampositiv",
+      "Listeria monocytogenes": "grampositiv",
+      "Escherichia coli": "gramnegativ",
+      "Enterobacter cloacae": "gramnegativ",
+      "Klebsiella spp.": "gramnegativ",
+      "Proteus mirabilis": "gramnegativ",
+      "Proteus vulgaris": "gramnegativ",
+      "Citrobacter spp.": "gramnegativ",
+      "Morganella morganii": "gramnegativ",
+      "Serratia spp.": "gramnegativ",
+      "Acinetobacter spp.": "gramnegativ",
+      "Pseudomonas aeruginosa": "gramnegativ",
+      "Stenotrophomonas maltophilia": "gramnegativ",
+      "Salmonella spp.": "gramnegativ",
+      "Shigella spp.": "gramnegativ",
+      "Neisseria gonorrhoeae (Gonokokken)": "gramnegativ",
+      "Neisseria meningitidis (Meningokokken)": "gramnegativ",
+      "Haemophilus influenzae": "gramnegativ",
+      "Bacteroides spp.": "Anaerobier",
+      "Clostridioides difficile": "Anaerobier",
+      "Chlamydophila pneumoniae": "Atypiker",
+      "Legionella spp.": "Atypiker",
+      "Mycoplasma pneumoniae": "Atypiker"
+    };
+
+    // Define a fixed mapping of antibiotic groups to colors
+    const groupToColor = {
+      'Penicilline': '#a9c4c0',
+      'Cephalosporine': '#6c9d9c',
+      'Carbapeneme': '#95b7b3',
+      'Chinolone': '#a4d8da',
+      'Makrolide': '#8fa5c9',
+      'Glykopeptide': '#aed7bf',
+      'Sonstige': '#97c2ac',
+    };
+
+    // Define a fixed mapping of bacterial groups to colors
+    const bacteriaGroupColors = {
+      'grampositiv': '#92d0d5',
+      'gramnegativ': '#92abd5',
+      'Anaerobier': '#cdbaeb',
+      'Atypiker': '#ba9bde'
+    };
+
+    // Severity button labels
+    const severityLevels = [
+      "Leichte Pneumonie",
+      "Mittelschwere Pneumonie",
+      "Schwere Pneumonie"
+    ];
+
+    // State variables
+    let selectedSeverityLevel = null; // Track the selected severity level
+    let penicillinAllergy = false; // Track the penicillin allergy toggle state
+
+    // Load all three data files
+    Promise.all([
+      d3.json('antibiotics_data.json'),
+      d3.json('disease_prevalence.json'),
+      d3.json('CAP_recommendations.json') // New recommendations data
+    ]).then(function([antibioticsData, diseasePrevalenceData, recommendationsData]) {
+      // Initialize the application with all three datasets
+      init(antibioticsData, diseasePrevalenceData, recommendationsData);
+    });
+
+    function init(antibioticsData, diseasePrevalenceData, recommendationsData) {
+      let capFilterOn = false; // Track the filter state
+      const disease = "Community Acquired Pneumonia"; // Current disease
+      const diseaseData = diseasePrevalenceData[disease]; // Prevalence data for CAP
+
+      // Store recommendations data globally or within a scope accessible to other functions
+      window.CAPRecommendations = recommendationsData;
+
+      // Add event listener to the CAP Filter button
+      const capFilterButton = d3.select('#cap-filter-button');
+      capFilterButton.on('click', function() {
+        capFilterOn = !capFilterOn; // Toggle the filter state
+        capFilterButton.classed('pressed', capFilterOn); // Toggle the 'pressed' class
+
+        // Show or hide the severity container
+        if (capFilterOn) {
+          d3.select('#severity-container').style('display', 'block');
+          createSeverityButtons(); // Dynamically generate severity buttons and "Einteilung" link
+        } else {
+          d3.select('#severity-container').style('display', 'none');
+          // Reset severity level selection
+          selectedSeverityLevel = null;
+          d3.selectAll('.severity-button').classed('pressed', false);
+          // Remove all recommendation highlights
+          d3.selectAll('.antibiotic-name')
+            .classed('primary-recommendation', false)
+            .classed('secondary-recommendation', false)
+            .classed('tertiary-recommendation', false);
+        }
+
+        createTable(antibioticsData, capFilterOn, diseaseData);
+      });
+
+      // Initial table creation
+      createTable(antibioticsData, capFilterOn, diseaseData);
+    }
+
+    // Maps to store references
+    const bacteriumHeaderCells = {};
+    const dataCellsByBacterium = {};
+    const antibioticNameCells = {};
+
+    // Function to create severity buttons and toggle
+    function createSeverityButtons() {
+      const container = d3.select('#severity-container');
+
+      // Clear any existing content
+      container.html('');
+
+      // Add the header
+      container.append('div')
+        .attr('id', 'severity-header')
+        .style('display', 'block') // Ensure it's visible
+        .text('Leitlinienempfehlung nach Schweregrad');
+
+      // Add the "Einteilung" link
+      container.append('a')
+        .attr('href', '#')
+        .attr('id', 'einteilung-link')
+        .attr('class', 'einteilung-button')
+        .text('Einteilung');
+
+      // Create a button for each severity level
+      container.selectAll('.severity-button')
+        .data(severityLevels)
+        .enter()
+        .append('button')
+        .attr('class', 'severity-button')
+        .text(d => d)
+        .on('click', function(event, d) {
+          // If the clicked button is already selected, unselect it
+          if (selectedSeverityLevel === d) {
+            selectedSeverityLevel = null;
+            d3.select(this).classed('pressed', false);
+          } else {
+            // Deselect any previously selected button
+            container.selectAll('.severity-button').classed('pressed', false);
+
+            // Select the clicked button
+            selectedSeverityLevel = d;
+            d3.select(this).classed('pressed', true);
+          }
+
+          // Update recommendations highlighting
+          updateRecommendationsHighlighting();
+        });
+
+      // Create a container for the toggle switch with some top margin
+      const toggleContainer = container.append('div')
+        .attr('class', 'toggle-container')
+        .style('margin-top', '20px'); // Adjust spacing as needed
+
+      // Append the toggle switch elements
+      toggleContainer.append('label')
+        .attr('class', 'toggle-switch')
+        .html(`
+          <input type="checkbox" id="penicillin-toggle">
+          <span class="toggle-slider"></span>
+        `);
+
+      // Append the toggle label separately to prevent overlap
+      toggleContainer.append('span')
+        .attr('class', 'toggle-label')
+        .text('Penicillin-Allergie');
+
+      // Add an event listener to handle toggle changes
+      d3.select('#penicillin-toggle').on('change', function(event) {
+        penicillinAllergy = d3.select(this).property('checked');
+        console.log('Penicillin-Allergie toggle is now', penicillinAllergy ? 'ON' : 'OFF');
+
+        // Update recommendations highlighting
+        updateRecommendationsHighlighting();
+      });
+
+      // Attach event listener to the "Einteilung" link
+      const einteilungLink = document.getElementById("einteilung-link");
+      const modal = document.getElementById("image-modal");
+      const modalImg = document.getElementById("modal-image");
+      const captionText = document.getElementById("caption");
+      const closeBtn = document.getElementsByClassName("close")[0];
+
+      if (einteilungLink) {
+        einteilungLink.onclick = function(event) {
+          event.preventDefault(); // Prevent default link behavior
+          modal.style.display = "block";
+          modalImg.src = "CAP_schweregradeinteilung.jpg"; // Path to your image
+          captionText.innerHTML = "Schweregradeinteilung"; // Optional caption
+        }
+      }
+
+      // When the user clicks on the close button, close the modal
+      if (closeBtn) {
+        closeBtn.onclick = function() {
+          modal.style.display = "none";
+        }
+      }
+
+      // When the user clicks anywhere outside of the modal content, close the modal
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+
+      // Close modal on 'Escape' key press
+      document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+          modal.style.display = "none";
+        }
+      });
+    }
+
+    function createTable(data, capFilterOn, diseaseData) {
+      // Remove existing table
+      d3.select('#table-container').select('table').remove();
+
+      // Get the table container
+      const container = d3.select('#table-container');
+
+      // Prepare data for table
+      const bacteriaSet = new Set();
+      const antibioticToGroup = {};
+
+      // Collect all bacteria and map antibiotics to groups
+      for (const group in data) {
+        for (const antibiotic in data[group]) {
+          antibioticToGroup[antibiotic] = group;
+          for (const bacterium in data[group][antibiotic]) {
+            bacteriaSet.add(bacterium);
+          }
+        }
+      }
+
+      // Convert the set to an array and filter based on CAP filter
+      let bacteria = Array.from(bacteriaSet);
+
+      if (capFilterOn) {
+        bacteria = bacteria.filter(bacterium => bacterium in diseaseData);
+      }
+
+      // Sort bacteria based on desiredOrderBacteria
+      bacteria.sort((a, b) => {
+        const indexA = desiredOrderBacteria.indexOf(a);
+        const indexB = desiredOrderBacteria.indexOf(b);
+        if (indexA === -1 && indexB === -1) return 0;
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+      });
+
+      // Map bacteria to their groups and determine where groups start
+      let bacteriaGroupsOrdered = [];
+      let currentGroup = null;
+
+      bacteria.forEach((bacterium, index) => {
+        const group = bacteriaGroups[bacterium] || 'Unknown';
+        const isGroupStart = group !== currentGroup;
+        if (isGroupStart) {
+          currentGroup = group;
+        }
+        bacteriaGroupsOrdered.push({
+          name: bacterium,
+          group: group,
+          isGroupStart: isGroupStart
+        });
+      });
+
+      // Compute the spans for each group
+      let groupSpans = [];
+      currentGroup = null;
+      let currentSpan = 0;
+
+      bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
+        if (bacteriumData.group !== currentGroup) {
+          if (currentGroup !== null) {
+            groupSpans.push({ group: currentGroup, span: currentSpan });
+          }
+          currentGroup = bacteriumData.group;
+          currentSpan = 1;
+        } else {
+          currentSpan++;
+        }
+        if (index === bacteriaGroupsOrdered.length - 1) {
+          groupSpans.push({ group: currentGroup, span: currentSpan });
+        }
+      });
+
+      // Create a flat list of antibiotics sorted according to desiredOrderAntibiotics
+      const antibiotics = desiredOrderAntibiotics.map(antibiotic => {
+        const group = antibioticToGroup[antibiotic];
+        if (group && data[group][antibiotic]) {
+          return {
+            group: group,
+            antibiotic: antibiotic,
+            sensitivities: data[group][antibiotic]
+          };
+        } else {
+          return null;
+        }
+      }).filter(entry => entry !== null);
+
+      // Calculate the number of antibiotics in each group
+      const groupCounts = {};
+      antibiotics.forEach(entry => {
+        if (groupCounts[entry.group]) {
+          groupCounts[entry.group]++;
+        } else {
+          groupCounts[entry.group] = 1;
+        }
+      });
+
+      // Prepare prevalence data and calculate total prevalence
+      let prevalenceData = {};
+      if (capFilterOn) {
+        prevalenceData = diseaseData;
+      } else {
+        bacteria.forEach(bacterium => {
+          prevalenceData[bacterium] = 1; // Equal prevalence
+        });
+      }
+
+      // Calculate total prevalence
+      let totalPrevalence = 0;
+      for (const bacterium of bacteria) {
+        totalPrevalence += prevalenceData[bacterium] || 0;
+      }
+
+      // Decide total width for bacteria columns (adjust as needed)
+      const totalBacteriaWidth = 800; // Total width in pixels for bacteria columns
+
+      // Calculate width in pixels for each bacterium
+      const bacteriaWidths = {};
+      for (const bacterium of bacteria) {
+        const prevalence = prevalenceData[bacterium] || 0;
+        const widthPx = (prevalence / totalPrevalence) * totalBacteriaWidth;
+        bacteriaWidths[bacterium] = widthPx;
+      }
+
+      // Create the table element
+      const table = container.append('table');
+
+      // Create the colgroup
+      const colgroup = table.append('colgroup');
+
+      // Add cols for the two fixed columns ('Group' and 'Antibiotic')
+      colgroup.append('col')
+        .attr('class', 'group-col')
+        .style('width', '150px'); // Adjust as needed
+
+      colgroup.append('col')
+        .attr('class', 'antibiotic-col')
+        .style('width', '150px'); // Adjust as needed
+
+      // Add cols for each bacterium with dynamic widths
+      colgroup.selectAll('col.bacterium-col')
+        .data(bacteriaGroupsOrdered)
+        .enter()
+        .append('col')
+        .attr('class', 'bacterium-col')
+        .style('width', d => bacteriaWidths[d.name] + 'px');
+
+      // Create the table header
+      const thead = table.append('thead');
+
+      // First row: bacterial groups
+      const groupHeaderRow = thead.append('tr');
+
+      // The first two cells are empty (for 'Group' and 'Antibiotic')
+      groupHeaderRow.append('th').attr('colspan', 2);
+
+      // Add group headers with colspan
+      groupHeaderRow.selectAll('th.bacteria-group')
+        .data(groupSpans)
+        .enter()
+        .append('th')
+        .attr('class', (d, i) => {
+          let classes = 'bacteria-group';
+          // Classes for the first cell only if needed
+          if (i === 0 || i > 0) {
+            classes += ' bacterial-group-start';
+          }
+          return classes;
+        })
+        .attr('colspan', d => d.span)
+        .style('background-color', d => bacteriaGroupColors[d.group] || '#e2e3e5')
+        .text(d => d.group);
+
+      // Maps to store references
+      // (Already declared at the top)
+
+      // Second row: bacteria names
+      const headerRow = thead.append('tr');
+
+      // Add 'Group' and 'Antibiotic' headers
+      headerRow.append('th').text('Group');
+      headerRow.append('th').text('Antibiotic');
+
+      // Add bacteria names as headers
+      headerRow.selectAll('th.bacterium')
+        .data(bacteriaGroupsOrdered)
+        .enter()
+        .append('th')
+        .attr('class', d => {
+          let classes = 'bacterium';
+          if (d.isGroupStart) {
+            classes += ' bacterial-group-start';
+          }
+          return classes;
+        })
+        .style('background-color', d => bacteriaGroupColors[d.group] || '#f2f2f2') // Apply background color
+        .text(d => d.name)
+        .each(function(d) {
+          // Store reference to the header cell
+          bacteriumHeaderCells[d.name] = d3.select(this);
+        })
+        .on('mouseover', function(event, d) {
+          const bacterium = d.name;
+          const bacteriumCell = d3.select(this);
+          bacteriumCell.classed('bacterium-name-hover', true);
+
+          // Highlight the column
+          const dataCells = dataCellsByBacterium[bacterium];
+          if (dataCells) {
+            dataCells.forEach(cellData => {
+              cellData.cell.classed('highlighted-column', true);
+            });
+          }
+
+          // For each antibiotic, modify the antibiotic name cells based on the sensitivity
+          antibiotics.forEach(entry => {
+            const sensitivity = entry.sensitivities[bacterium];
+            const antibioticNameCell = antibioticNameCells[entry.antibiotic];
+            if (sensitivity === 0.0) {
+              antibioticNameCell.classed('antibiotic-low-sensitivity', true);
+            } else if (sensitivity === 0.5) {
+              antibioticNameCell.classed('antibiotic-intermedium-sensitivity', true);
+            } else if (sensitivity === 1.0) { // New condition for high sensitivity
+              antibioticNameCell.classed('antibiotic-high-sensitivity', true);
+            }
+          });
+        })
+        .on('mouseout', function(event, d) {
+          const bacterium = d.name;
+          const bacteriumCell = d3.select(this);
+          bacteriumCell.classed('bacterium-name-hover', false);
+
+          // Remove highlight from the column
+          const dataCells = dataCellsByBacterium[bacterium];
+          if (dataCells) {
+            dataCells.forEach(cellData => {
+              cellData.cell.classed('highlighted-column', false);
+            });
+          }
+
+          // Remove styles from antibiotic name cells
+          antibiotics.forEach(entry => {
+            const antibioticNameCell = antibioticNameCells[entry.antibiotic];
+            antibioticNameCell.classed('antibiotic-low-sensitivity', false);
+            antibioticNameCell.classed('antibiotic-intermedium-sensitivity', false);
+            antibioticNameCell.classed('antibiotic-high-sensitivity', false);
+          });
+        });
+
+      // Create the table body
+      const tbody = table.append('tbody');
+
+      // Initialize previous group tracker
+      let previousGroup = null;
+
+      // Add rows for each antibiotic
+      antibiotics.forEach(entry => {
+        const row = tbody.append('tr');
+
+        // If the group is different from the previous, insert the group cell with rowspan
+        if (entry.group !== previousGroup) {
+          row.classed('antibiotic-group-start', true); // Add class to indicate start of a new group
+
+          row.append('td')
+            .attr('class', 'group-name')
+            .attr('rowspan', groupCounts[entry.group])
+            .style('background-color', groupToColor[entry.group]) // Set background color
+            .text(entry.group);
+
+          // Update the previousGroup
+          previousGroup = entry.group;
+        }
+
+        // Add antibiotic name with event listeners for hover effect
+        const antibioticNameCell = row.append('td')
+          .attr('class', 'antibiotic-name')
+          .style('background-color', groupToColor[entry.group]) // Set background color
+          .text(entry.antibiotic)
+          .datum(entry.antibiotic) // Bind the antibiotic name as datum
+          .on('mouseover', function() {
+            d3.select(this).classed('antibiotic-name-hover', true);
+            d3.select(this.parentNode).classed('highlighted-row', true);
+
+            // Highlight bacterium headers based on sensitivity
+            const sensitivities = entry.sensitivities;
+            for (const bacterium in sensitivities) {
+              if (sensitivities[bacterium] === 0.0) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', true);
+                }
+              } else if (sensitivities[bacterium] === 0.5) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', true);
+                }
+              } else if (sensitivities[bacterium] === 1.0) { // New condition for high sensitivity
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed('bacterium-high-sensitivity', true);
+                }
+              }
+            }
+
+          })
+          .on('mouseout', function() {
+            d3.select(this).classed('antibiotic-name-hover', false);
+            d3.select(this.parentNode).classed('highlighted-row', false);
+
+            // Remove highlight from bacterium headers
+            const sensitivities = entry.sensitivities;
+            for (const bacterium in sensitivities) {
+              if (bacteriumHeaderCells[bacterium]) {
+                bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', false);
+                bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', false);
+                bacteriumHeaderCells[bacterium].classed('bacterium-high-sensitivity', false);
+              }
+            }
+          });
+
+        // Store reference to the antibiotic name cell
+        antibioticNameCells[entry.antibiotic] = antibioticNameCell;
+
+        // Add cells for each bacterium
+        bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
+          const bacterium = bacteriumData.name;
+          const isGroupStart = bacteriumData.isGroupStart;
+
+          const sensitivity = entry.sensitivities[bacterium];
+          const cell = row.append('td')
+            .attr('class', () => {
+              let classes = 'data-cell';
+              if (isGroupStart) {
+                classes += ' bacterial-group-start';
+              }
+              if (sensitivity === 1.0) {
+                classes += ' sensitivity-high';
+              } else if (sensitivity === 0.5) {
+                classes += ' sensitivity-medium';
+              } else if (sensitivity === 0.0) {
+                classes += ' sensitivity-low';
+              }
+              return classes;
+            });
+
+          // Remove the text from the cell
+          cell.text(''); // Set cell text to empty string
+
+          // Store reference to the data cell
+          if (!dataCellsByBacterium[bacterium]) {
+            dataCellsByBacterium[bacterium] = [];
+          }
+          dataCellsByBacterium[bacterium].push({
+            cell: cell,
+            sensitivity: sensitivity,
+            antibiotic: entry.antibiotic,
+          });
+        });
+      });
+
+      // After table is created, apply current recommendations highlighting
+      updateRecommendationsHighlighting();
+    }
+
+    function updateRecommendationsHighlighting() {
+      if (!selectedSeverityLevel) {
+        // If no severity is selected, remove all recommendation highlights
+        d3.selectAll('.antibiotic-name')
+          .classed('primary-recommendation', false)
+          .classed('secondary-recommendation', false)
+          .classed('tertiary-recommendation', false);
+        return;
+      }
+
+      // Determine the allergy status key
+      const allergyKey = penicillinAllergy ? 'penicillin_allergy' : 'no_penicillin_allergy';
+
+      // Retrieve recommendations for the current severity and allergy status
+      const recommendations = window.CAPRecommendations[selectedSeverityLevel][allergyKey];
+
+      // Extract primary, secondary, and tertiary recommendations
+      const primary = recommendations.primary_recommendation || [];
+      const secondary = recommendations.secondary_recommendation || [];
+      const tertiary = recommendations.tertiary_recommendation || [];
+
+      // Log recommendations for debugging
+      console.log('Current Recommendations:', { primary, secondary, tertiary });
+
+      // Apply styles to antibiotics
+      d3.selectAll('.antibiotic-name')
+        .classed('primary-recommendation', function() {
+          const antibiotic = d3.select(this).datum();
+          return primary.includes(antibiotic);
+        })
+        .classed('secondary-recommendation', function() {
+          const antibiotic = d3.select(this).datum();
+          return secondary.includes(antibiotic);
+        })
+        .classed('tertiary-recommendation', function() {
+          const antibiotic = d3.select(this).datum();
+          return tertiary.includes(antibiotic);
+        });
+    }
+
+
+    // Note: The modal functionality has been moved inside the createSeverityButtons function
+    // to ensure that the "Einteilung" link exists when the event listener is attached.
+
+  </script>
+</body>
+</html>
