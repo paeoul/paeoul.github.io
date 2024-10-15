@@ -4,13 +4,29 @@
   <meta charset="UTF-8">
   <title>Antibiotic Resistance Table</title>
   <style>
-    /* General Styles */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f8f9fa; /* Light background for the page */
-    }
+  :root {
+    --primary-color: #008DCA;
+    --secondary-color: #0f4067;
+    --accent-color: #CDE4F6;
+    --extra-accent-color: #3CB371;
+    --background-color: #FFFFFF;
+    --text-color: #333333;
+    --primary-recommendation-color: #3CB371;
+    --secondary-recommendation-color: #ffc107;
+    --tertiary-recommendation-color:#fd7e14;
+    --sensitivity-high-color: #a7dca7;
+    --sensitivity-medium-color: #ffe594;
+    --sensitivity-low-color: #ffb4b4;
+  }
+
+  body {
+    font-family: 'Helvetica', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+  }
+
 
     h1 {
       font-size: 20px;
@@ -27,7 +43,7 @@
 
     #header_table_container {
       flex-grow: 1;
-      padding: 20px;
+      padding: 15px;
       overflow-y: auto; /* Enable vertical scrolling */
       overflow-x: auto; /* Enable horizontal scrolling if needed */
       display: flex;
@@ -39,9 +55,9 @@
     #sidebar {
       width: 200px; /* Fixed width for the sidebar */
       padding: 20px;
-      background-color: #ffffff;
-      border-right: 1px solid #dee2e6;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      background-color: var(--background-color);
+      border-right: solid 1px var(--secondary-color);
+      box-shadow: 6px 0px 20px rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
       /* Ensure sidebar doesn't shrink */
       flex: 0 0 200px;
@@ -53,8 +69,12 @@
 
     /* Button Styles */
     #cap-filter-button {
-      background-color: #007bff; /* Blue background */
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--background-color);
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, transform 0.2s;
+      border: none;
       padding: 10px 20px;
       border: none;
       cursor: pointer;
@@ -62,12 +82,15 @@
       font-size: 16px;
       width: 100%;
       border-radius: 4px;
-      transition: background-color 0.3s;
     }
 
     #cap-filter-button.pressed {
-      background-color: #0056b3; /* Darker blue when pressed */
+      background-color: var(--secondary-color);
     }
+
+    #cap-filter-button:hover {
+      opacity: 0.9;
+}
 
     /* Severity Header */
     #severity-header {
@@ -80,8 +103,8 @@
 
     /* Severity Buttons */
     .severity-button {
-      background-color: #28a745; /* Green background */
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--background-color);
       padding: 8px 12px;
       border: none;
       cursor: pointer;
@@ -94,7 +117,7 @@
     }
 
     .severity-button.pressed {
-      background-color: #1e7e34; /* Darker green when pressed */
+  background-color: var(--secondary-color);
     }
 
     .severity-button:hover {
@@ -113,7 +136,6 @@
     table {
       border-collapse: collapse;
       width: auto; /* Allows the table to take its natural width */
-      /* min-width: 1000px; */ /* Set to original table width; adjust as needed */
       table-layout: fixed;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
       border-radius: 8px; /* Rounded corners */
@@ -130,38 +152,38 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 10px;
+      font-size: 8px;
     }
 
     th {
       background-color: none;
       font-weight: normal;
-      font-size: 14px;
+      font-size: 12px;
     }
 
     /* Style for the group names */
     td.group-name {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       color: #000; /* Ensure group names are black */
       text-align: left;
       vertical-align: middle; /* Center text vertically */
-      width: 150px; /* Fixed width */
+    /* width: 150px; /* Fixed width */
     }
 
     /* Style for the antibiotic names */
     td.antibiotic-name {
-      font-size: 12px;
+      font-size: 10px;
       color: #000; /* Ensure antibiotic names are black */
       text-align: left;
       cursor: pointer; /* Indicate that the cell is interactive */
-      width: 150px; /* Fixed width */
+  /*    width: 150px; /* Fixed width */
     }
 
     /* Style for the bacteria group headers */
     th.bacteria-group {
       background-color: #fff; /* This will be overridden by inline styles */
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       text-align: center;
     }
@@ -182,17 +204,17 @@
 
     /* Data cell styles */
     td.sensitivity-high {
-      background-color: #a7dca7; /* Light green */
+      background-color: var(--sensitivity-high-color); /* Light green */
       color: #fff; /* White text */
     }
 
     td.sensitivity-medium {
-      background-color: #ffe594; /* Light yellow */
+      background-color: var(--sensitivity-medium-color); /* Light yellow */
       color: #000; /* Black text */
     }
 
     td.sensitivity-low {
-      background-color: #ffb4b4; /* Light red */
+      background-color: var(--sensitivity-low-color); /* Light red */
       color: #fff; /* White text */
     }
 
@@ -219,18 +241,18 @@
     /* New CSS class for bacterium header cells with low sensitivity */
     .bacterium-low-sensitivity {
       /* background-color: lightgrey !important; */
-      background-color: #ffb4b4 !important; /* Light red */
+      background-color: var(--sensitivity-low-color) !important; /* Light red */
     }
 
     /* New CSS class for bacterium header cells with intermediate sensitivity */
     .bacterium-intermedium-sensitivity {
-      background-color: #ffe594 !important; /* Light yellow */
+      background-color: var(--sensitivity-medium-color) !important; /* Light yellow */
       /*  filter: brightness(140%) !important; */
     }
 
     /* Bacterium header cell styles for high sensitivity */
     .bacterium-high-sensitivity {
-      background-color: #a7dca7 !important; /* Light green */
+      background-color: var(--sensitivity-high-color) !important; /* Light green */
     }
 
 
@@ -272,18 +294,18 @@
     /* New CSS class for antibiotic index cells with low sensitivity */
     .antibiotic-low-sensitivity {
       /* background-color: lightgrey !important; */
-      background-color: #ffb4b4 !important; /* Light red */
+      background-color: var(--sensitivity-low-color) !important; /* Light red */
     }
 
     /* New CSS class for antibiotic index cells with intermediate sensitivity */
     .antibiotic-intermedium-sensitivity {
-      background-color: #ffe594 !important; /* Light yellow */
+      background-color: var(--sensitivity-medium-color) !important; /* Light yellow */
       /*  filter: brightness(140%) !important; */
     }
 
     /* New CSS class for antibiotic index cells with high sensitivity */
     .antibiotic-high-sensitivity {
-      background-color: #a7dca7 !important; /* Light green */
+      background-color: var(--sensitivity-high-color) !important; /* Light green */
     }
 
     /* Modal Styles */
@@ -299,6 +321,12 @@
       overflow: auto; /* Enable scroll if needed */
       background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
     }
+
+    /* Data cell hover effect */
+    .data-cell-hover {
+      box-shadow: inset 0 0 0 1px #000; /* Thin black inner shadow */
+    }
+
 
     /* Modal Content (Image) */
     .modal-content {
@@ -372,7 +400,6 @@
       align-items: center; /* Center vertically */
       width: 60px;
       height: 34px;
-      margin-top: 10px; /* Space above the toggle */
     }
 
     .toggle-switch input {
@@ -427,23 +454,28 @@
 
     /* Primary Recommendations - Green Background and Border */
     .primary-recommendation {
-  /*    background-color: #28a745 !important; /* Solid green background */
+    /*   background-color: #fff !important;*/
       font-weight: bold; /* Bold text */
-      box-shadow: inset 0 0 0 4px #28a745; /* Subtle inset shadow for depth */
+      box-shadow: inset 0 0 0 4px var(--primary-recommendation-color); /* Subtle inset shadow for depth */
+      filter: brightness(125%) !important;
     }
 
     /* Secondary Recommendations - Yellow Background and Border */
     .secondary-recommendation {
-  /*    background-color: #ffc107 !important; /* Solid yellow background */
+      /*   background-color: #fff !important;*/
       font-weight: bold; /* Bold text */
-      box-shadow: inset 0 0 0 4px #ffc107; /* Subtle inset shadow for depth */
+      box-shadow: inset 0 0 0 4px var(--secondary-recommendation-color); /* Subtle inset shadow for depth */
+      filter: brightness(125%) !important;
+
     }
 
     /* Tertiary Recommendations - Orange Background and Border */
     .tertiary-recommendation {
-  /*    background-color: #fd7e14 !important; /* Solid orange background */
+      /*   background-color: #fff !important;*/
       font-weight: bold; /* Bold text */
-      box-shadow: inset 0 0 0 4px #fd7e14; /* Subtle inset shadow for depth */
+      box-shadow: inset 0 0 0 4px var(--tertiary-recommendation-color); /* Subtle inset shadow for depth */
+      filter: brightness(125%) !important;
+
     }
 
     /* Optional: Add transition for smooth visual effect */
@@ -852,6 +884,7 @@ document.addEventListener('keydown', function(event) {
 }
 
 function createTable(data, capFilterOn, diseaseData) {
+
 // Remove existing table
 d3.select('#table-container').select('table').remove();
 
@@ -972,7 +1005,8 @@ for (const bacterium of bacteria) {
 }
 
 // Decide total width for bacteria columns (adjust as needed)
-const totalBacteriaWidth = 800; // Total width in pixels for bacteria columns
+const totalBacteriaWidth = window.innerWidth - 800; // Total width is 100vw minus 250px
+
 
 // Calculate width in pixels for each bacterium
 const bacteriaWidths = {};
@@ -991,11 +1025,11 @@ const colgroup = table.append('colgroup');
 // Add cols for the two fixed columns ('Group' and 'Antibiotic')
 colgroup.append('col')
   .attr('class', 'group-col')
-  .style('width', '150px'); // Adjust as needed
+  .style('width', '135px'); // Adjust as needed
 
 colgroup.append('col')
   .attr('class', 'antibiotic-col')
-  .style('width', '150px'); // Adjust as needed
+  .style('width', '135px'); // Adjust as needed
 
 // Add cols for each bacterium with dynamic widths
 colgroup.selectAll('col.bacterium-col')
@@ -1195,7 +1229,75 @@ antibiotics.forEach(entry => {
           classes += ' sensitivity-low';
         }
         return classes;
-      });
+      })
+
+
+      .datum({
+            antibiotic: entry.antibiotic,
+            bacterium: bacterium,
+            sensitivity: sensitivity
+          })
+          .on('mouseover', function(event, d) {
+            const cellData = d3.select(this).datum();
+            const antibiotic = cellData.antibiotic;
+            const bacterium = cellData.bacterium;
+
+            // Add the hover effect to the data cell
+            d3.select(this).classed('data-cell-hover', true);
+
+            // Highlight the antibiotic name cell
+            if (antibioticNameCells[antibiotic]) {
+              antibioticNameCells[antibiotic].classed('antibiotic-name-hover', true);
+              d3.select(antibioticNameCells[antibiotic].node().parentNode).classed('highlighted-row', true);
+            }
+
+            // Highlight the bacterium header cell
+            if (bacteriumHeaderCells[bacterium]) {
+              bacteriumHeaderCells[bacterium].classed('bacterium-name-hover', true);
+            }
+
+            // Highlight all cells in the same row (data cells)
+            d3.select(this.parentNode).selectAll('td.data-cell').classed('highlighted-row', true);
+
+            // Highlight all cells in the same column
+            const dataCells = dataCellsByBacterium[bacterium];
+            if (dataCells) {
+              dataCells.forEach(cellData => {
+                cellData.cell.classed('highlighted-column', true);
+              });
+            }
+          })
+          .on('mouseout', function(event, d) {
+            const cellData = d3.select(this).datum();
+            const antibiotic = cellData.antibiotic;
+            const bacterium = cellData.bacterium;
+
+            // Remove the hover effect from the data cell
+            d3.select(this).classed('data-cell-hover', false);
+
+            // Remove highlight from the antibiotic name cell
+            if (antibioticNameCells[antibiotic]) {
+              antibioticNameCells[antibiotic].classed('antibiotic-name-hover', false);
+              d3.select(antibioticNameCells[antibiotic].node().parentNode).classed('highlighted-row', false);
+            }
+
+            // Remove highlight from the bacterium header cell
+            if (bacteriumHeaderCells[bacterium]) {
+              bacteriumHeaderCells[bacterium].classed('bacterium-name-hover', false);
+            }
+
+            // Remove highlight from all cells in the same row
+            d3.select(this.parentNode).selectAll('td.data-cell').classed('highlighted-row', false);
+
+            // Remove highlight from all cells in the same column
+            const dataCells = dataCellsByBacterium[bacterium];
+            if (dataCells) {
+              dataCells.forEach(cellData => {
+                cellData.cell.classed('highlighted-column', false);
+              });
+            }
+          });
+
 
     // Remove the text from the cell
     cell.text(''); // Set cell text to empty string
