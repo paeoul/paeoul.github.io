@@ -561,6 +561,16 @@ transition: transform 0.3s ease-in-out;
             cursor: pointer;
         }
 
+        .impressum-container {
+          width: 96%;
+          margin-left: auto;
+          margin-right: auto;
+          display: flex;
+          justify-content: flex-end;
+          flex: 0 0 auto;
+          /* Prevents flex-grow and flex-shrink */
+        }
+
   </style>
 </head>
 <body>
@@ -589,8 +599,13 @@ transition: transform 0.3s ease-in-out;
     </div>
 
     <div id="right-sidebar">
-      <div class="img-container" href="index.html">
+      <a class="img-container" href="index.html">
         <img src="finished_icon.png" alt="DokuSwift Logo" id="logo-img">
+      </a>
+      <div class="impressum-container">
+        <p style="font-size: 9px; text-align: right; cursor: default; color: black;">
+          <a href="impressum.html" style="text-decoration: none; color: black;">Impressum</a>
+        </p>
       </div>
     </div>
   </div>
