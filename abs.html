@@ -5,6 +5,7 @@
   <title>Antibiotic Resistance Table</title>
   <style>
   :root {
+      --body-font-family: 'Helvetica', sans-serif;
     --primary-color: #008DCA;
     --secondary-color: #0f4067;
     --accent-color: #CDE4F6;
@@ -20,7 +21,7 @@
   }
 
   body {
-    font-family: 'Helvetica', sans-serif;
+    font-family: var(--body-font-family);
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0;
@@ -49,7 +50,8 @@
       display: flex;
       flex-direction: column; /* Stack items vertically */
       align-items: center;
-    }
+      justify-content: center;
+        }
 
     /* Sidebar Styles */
     #sidebar {
@@ -66,6 +68,22 @@
       flex-direction: column;
       align-items: center; /* Center contents horizontally */
     }
+
+    /* Right Sidebar Styles */
+    #right-sidebar {
+      width: 200px; /* Same fixed width as the left sidebar */
+      padding: 20px;
+      background-color: var(--background-color);
+      border-left: solid 1px var(--secondary-color); /* Border on the left */
+      box-shadow: -6px 0px 20px rgba(0, 0, 0, 0.1); /* Shadow to the left */
+      box-sizing: border-box;
+      flex: 0 0 200px; /* Prevents the sidebar from shrinking */
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
 
     /* Button Styles */
     #cap-filter-button {
@@ -267,28 +285,30 @@
 
     /* Highlighted column styles */
     .highlighted-column.sensitivity-high {
-      filter: brightness(108%);
+    filter: brightness(85%) saturate(120%);
     }
 
     .highlighted-column.sensitivity-medium {
-      filter: brightness(105%);
+  filter: brightness(95%) saturate(150%);
     }
 
     .highlighted-column.sensitivity-low {
-      filter: brightness(108%);
+      filter: brightness(95%) saturate(200%);
     }
 
     /* Highlighted row styles */
     .highlighted-row td.sensitivity-high {
-      filter: brightness(108%);
+      filter: brightness(85%) saturate(120%);
+
+
     }
 
     .highlighted-row td.sensitivity-medium {
-      filter: brightness(105%);
+     filter: brightness(95%) saturate(150%);
     }
 
     .highlighted-row td.sensitivity-low {
-      filter: brightness(108%);
+    filter: brightness(95%) saturate(200%);
     }
 
     /* New CSS class for antibiotic index cells with low sensitivity */
@@ -529,7 +549,17 @@
   margin-bottom: 20px; /* Adds space below each toggle, except the last one */
 }
 
+/* Responsive Image of logo*/
+#logo-img {
+  width: 180px;
+  height: auto;
+transition: transform 0.3s ease-in-out;
+}
 
+#logo-img:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
 
   </style>
 </head>
@@ -555,6 +585,12 @@
       <!-- <h1>Antibiotic Resistance Data</h1> -->
       <div id="table-container">
         <!-- Table will be generated here -->
+      </div>
+    </div>
+
+    <div id="right-sidebar">
+      <div class="img-container" href="index.html">
+        <img src="finished_icon.png" alt="DokuSwift Logo" id="logo-img">
       </div>
     </div>
   </div>
