@@ -1,18 +1,18 @@
 {
   "Leichte Pneumonie": {
     "title": "Leitlinienempfehlung: Leichte Pneumonie",
-    "content": "Patienten mit leichter Pneumonie ohne definierte Komorbidität (siehe Tabelle 10) sollen als initiale kalkulierte Therapie der Wahl eine Monotherapie mit einem hochdosierten Aminopenicillinpräparat erhalten. Alternativ kann bei Penicillinallergie oder Unverträglichkeit ein Tetracyclin (Doxycyclin), ein Makrolid (Azithromycin, Clarithromycin) oder nachgeordnet ein Fluorchinolon (Moxifloxacin, Levofloxin) verabreicht werden. Starke Empfehlung, Evidenz B.",
+    "content": "Patienten mit leichter Pneumonie ohne definierte Komorbidität (siehe Tabelle 10) sollen als initiale kalkulierte Therapie der Wahl eine Monotherapie mit einem hochdosierten <strong>Aminopenicillinpräparat</strong> erhalten. <br/><br/>Alternativ kann bei Penicillinallergie oder Unverträglichkeit ein Tetracyclin (<strong>Doxycyclin</strong>), ein Makrolid (<strong>Azithromycin, Clarithromycin</strong>) oder nachgeordnet ein Fluorchinolon (<strong>Moxifloxacin, Levofloxin</strong>) verabreicht werden.",
     "image":""
   },
 
   "Mittelschwere Pneumonie": {
     "title": "Leitlinienempfehlung: Mittelschwere Pneumonie",
-    "content": "Patienten mit mittelschwerer Pneumonie werden stationär behandelt und sollen als initiale kalkulierte antimikrobielle Therapie eine Aminopenicillin/BLI-Kombination oder ein Cephalosporin der Klasse 2 oder 3a, ggf. mit Makrolid erhalten. [...] Alternativ kann bei Patienten mit moderater ambulant erworbener Pneumonie eine Therapie mit einem Fluorchinolon (Moxifloxacin, Levofloxacin) erfolgen.",
+    "content": "Patienten mit mittelschwerer Pneumonie werden stationär behandelt und sollen als initiale kalkulierte antimikrobielle Therapie eine <strong>Aminopenicillin/BLI-Kombination</strong> oder ein <strong>Cephalosporin der Klasse 2 oder 3a</strong>, ggf. mit <strong>Makrolid</strong> erhalten. [...] <br/><br/>Alternativ kann bei Patienten mit moderater ambulant erworbener Pneumonie eine Therapie mit einem Fluorchinolon (<strong>Moxifloxacin, Levofloxacin</strong>) erfolgen.",
     "image":""
   },
   "Schwere Pneumonie": {
     "title": "Leitlinienempfehlung: Schwere Pneumonie",
-    "content": "Patienten mit schwerer Pneumonie sollen initial kalkuliert eine intravenöse Kombinationstherapie aus einem β-Laktam mit breitem Spektrum (Beta-Lakatam/BLI, Ceph 3a) und einem Makrolid erhalten. Bei klinischer Stabilisierung und fehlendem Nachweis eines atypischen bakteriellen Erregers soll die Makrolidtherapie nach 3 Tagen beendet werden. Die Monotherapie mit einem Fluorchinolon (Moxifloxacin, Levofloxacin) ist eine mögliche Alternative, dies gilt jedoch nur für Patienten ohne septischen Schock.",
+    "content": "Patienten mit schwerer Pneumonie sollen initial kalkuliert eine intravenöse Kombinationstherapie aus einem <strong>β-Laktam mit breitem Spektrum (Beta-Lakatam/BLI, Ceph 3a) und einem Makrolid</strong> erhalten. [...]  <br/><br/>Die Monotherapie mit einem Fluorchinolon (<strong>Moxifloxacin, Levofloxacin</strong>) ist eine mögliche Alternative, dies gilt jedoch nur für Patienten ohne septischen Schock.",
     "image":""
     }
   }
