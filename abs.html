@@ -97,6 +97,7 @@
       font-size: 14px;
       line-height: 1.5;
       margin-bottom: 10px;
+      font-style: oblique;
     }
 
     #right-sidebar img {
@@ -940,7 +941,7 @@ function updateRightSidebar(severityLevel) {
     // Add content
     sidebarContent.append('p')
       .attr('class', 'right-sidebar-content')
-      .text(info.content);
+      .html(info.content);
 
     // Add image if it exists
     if (info.image) {
