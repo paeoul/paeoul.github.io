@@ -3,12 +3,33 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=overlays-content">
   <title>Impressum</title>
+  <link rel="icon" href="DS_resize.png" type="image/png">
   <style>
+    :root {
+      --body-font-family: 'Helvetica', sans-serif;
+
+      --primary-color: #008DCA;
+      --secondary-color: #0f4067;
+      --accent-color: #CDE4F6;
+      --extra-accent-color: #3CB371;
+      --background-color: #FFFFFF;
+      --text-color: #333333;
+
+      --heading-font-size: 2em;
+      --subheading-font-size: 1.5em;
+      --body-font-size: 16px;
+      --small-font-size: 12px;
+      --border-radius: 4px;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --transition-duration: 0.3s;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      font-family: var(--body-font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       margin: 0;
       padding: 0;
       display: flex;
@@ -17,77 +38,117 @@
       min-height: 100vh;
     }
 
-    .page {
-      background-color: #ffffff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: left;
-      max-width: 400px;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 15px 30px;
-      cursor: pointer;
-    }
-
-    .background {
-      background-color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 800px;
+    .impressum-container {
       background-color: #f0f4f8;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      max-width: 800px;
+      width: 90%;
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-img {
+      width: 350px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.8em;
+      color: var(--secondary-color);
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 5px;
+    }
+
+    p {
+      font-size: var(--body-font-size);
+      line-height: 1.6;
+      margin: 10px 0;
     }
 
     .section {
       font-weight: bold;
-      font-size: 18px;
-      margin-top: 10px;
+      font-size: 1.2em;
+      margin-top: 15px;
+      color: var(--secondary-color);
     }
 
-    .hidden-link {
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    a:hover {
       text-decoration: underline;
-      color: #007bff;
-      cursor: pointer;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .impressum-container {
+        padding: 15px;
+      }
+
+      .logo-img {
+        width: 120px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      .section {
+        font-size: 1em;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="background">
-    <div class="container">
-      <div class="page">
-        <div class="button-container">
-          <button class="button" onclick="window.location.href='index.html'">Zurück</button>
-        </div>
-        <h2 style="text-align: center;">Impressum</h2>
-        <p class="section">Angaben gemäß § 5 TMG</p>
-        <p>Paul Christian<br>
-          Willibaldstraße 15<br>
-          90491 Nürnberg</p>
-        <p class="section">Kontakt</p>
-        <p>E-Mail: paul.christian@outlook.com</p>
-        <p class="section">Quelle:<br>
-          <span class="hidden-link" onclick="window.location.href='https://www.e-recht24.de/impressum-generator.html'">e-recht24</span>
-        </p>
+  <div class="impressum-container">
+    <div class="header">
+
+
+
+      <a href="index.html">
+      <img src="finished_icon.png" alt="DokuSwift Logo" class="logo-img">
+    </a>
+
+      <h1>Impressum</h1>
+    </div>
+
+    <p class="section">Angaben gemäß § 5 TMG</p>
+    <p>Paul Christian<br>
+      Willibaldstraße 15<br>
+      90491 Nürnberg</p>
+
+    <p class="section">Kontakt</p>
+    <p>E-Mail: <a href="mailto:paul.christian@outlook.com">paul.christian@outlook.com</a></p>
+
+    <p class="section">Quelle:<br>
+      <a href="https://www.e-recht24.de/impressum-generator.html">e-recht24</a>
+    </p>
         <h2>Hosting</h2>
 <p>Unser Hoster erhebt in sog. Logfiles folgende Daten, die Ihr Browser übermittelt:</p>
 <ul>
