@@ -1,1539 +1,1422 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
   <meta charset="UTF-8">
-  <title>Antibiotic Resistance Table</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,  maximum-scale=1.0, interactive-widget=overlays-content">
+  <title>DokuSwift</title>
+  <link rel="icon" href="DS_resize.png" type="image/png">
   <style>
-  :root {
+    :root {
       --body-font-family: 'Helvetica', sans-serif;
-    --primary-color: #008DCA;
-    --secondary-color: #0f4067;
-    --accent-color: #CDE4F6;
-    --extra-accent-color: #3CB371;
-    --background-color: #FFFFFF;
-    --text-color: #333333;
-    --primary-recommendation-color: #005e18;    /*    #3CB371;*/
-    --secondary-recommendation-color: #ca9800;       /*  #ffc107; */
-    --tertiary-recommendation-color: #d75000;          /*    #fd7e14;*/
-    --sensitivity-high-color: #a7dca7;
-    --sensitivity-medium-color: #ffe594;
-    --sensitivity-low-color: #ffb4b4;
-  }
 
-  body {
-    font-family: var(--body-font-family);
-    background-color: var(--background-color);
-    color: var(--text-color);
-    margin: 0;
-    padding: 0;
-  }
+      --primary-color: #008DCA;
+      --secondary-color: #0f4067;
+      --accent-color: #CDE4F6;
+      --extra-accent-color: #3CB371;
+      --background-color: #FFFFFF;
+      --text-color: #333333;
 
 
-    h1 {
-      font-size: 20px;
+      --heading-font-size: ;
+      --subheading-font-size: ;
+      --body-font-size: 16px;
+      --small-font-size: ;
+      --border-radius: 4px;
+      --box-shadow: ;
+      --transition-duration: ;
+    }
+
+
+    body {
+      font-family: var(--body-font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .montserrat {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      position: relative;
+      z-index: 0;
+      /* Ensure it stays below */
+      color: black;
+    }
+
+    .great-vibes {
+      font-family: 'Great Vibes', cursive;
+      position: relative;
+      left: -18px;
+      /* Adjust this value to control the overlap */
+      z-index: 1;
+      /* Ensure it stays above */
+    }
+
+    .doku-box {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 40vw;
+      background-color: #fff;
+      padding: 2px;
+      box-shadow: -6px 0px 20px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      border-radius: 0px;
+      border-left: solid 1px var(--secondary-color);
+      background-color: var(--background-color);
+
+      display: flex;
+      /* Enables flexbox layout */
+      flex-direction: column;
+      /* Arranges children in a column */
+    }
+
+    .header {
+      top: 0;
+      right: 0;
+      width: 40vw;
+      background-color: var(--background-color);
+      color: var(--primary-color);
       text-align: center;
-      margin: 20px 0;
-      color: #343a40; /* Dark text for the heading */
-    }
-
-    /* Dashboard Layout */
-    #dashboard {
-      display: flex;
-      height: 100vh; /* Full viewport height */
-    }
-
-    #header_table_container {
-      flex-grow: 1;
-      padding: 15px;
-      overflow-y: auto; /* Enable vertical scrolling */
-      overflow-x: auto; /* Enable horizontal scrolling if needed */
-      display: flex;
-      flex-direction: column; /* Stack items vertically */
-      align-items: center;
       justify-content: center;
-        }
-
-    /* Sidebar Styles */
-    #left-sidebar {
-      width: 160px; /* Fixed width for the sidebar */
-      padding: 10px;
-      padding-top: 20px;
-      background-color: var(--background-color);
-      border-right: solid 1px var(--secondary-color);
-      box-shadow: 6px 0px 20px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-      flex: 0 0 160px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Center contents horizontally */
-      flex-shrink: 1; /* Allow shrinking */
-    }
-
-    /* Right Sidebar Styles */
-    #right-sidebar {
-      width: 250px;
-      padding: 20px;
-      background-color: var(--background-color);
-      border-left: solid 1px var(--secondary-color); /* Border on the left */
-      box-shadow: -6px 0px 20px rgba(0, 0, 0, 0.1); /* Shadow to the left */
-      box-sizing: border-box;
-      flex: 0 0 250px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      /* Prevents flex-grow and flex-shrink */
     }
 
-    /* Right Sidebar Content */
-    #right-sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    #right-sidebar p {
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 10px;
-      font-style: oblique;
-    }
-
-    #right-sidebar img {
-      max-width: 100%;
+    /* Responsive Image of logo*/
+    .logo-img {
+      width: 250px;
       height: auto;
-      display: block;
-      margin: 10px auto;
     }
 
-    /* Button Styles */
-    #cap-filter-button {
-      background-color: var(--primary-color);
-      color: var(--background-color);
+    .ABS_link {
+      margin-top: 0px;
+      margin-bottom: 0px;
+      font-size: 12px;
+      color: black;
+    }
+
+    #result-textarea {
+      /*  height: 82vh; */
+      /* flex: 1 1 auto; */
+      /* Allows the textarea to grow and shrink */
+      width: 96%;
+      height: 80vh;
+      margin: 20px auto;
+      padding: 7px;
+      box-sizing: border-box;
+      resize: none;
+      display: block;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: var(--body-font-family);
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    #result-textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 10px rgba(0, 141, 202, 0.5);
+      background-color: var(--background-color);
+    }
+
+    #result-textarea::placeholder {
+      color: #aaa;
+      opacity: 1;
+      /* Ensures the placeholder text is visible in all browsers */
+    }
+
+
+
+    .impressum-container {
+      width: 96%;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      justify-content: flex-end;
+      flex: 0 0 auto;
+      /* Prevents flex-grow and flex-shrink */
+    }
+
+    .copy-button {
+      display: block;
+      margin-top: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 160px;
+      height: 40px;
+      font-size: 15px;
+      cursor: pointer;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s, transform 0.2s;
       border: none;
-      padding: 8px 10px;
-      border: none;
-      cursor: pointer;
-      margin-bottom: 20px;
-      font-size: 16px;
-   /*    width: 100%; */
       border-radius: 4px;
-      word-wrap: break-word; /* Break long words if necessary */
-text-align: center; /* Center the text */
+      background-color: var(--primary-color);
+      color: var(--background-color);
+      flex: 0 0 auto;
     }
 
-    #cap-filter-button.pressed {
+    .copy-button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Active State */
+    .copy-button:active {
+      background-color: #00405a;
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Focus State */
+    .copy-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 141, 202, 0.4);
+    }
+
+
+    /*  Navbar Styles */
+
+    .navbar {
+      background-color: var(--background-color);
+      border-right: solid 1px var(--secondary-color);
+      padding: 0px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 120px;
+      overflow-y: auto;
+      box-shadow: 6px 0px 20px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .nav-item-outer {
+      padding: 15px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+    }
+
+
+    .nav-item-outer:not(:last-child):after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 1px;
+      width: 80%;
       background-color: var(--secondary-color);
     }
 
-    #cap-filter-button:hover {
-      opacity: 0.9;
-}
-
-/* Severity Container Styles */
-#severity-container {
-  width: 100%; /* Ensure it takes the full width of the sidebar */
-  max-width: 100%; /* Prevent it from exceeding the sidebar width */
-  padding: 0; /* Adjust padding if necessary */
-  margin: 0; /* Remove any default margins */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  justify-content: center;
-}
-
-    /* Severity Header */
-    #severity-header {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #343a40;
-      display: none; /* Hidden by default */
-      max-width: 100%;
-    }
-
-    /* Severity Buttons */
-    .severity-button {
+    .nav-item-outer:hover {
       background-color: var(--primary-color);
-      color: var(--background-color);
-      padding: 6px 8px;
-      border: none;
-      cursor: pointer;
-      margin-bottom: 10px;
-      font-size: 14px;
-  /*    width: 100%; */
-      border-radius: 4px;
-      transition: background-color 0.3s;
-      text-align: center;
-      white-space: normal; /* Allow text to wrap */
-word-wrap: break-word;
+      /* Darker background on hover */
+
     }
 
-    .severity-button.pressed {
-  background-color: var(--secondary-color);
-    }
-
-    .severity-button:hover {
-      opacity: 0.9;
-    }
-
-    /* Table Container */
-    #table-container {
-      width: 100%; /* Take full width of the container */
-      overflow-x: auto;
-      display: flex;
-      justify-content: center; /* Center the table horizontally */
-      background-color: #fff;
-      border: none;
-    }
-
-    /* Table Styles */
-    table {
-      border-collapse: collapse;
-      width: auto; /* Allows the table to take its natural width */
-      table-layout: fixed;
-  /*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-      border-radius: 12px; /* Rounded corners */
-      overflow: hidden; /* Clip the border-radius */
-      background-color: #ffffff; /* White background for the table */
-    }
-
-    th, td {
-      border-style: solid;
-      border-width: 1px;
-      border-color: #fff;
-      padding: 4px;
-      padding-left: 5px;
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 8px;
-    }
-
-    th {
-      background-color: none;
-      font-weight: normal;
-      font-size: 12.5px;
-    }
-
-    /* Style for the group names */
-    td.group-name {
-      font-size: 14px;
-      font-weight: bold;
-      padding-left: 6px;
-      color: #000; /* Ensure group names are black */
-      text-align: left;
-      vertical-align: middle; /* Center text vertically */
-    /* width: 150px; /* Fixed width */
-    }
-
-    /* Style for the antibiotic names */
-    td.antibiotic-name {
-      font-size: 12px;
-      color: #000; /* Ensure antibiotic names are black */
-      text-align: left;
-      cursor: pointer; /* Indicate that the cell is interactive */
-  /*    width: 150px; /* Fixed width */
-    }
-
-    /* Style for the bacteria group headers */
-    th.bacteria-group {
-      background-color: #fff; /* This will be overridden by inline styles */
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    /* Style for the table headers (bacterium names) */
-    th.bacterium {
-      writing-mode: vertical-rl; /* Vertical writing mode right to left */
-      text-orientation: mixed;
-      white-space: normal; /* Allow wrapping */
-      padding: 4.5px;
-      vertical-align: middle;
-      height: 150px; /* Adjust as needed */
-      overflow: visible;
-      text-align: left;
-      cursor: pointer; /* Indicate that the cell is interactive */
-      /* Remove width property to allow dynamic sizing */
-    }
-
-    /* Data cell styles */
-    td.sensitivity-high {
-      background-color: var(--sensitivity-high-color); /* Light green */
-      color: #fff; /* White text */
-    }
-
-    td.sensitivity-medium {
-      background-color: var(--sensitivity-medium-color); /* Light yellow */
-      color: #000; /* Black text */
-    }
-
-    td.sensitivity-low {
-      background-color: var(--sensitivity-low-color); /* Light red */
-      color: #fff; /* White text */
-    }
-
-    /* Apply text color only to data cells */
-    td.data-cell {
-      /* The text color is set in the sensitivity classes */
-    }
-
-    /* Style for visual separation */
-
-    /* Thicker border-top for the first row of each antibiotic group */
-    tr.antibiotic-group-start td {
-      border-top-width: 4px;
-      border-top-color: #fff;
-    }
-
-    /* Thicker border-left for the first column of each bacterial group */
-    th.bacterial-group-start,
-    td.bacterial-group-start {
-      border-left-width: 4px;
-      border-left-color: #fff;
-    }
-
-    /* New CSS class for bacterium header cells with low sensitivity */
-    .bacterium-low-sensitivity {
-      /* background-color: lightgrey !important; */
-      background-color: var(--sensitivity-low-color) !important; /* Light red */
-    }
-
-    /* New CSS class for bacterium header cells with intermediate sensitivity */
-    .bacterium-intermedium-sensitivity {
-      background-color: var(--sensitivity-medium-color) !important; /* Light yellow */
-      /*  filter: brightness(140%) !important; */
-    }
-
-    /* Bacterium header cell styles for high sensitivity */
-    .bacterium-high-sensitivity {
-      background-color: var(--sensitivity-high-color) !important; /* Light green */
-    }
-
-
-    /* Style for bacterium name cell hover */
-    .bacterium-name-hover {
-      filter: brightness(120%);
-      box-shadow:
-        inset 2px 0 0 0 #000,   /* Left border */
-        inset 0 2px 0 0 #000,   /* Top border */
-        inset -2px 0 0 0 #000;  /* Right border */
-    }
-
-    /* Highlighted column styles */
-    .highlighted-column.sensitivity-high {
-    filter: brightness(85%) saturate(120%);
-    }
-
-    .highlighted-column.sensitivity-medium {
-  filter: brightness(95%) saturate(150%);
-    }
-
-    .highlighted-column.sensitivity-low {
-      filter: brightness(95%) saturate(200%);
-    }
-
-    /* Highlighted row styles */
-    .highlighted-row td.sensitivity-high {
-      filter: brightness(85%) saturate(120%);
-    }
-
-    .highlighted-row td.sensitivity-medium {
-     filter: brightness(95%) saturate(150%);
-    }
-
-    .highlighted-row td.sensitivity-low {
-    filter: brightness(95%) saturate(200%);
-    }
-
-    /* New CSS class for antibiotic index cells with low sensitivity */
-    .antibiotic-low-sensitivity {
-      /* background-color: lightgrey !important; */
-      background-color: var(--sensitivity-low-color) !important; /* Light red */
-    }
-
-    /* New CSS class for antibiotic index cells with intermediate sensitivity */
-    .antibiotic-intermedium-sensitivity {
-      background-color: var(--sensitivity-medium-color) !important; /* Light yellow */
-      /*  filter: brightness(140%) !important; */
-    }
-
-    /* New CSS class for antibiotic index cells with high sensitivity */
-    .antibiotic-high-sensitivity {
-      background-color: var(--sensitivity-high-color) !important; /* Light green */
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1000; /* Sit on top */
-      padding-top: 60px; /* Location of the box */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
-    }
-
-    /* Data cell hover effect */
-    .data-cell-hover {
-      box-shadow: inset 0 0 0 1px #000; /* Thin black inner shadow */
-    }
-
-
-    /* Modal Content (Image) */
-    .modal-content {
-      margin: auto;
-      display: block;
-      max-width: 80%;
-      max-height: 80%;
-      border-radius: 4px;
-    }
-
-    /* Caption (optional) */
-    #caption {
-      margin: auto;
-      display: block;
-      width: 80%;
-      max-width: 700px;
-      text-align: center;
-      color: #ccc;
-      padding: 10px 0;
-    }
-
-    /* Close Button */
-    .close {
-      position: absolute;
-      top: 30px;
-      right: 35px;
-      color: #f1f1f1;
-      font-size: 40px;
-      font-weight: bold;
-      transition: color 0.3s;
-      cursor: pointer;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: #bbb;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    /* Optional: Style the "Einteilung" link as a button */
-    .einteilung-button {
-      display: block;
-      margin-bottom: 10px;
-      padding: 8px 12px;
-      background-color: var(--extra-accent-color); /* Bootstrap info color */
-      color: white;
-      text-align: center;
-      text-decoration: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .einteilung-button:hover {
-opacity: 0.9;
-    }
-
-    /* New CSS to center the toggle-container within the sidebar */
-    .toggle-container {
+    .nav-item-inner {
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 100%; /* Ensure it takes full width of the container */
+      color: var(--secondary-color);
     }
 
-    /* Toggle Switch Styles */
-    .toggle-switch {
-      position: relative;
-      display: flex; /* Flex to align children */
-      align-items: center; /* Center vertically */
-      width: 60px;
-      height: 34px;
+    /* Style for the Active Navbar Item */
+    .nav-item-outer.active {
+      background-color: var(--accent-color);
+      color: var(--background-color);
     }
 
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-
-    .toggle-slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s ease;
-      border-radius: 50%;
-    }
-
-    .toggle-switch input:checked + .toggle-slider {
-      background-color: #28a745; /* Green when checked */
-    }
-
-    .toggle-switch input:focus + .toggle-slider {
-      box-shadow: 0 0 1px #28a745;
-    }
-
-    .toggle-switch input:checked + .toggle-slider:before {
-      transform: translateX(25px);
-    }
-
-    /* Style for the toggle label */
-    .toggle-label {
-      margin-left: 2px; /* Added margin to prevent overlap */
-      font-size: 10px;
-      color: #343a40;
-      vertical-align: middle;
-    }
-
-    /* Primary Recommendations - Green Background and Border */
-    .primary-recommendation {
-    /*   background-color: #fff !important;*/
-      font-weight: bold; /* Bold text */
-      box-shadow: inset 0 0 0 4px var(--primary-recommendation-color); /* Subtle inset shadow for depth */
-      filter: brightness(125%) !important;
-    }
-
-    /* Secondary Recommendations - Yellow Background and Border */
-    .secondary-recommendation {
-      /*   background-color: #fff !important;*/
-      font-weight: bold; /* Bold text */
-      box-shadow: inset 0 0 0 4px var(--secondary-recommendation-color); /* Subtle inset shadow for depth */
-      filter: brightness(125%) !important;
-
-    }
-
-    /* Tertiary Recommendations - Orange Background and Border */
-    .tertiary-recommendation {
-      /*   background-color: #fff !important;*/
-      font-weight: bold; /* Bold text */
-      box-shadow: inset 0 0 0 4px var(--tertiary-recommendation-color); /* Subtle inset shadow for depth */
-      filter: brightness(125%) !important;
-
-    }
-
-    /* Optional: Add transition for smooth visual effect */
-    .antibiotic-name {
-      transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
-    }
-
-    /* Antibiotic name cell hover style */
-    .antibiotic-name-hover {
-      filter: brightness(120%);
-    }
-
-    .antibiotic-name-hover::before {
+    /* Indicator (e.g., a left border) */
+    .nav-item-outer.active::before {
       content: '';
       position: absolute;
-      top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      box-shadow:
-        inset 2px 0 0 0 #000,
-        inset 0 2px 0 0 #000,
-        inset 0 -2px 0 0 #000;
-      pointer-events: none; /* Ensure the pseudo-element doesn't block interactions */
+      width: 5px;
+      height: 100%;
+      background-color: var(--background-color);
     }
 
 
-    /* Hover Styles
-.antibiotic-name-hover {
-  position: relative;
-  z-index: 1;
+    .floating-button {
+      position: fixed;
+      bottom: 25px;
+      left: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: var(--primary-color);
+      color: var(--background-color);
+      border: none;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 50px;
+      font-size: 25px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+      z-index: 1000;
+      /* Ensure the button stays on top */
+    }
+
+    .floating-button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .floating-button:active {
+      background-color: #00405a;
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .floating-button-label {
+      position: fixed;
+      bottom: 0px;
+      left: 26.5px;
+      width: auto;
+      font-size: 10px;
+      z-index: 1000;
+      display: flex;
+      font-style: italic;
+      justify-content: center;
+      /* Horizontally center */
+      align-items: center;
+      /* Vertically center */
+      text-align: left;
+      /* Center text */
+    /*   transform: rotate(-22deg);*/ /* Rotate the text */
+       color: var(--primary-color);
+    }
+
+
+    /* MAIN CONTENT */
+
+    .main-content {
+      margin-left: 140px;
+      width: 47vw;
+      background-color: var(--background-color);
+      color: #3e3e3e;
+    }
+
+
+    .survey-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      background-color: #fff;
+      margin: 5px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 5px;
+      border-radius: 0px;
+      box-sizing: border-box;
+      /* Adjust the margin to accommodate the navbar width */
+      background-color: var(--background-color);
+    }
+
+    #grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* Creates two columns of equal width */
+      gap: 10px;
+      /* Adds space between the columns */
+      padding: 10px;
+      /* Adds padding around the content within the container */
+    }
+
+
+    .grid-container .aspect-container {
+      flex: 1 1 48%;
+      /* Combines flex-grow, flex-shrink, and flex-basis */
+      box-sizing: border-box;
+      /* Includes padding and border in width */
+      margin: 5px;
+      /* Ensures there is space between flex items */
+    }
+
+    #stuhlgang-container {
+      padding-top: 10px;
+    }
+
+
+    .aspect-container {
+      margin-bottom: 0px;
+      margin-left: 20px;
+      margin-top: 5px;
+      padding: 2px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      flex-direction: column;
+      background-color: var(--background-color);
+    }
+
+    .checkbox-group {
+      margin-bottom: 5px;
+      margin-left: 20px;
+      display: flex;
+      flex-direction: column;
+      /* Updated to make checkboxes appear vertically */
+      align-items: flex-start;
+      /* Align checkboxes to the start of the container */
+    }
+
+    .checkbox-group label {
+      display: block;
+      /* Makes the label behave like a block element */
+      width: 100%;
+      /* Optional: Ensures the label takes full width of its container */
+    }
+
+
+    label {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      /* Added margin-bottom for spacing between labels and checkboxes */
+      white-space: nowrap;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.3);
+      cursor: pointer;
+      accent-color: var(--primary-color);
+      /* Modern browsers support this for color customization */
+      transition: transform 0.2s ease-in-out;
+      margin-right: 8px;
+    }
+
+    input[type=checkbox]:checked {
+      accent-color: var(--accent-color);
+      transform: scale(1.4);
+      /* Slightly larger when checked */
+    }
+
+    input[type="text"] {
+      margin-left: 1px;
+      width: 100px;
+      padding: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: var(--body-font-family);
+      font-size: 16px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px rgba(0, 141, 202, 0.5);
+    }
+
+    input[type="text"]:disabled {
+      background-color: #f5f5f5;
+      color: #999;
+      border-color: #ddd;
+    }
+
+    h1 {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 3.4vw;
+
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+
+    h3 {
+      margin-right: 10px;
+      margin-top: 0px;
+      margin-bottom: 10px;
+      /* Smaller bottom margin for moderate spacing */
+      color: var(--primary-color);
+    }
+
+    ::selection {
+      background: var(--accent-color);
+    }
+
+
+
+
+
+    /* individual styling to input field of 'Schilderung' */
+    #Schilderung-container {
+      width: 88%;
+      /* Maintains full width within parent, including padding and borders */
+    }
+
+    #Schilderung-group {
+      width: 100%;
+      /* Maintains full width within parent, including padding and borders */
+    }
+
+    #Schilderung_AText {
+      box-sizing: border-box;
+      width: 100%;
+      /* Maintains full width within parent, including padding and borders */
+    }
+
+    /*
+#Schilderung_BText {
+    box-sizing: border-box;
+    width: 100%; /* Maintains full width within parent, including padding and borders */
+
+    /*
+#Schilderung_CText{
+    box-sizing: border-box;
+    width: 100%; /* Maintains full width within parent, including padding and borders */
+
+
+    /* ((((((((((SCROLLBAR)))))))))) */
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: var(--accent-color);
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #99D1EA;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-color);
+    }
+
+    .item-name {
+      position: sticky;
+      top: 0;
+      background-color: var(--background-color);
+      text-align: left;
+      border-bottom: solid 0.5px var(--secondary-color);
+      padding-top: 0.4em;
+      z-index: 1;
+    }
+
+    /* POPUP PART ///////////////////////////////////////// */
+
+
+    /* Base Styles for Alert Message */
+    .alert-message {
+      position: fixed;
+      top: 80vh;
+      left: 80%;
+      transform: translateX(-50%) translateY(-10px);
+      padding: 10px 20px;
+      background-color: var(--extra-accent-color);
+      color: var(--background-color);
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      font-family: var(--body-font-family);
+      font-size: 14px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      text-align: center;
+    }
+
+    /* Show animation */
+    .alert-message.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Hide animation */
+    .alert-message.hide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+
+
+
+
+    /* MEDIA PART ///////////////////////////////////////// */
+
+    @media (max-width: 767px) {
+
+      html,
+      body {
+        overscroll-behavior: none;
+      }
+
+      body {
+        flex-direction: column;
+        /* Stack main-content and doku-box vertically */
+      }
+
+      .navbar {
+        display: none;
+      }
+
+      .floating-button, .floating-button-label {
+        display: none;
+      }
+
+      .doku-box {
+        width: 100%;
+        height: 33vh;
+        /* Adjust height as needed */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        /* Ensure it stays above other elements */
+        border-left: none;
+        /* Remove left border */
+        border-bottom: solid 1px var(--secondary-color);
+        /* Optional: Add bottom border for separation */
+      }
+
+      .header {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        /* Needed for positioning the impressum-container */
+      }
+
+      .logo-img {
+        width: 150px;
+        /* Adjust width as needed for smaller screens */
+        height: auto;
+        /* Maintain aspect ratio */
+      }
+
+.ABS_link {
+  display: none;
 }
-.antibiotic-name-hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-} */
 
-/* New CSS class to push the toggle to the bottom of the sidebar */
-.bottom-toggle {
-  margin-top: auto; /* Pushes the element to the bottom */
-}
+      .impressum-container {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        margin: 0;
+        /* Adjust margin as needed */
+        z-index: 2000;
+      }
 
-/* Optional: Adjust spacing between the two toggles */
-.toggle-container:not(:last-child) {
-  margin-bottom: 20px; /* Adds space below each toggle, except the last one */
-}
+      #result-textarea {
+        /*  height: 82vh; */
+        /* flex: 1 1 auto; */
+        /* Allows the textarea to grow and shrink */
+        width: 96%;
+        height: 80vh;
+        margin: 10px auto;
+        margin-top: 5px;
+        padding: 7px;
+        font-size: 10px;
+      }
 
-/* Responsive Image of logo*/
-#logo-img {
-  width: 220px;
-  height: auto;
-transition: transform 0.3s ease-in-out;
-}
+      .copy-button {
+        margin-top: 5px;
+        margin-bottom: 15px;
+        width: 50vw;
+      }
 
-#logo-img:hover {
-            transform: scale(1.05);
-            cursor: pointer;
-        }
+      .main-content {
+        margin-left: 0px;
+        margin-top: 33vh;
+        /* Adjust based on the height of the doku-box */
+        width: 100%;
+      }
 
-        .impressum-container {
-          width: 96%;
-          margin-left: auto;
-          margin-right: auto;
-          display: flex;
-          justify-content: flex-end;
-          flex: 0 0 auto;
-          /* Prevents flex-grow and flex-shrink */
-        }
+      #grid-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        /* Change to a single column layout */
+        gap: 10px;
+        /* Keep the gap between items */
+        padding: 10px;
+        /* Keep padding around the content */
+      }
 
+      .item-name {
+        position: sticky;
+        top: 33vh;
+        z-index: 2000;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding-top: 4px;
+        padding-bottom: 6px;
+        padding-left: 4px;
+        border-top: solid 1px var(--secondary-color);
+        border-bottom: none;
+      }
+
+      .item-name::after {
+        content: "";
+        display: block;
+        width: 99%;
+        height: 0.5px;
+        background-color: none;
+        margin: 0 auto;
+        /* Centers the border */
+      }
+
+
+      input[type="checkbox"] {
+        transform: scale(1.7);
+        /* Adjust the scale as needed */
+        margin-right: 7px;
+      }
+
+      input[type="text"] {
+        margin-left: 0;
+      }
+
+      .survey-container:first-of-type {
+        margin-top: 0;
+        padding-top: 0;
+
+      }
+
+      .survey-container {
+        overflow-x: hidden;
+        /* Prevent horizontal scrolling */
+        white-space: normal;
+        /* Allow text to wrap */
+      }
+
+      .checkbox-group {
+        margin-left: 20px;
+      }
+
+      .checkbox-group label {
+        white-space: normal;
+        /* Ensure labels wrap to the next line */
+        text-indent: -23px;
+        padding-left: 28px;
+        width: 90%;
+      }
+
+      .aspect-container {
+        margin-left: 15px;
+      }
+
+      #Schilderung_AText {
+        box-sizing: border-box;
+        width: 90%;
+        /* Maintains full width within parent, including padding and borders */
+      }
+
+    }
   </style>
 </head>
+
 <body>
-  <div id="dashboard">
-    <div id="left-sidebar">
-      <button id="cap-filter-button">Filter: ambulant erworbene Pneumonie</button>
-      <div id="severity-container" style="display: none;">
-        <!-- "Schweregrad" header, "Einteilung" link, severity buttons, and toggle will be added dynamically -->
+
+  <!---->
+
+
+
+  <!-- Floating_button -->
+  <button class="floating-button" onclick="window.open('file:///Users/paul/Documents/Programming/project%20streamline/current/Printout_Anamnesebogen/Anamnesebogen.pdf','_blank')">
+    &#8681;
+    <!-- Unicode character for download arrow -->
+  </button>
+
+  <!-- Short paragraph above the floating button -->
+  <div class="floating-button-label">
+    <p>Bogen als PDF</p>
+
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-item-outer" href="#item1"><span class="nav-item-inner">Aktuelle Anamnese</span></div>
+    <div class="nav-item-outer" href="#item2"><span class="nav-item-inner">Vor-geschichte</span></div>
+    <div class="nav-item-outer" href="#item3"><span class="nav-item-inner">Vegetative Anamnese</span></div>
+    <div class="nav-item-outer" href="#item4"><span class="nav-item-inner">Sucht-anamnese</span></div>
+    <div class="nav-item-outer" href="#item5"><span class="nav-item-inner">Gyn-Anamnese</span></div>
+    <div class="nav-item-outer" href="#item6"><span class="nav-item-inner">Sozial</span></div>
+  </nav>
+
+  <div class="main-content" id="scrollcontainer">
+    <!-- container 1 -->
+
+    <h2 class="item-name" id="item1">Aktuelle Anamnese</h2>
+    <div class="survey-container">
+      <div class="aspect-container">
+        <h3>Vorstellung</h3>
+        <div class="checkbox-group">
+          <label for="Vorstellung_A"><input type="checkbox" id="Vorstellung_A">rettungsdienstliche Zubringung</label>
+          <label for="Vorstellung_B"><input type="checkbox" id="Vorstellung_B">in Notarztbegleitung</label>
+          <label for="Vorstellung_C"><input type="checkbox" id="Vorstellung_C">Rettungsdienst verständigt durch<input type="text" id="Vorstellung_CText" disabled></label>
+          <label for="Vorstellung_D"><input type="checkbox" id="Vorstellung_D">selbstständig</label>
+          <label for="Vorstellung_E"><input type="checkbox" id="Vorstellung_E">in Begleitung von<input type="text" id="Vorstellung_EText" disabled></label>
+          <label for="Vorstellung_F"><input type="checkbox" id="Vorstellung_F">mit hausärztlicher Einweisung<input type="text" id="Vorstellung_FText" disabled></label>
+          <label for="Vorstellung_G"><input type="checkbox" id="Vorstellung_G">mit Einweisung von<input type="text" id="Vorstellung_GText" disabled></label>
+        </div>
       </div>
 
-      <!-- New Toggle: Häufig eingesetzte Antibiotika -->
-      <div class="toggle-container bottom-toggle">
-        <label class="toggle-switch">
-          <input type="checkbox" id="frequent-antibiotics-toggle" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-label">Fokus</span>
+      <div class="aspect-container">
+        <h3>Vorstellungsgrund</h3>
+        <div class="checkbox-group">
+          <label for="Vorstellungsgrund_A"><input type="checkbox" id="Vorstellungsgrund_A">Dyspnoe</label>
+          <label for="Vorstellungsgrund_B"><input type="checkbox" id="Vorstellungsgrund_B">thorakaler Schmerz</label>
+          <label for="Vorstellungsgrund_C"><input type="checkbox" id="Vorstellungsgrund_C">abdominaler Schmerz</label>
+          <label for="Vorstellungsgrund_D"><input type="checkbox" id="Vorstellungsgrund_D">Übelkeit</label>
+          <label for="Vorstellungsgrund_E"><input type="checkbox" id="Vorstellungsgrund_E">Erbrechen</label>
+          <label for="Vorstellungsgrund_F"><input type="checkbox" id="Vorstellungsgrund_F">AZ-Minderung</label>
+          <label for="Vorstellungsgrund_G"><input type="checkbox" id="Vorstellungsgrund_G">Fieber</label>
+          <label for="Vorstellungsgrund_H"><input type="checkbox" id="Vorstellungsgrund_H"><input type="text" id="Vorstellungsgrund_HText" disabled></label>
+          <label for="Vorstellungsgrund_I"><input type="checkbox" id="Vorstellungsgrund_I">Beschwerden bestehend seit<input type="text" id="Vorstellungsgrund_IText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container" id="Schilderung-container">
+        <h3>Schilderung</h3>
+        <div class="checkbox-group" id="Schilderung-group">
+          <label for="Schilderung_A"><input type="checkbox" id="Schilderung_A"><input type="text" id="Schilderung_AText" disabled></label>
+        </div>
+      </div>
+
+
+      <div class="aspect-container">
+        <h3>Schmerzen</h3>
+        <div class="checkbox-group">
+          <label for="Schmerzen_A"><input type="checkbox" id="Schmerzen_A">keine</label>
+          <label for="Schmerzen_B"><input type="checkbox" id="Schmerzen_B"><input type="text" id="Schmerzen_BText" disabled></label>
+          <label for="Schmerzen_C"><input type="checkbox" id="Schmerzen_C">Schmerzcharakter:<input type="text" id="Schmerzen_CText" disabled></label>
+          <label for="Schmerzen_D"><input type="checkbox" id="Schmerzen_D">Beginn:<input type="text" id="Schmerzen_DText" disabled></label>
+          <label for="Schmerzen_E"><input type="checkbox" id="Schmerzen_E">Verlauf:<input type="text" id="Schmerzen_EText" disabled></label>
+          <label for="Schmerzen_F"><input type="checkbox" id="Schmerzen_F">Ausstrahlung:<input type="text" id="Schmerzen_FText" disabled></label>
+          <label for="Schmerzen_G"><input type="checkbox" id="Schmerzen_G">Trigger:<input type="text" id="Schmerzen_GText" disabled></label>
+          <label for="Schmerzen_H"><input type="checkbox" id="Schmerzen_H"><input type="text" id="Schmerzen_HText" disabled></label>
+        </div>
+      </div>
+
+      <div class="grid-container" id="grid-container">
+
+
+        <div class="aspect-container">
+          <h3>Dyspnoe</h3>
+          <div class="checkbox-group">
+            <label for="Dyspnoe_A"><input type="checkbox" id="Dyspnoe_A">keine</label>
+            <label for="Dyspnoe_B"><input type="checkbox" id="Dyspnoe_B">Belastungsdyspnoe</label>
+            <label for="Dyspnoe_C"><input type="checkbox" id="Dyspnoe_C">Ruhedyspnoe</label>
+            <label for="Dyspnoe_D"><input type="checkbox" id="Dyspnoe_D">Sprechdyspnoe</label>
+            <label for="Dyspnoe_E"><input type="checkbox" id="Dyspnoe_E">Tachypnoe<input type="text" id="Dyspnoe_EText" disabled></label>
+            <label for="Dyspnoe_F"><input type="checkbox" id="Dyspnoe_F"><input type="text" id="Dyspnoe_FText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>AP-Beschwerden</h3>
+          <div class="checkbox-group">
+            <label for="AP-Beschwerden_A"><input type="checkbox" id="AP-Beschwerden_A">keine</label>
+            <label for="AP-Beschwerden_B"><input type="checkbox" id="AP-Beschwerden_B">bei leichter Belastung<input type="text" id="AP-Beschwerden_BText" disabled></label>
+            <label for="AP-Beschwerden_C"><input type="checkbox" id="AP-Beschwerden_C">bei schwerer Belastung<input type="text" id="AP-Beschwerden_CText" disabled></label>
+            <label for="AP-Beschwerden_D"><input type="checkbox" id="AP-Beschwerden_D">in Ruhe</label>
+            <label for="AP-Beschwerden_E"><input type="checkbox" id="AP-Beschwerden_E">Ausstrahlung<input type="text" id="AP-Beschwerden_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Husten</h3>
+          <div class="checkbox-group">
+            <label for="Husten_A"><input type="checkbox" id="Husten_A">kein</label>
+            <label for="Husten_B"><input type="checkbox" id="Husten_B">trocken</label>
+            <label for="Husten_C"><input type="checkbox" id="Husten_C">produktiv, Sputumfarbe<input type="text" id="Husten_CText" disabled></label>
+            <label for="Husten_D"><input type="checkbox" id="Husten_D"><input type="text" id="Husten_DText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Reiseanamnese</h3>
+          <div class="checkbox-group">
+            <label for="Reiseanamnese_A"><input type="checkbox" id="Reiseanamnese_A">leer</label>
+            <label for="Reiseanamnese_B"><input type="checkbox" id="Reiseanamnese_B"><input type="text" id="Reiseanamnese_BText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Eigenanamnese</h3>
+          <div class="checkbox-group">
+            <label for="Eigenanamnese_A"><input type="checkbox" id="Eigenanamnese_A">problemlos möglich</label>
+            <label for="Eigenanamnese_B"><input type="checkbox" id="Eigenanamnese_B">erschwert bei Sprachbarriere</label>
+            <label for="Eigenanamnese_C"><input type="checkbox" id="Eigenanamnese_C">Muttersprache:<input type="text" id="Eigenanamnese_CText" disabled></label>
+            <label for="Eigenanamnese_D"><input type="checkbox" id="Eigenanamnese_D">Übersetzung durch<input type="text" id="Eigenanamnese_DText" disabled></label>
+            <label for="Eigenanamnese_E"><input type="checkbox" id="Eigenanamnese_E">erschwert durch<input type="text" id="Eigenanamnese_EText" disabled></label>
+            <label for="Eigenanamnese_F"><input type="checkbox" id="Eigenanamnese_F">unmöglich aufgrund von<input type="text" id="Eigenanamnese_FText" disabled></label>
+            <label for="Eigenanamnese_G"><input type="checkbox" id="Eigenanamnese_G">Fremdanamnese durch<input type="text" id="Eigenanamnese_GText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Orientierung</h3>
+          <div class="checkbox-group">
+            <label for="Orientierung_A"><input type="checkbox" id="Orientierung_A">4-fach orientiert</label>
+            <label for="Orientierung_B"><input type="checkbox" id="Orientierung_B">voll orientiert zu<input type="text" id="Orientierung_BText" disabled></label>
+            <label for="Orientierung_C"><input type="checkbox" id="Orientierung_C">teilorientiert zu<input type="text" id="Orientierung_CText" disabled></label>
+            <label for="Orientierung_D"><input type="checkbox" id="Orientierung_D">nicht orientiert zu<input type="text" id="Orientierung_DText" disabled></label>
+            <label for="Orientierung_E"><input type="checkbox" id="Orientierung_E">nicht prüfbar<input type="text" id="Orientierung_EText" disabled></label>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div id="header_table_container">
-      <!-- <h1>Antibiotic Resistance Data</h1> -->
-      <div id="table-container">
-        <!-- Table will be generated here -->
+
+    <!-- container 2 -->
+    <h2 class="item-name" id="item2">Vorgeschichte</h2>
+    <div class="survey-container">
+
+      <div class="aspect-container">
+        <h3>Vorerkrankungen</h3>
+        <div class="checkbox-group">
+          <label for="Vorerkrankungen_A"><input type="checkbox" id="Vorerkrankungen_A">keine Vorerkrankungen</label>
+          <label for="Vorerkrankungen_B"><input type="checkbox" id="Vorerkrankungen_B">Arterielle Hypertonie</label>
+          <label for="Vorerkrankungen_C"><input type="checkbox" id="Vorerkrankungen_C">Diabetes mellitus Typ 2, OAD<input type="text" id="Vorerkrankungen_CText" disabled></label>
+          <label for="Vorerkrankungen_D"><input type="checkbox" id="Vorerkrankungen_D">Diabetes mellitus Typ 2, Insulintherapie<input type="text" id="Vorerkrankungen_DText" disabled></label>
+          <label for="Vorerkrankungen_E"><input type="checkbox" id="Vorerkrankungen_E">KHK<input type="text" id="Vorerkrankungen_EText" disabled></label>
+          <label for="Vorerkrankungen_F"><input type="checkbox" id="Vorerkrankungen_F">COPD<input type="text" id="Vorerkrankungen_FText" disabled></label>
+          <label for="Vorerkrankungen_G"><input type="checkbox" id="Vorerkrankungen_G">COPD mit LTOT<input type="text" id="Vorerkrankungen_GText" disabled></label>
+          <label for="Vorerkrankungen_H"><input type="checkbox" id="Vorerkrankungen_H">siehe Vorbrief(e)<input type="text" id="Vorerkrankungen_HText" disabled></label>
+          <label for="Vorerkrankungen_I"><input type="checkbox" id="Vorerkrankungen_I"><input type="text" id="Vorerkrankungen_IText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Voroperationen</h3>
+        <div class="checkbox-group">
+          <label for="Voroperationen_A"><input type="checkbox" id="Voroperationen_A">keine Voroperationen</label>
+          <label for="Voroperationen_B"><input type="checkbox" id="Voroperationen_B">Z.n. Cholezystektomie<input type="text" id="Voroperationen_BText" disabled></label>
+          <label for="Voroperationen_C"><input type="checkbox" id="Voroperationen_C">Z.n. Appendektomie<input type="text" id="Voroperationen_CText" disabled></label>
+          <label for="Voroperationen_D"><input type="checkbox" id="Voroperationen_D"><input type="text" id="Voroperationen_DText" disabled></label>
+          <label for="Voroperationen_E"><input type="checkbox" id="Voroperationen_E"><input type="text" id="Voroperationen_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Endoskopie-Historie</h3>
+        <div class="checkbox-group">
+          <label for="Endoskopie_A"><input type="checkbox" id="Endoskopie_A">noch nie Gastroskopie</label>
+          <label for="Endoskopie_B"><input type="checkbox" id="Endoskopie_B">noch nie Coloskopie</label>
+          <label for="Endoskopie_C"><input type="checkbox" id="Endoskopie_C">letzte Gastroskopie:<input type="text" id="Endoskopie_CText" disabled></label>
+          <label for="Endoskopie_D"><input type="checkbox" id="Endoskopie_D">letzte Coloskopie:<input type="text" id="Endoskopie_DText" disabled></label>
+          <label for="Endoskopie_E"><input type="checkbox" id="Endoskopie_E"><input type="text" id="Endoskopie_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Dauermedikation</h3>
+        <div class="checkbox-group">
+          <label for="Dauermedikation_A"><input type="checkbox" id="Dauermedikation_A">keine Dauermedikation</label>
+          <label for="Dauermedikation_B"><input type="checkbox" id="Dauermedikation_B">siehe Medikamentenplan anbei</label>
+          <label for="Dauermedikation_C"><input type="checkbox" id="Dauermedikation_C">Antikoagulation mit<input type="text" id="Dauermedikation_CText" disabled></label>
+          <label for="Dauermedikation_D"><input type="checkbox" id="Dauermedikation_D">Grund der AK:<input type="text" id="Dauermedikation_DText" disabled></label>
+          <label for="Dauermedikation_E"><input type="checkbox" id="Dauermedikation_E">Medikamentenplan nicht dabei</label>
+          <label for="Dauermedikation_F"><input type="checkbox" id="Dauermedikation_F"><input type="text" id="Dauermedikation_FText" disabled></label>
+
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Allergien</h3>
+        <div class="checkbox-group">
+          <label for="Allergien_A"><input type="checkbox" id="Allergien_A">keine Medikamentenallergien bekannt</label>
+          <label for="Allergien_B"><input type="checkbox" id="Allergien_B">Penicillin<input type="text" id="Allergien_BText" disabled></label>
+          <label for="Allergien_C"><input type="checkbox" id="Allergien_C">Kontrastmittel<input type="text" id="Allergien_CText" disabled></label>
+          <label for="Allergien_D"><input type="checkbox" id="Allergien_D"><input type="text" id="Allergien_DText" disabled></label>
+          <label for="Allergien_E"><input type="checkbox" id="Allergien_E">Reaktion:<input type="text" id="Allergien_EText" disabled></label>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <!-- container 3 -->
+    <h2 class="item-name" id="item3">Vegetative Anamnese</h2>
+    <div class="survey-container">
+
+      <div class="grid-container" id="grid-container">
+
+        <div class="aspect-container">
+          <h3>Fieber</h3>
+          <div class="checkbox-group">
+            <label for="Fieber_A"><input type="checkbox" id="Fieber_A">keines</label>
+            <label for="Fieber_B"><input type="checkbox" id="Fieber_B"><input type="text" id="Fieber_BText" disabled></label>
+            <label for="Fieber_C"><input type="checkbox" id="Fieber_C">seit<input type="text" id="Fieber_CText" disabled></label>
+            <label for="Fieber_D"><input type="checkbox" id="Fieber_D"><input type="text" id="Fieber_DText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Nachtschweiß</h3>
+          <div class="checkbox-group">
+            <label for="Nachtschweiß_A"><input type="checkbox" id="Nachtschweiß_A">nein</label>
+            <label for="Nachtschweiß_B"><input type="checkbox" id="Nachtschweiß_B">ja<input type="text" id="Nachtschweiß_BText" disabled></label>
+            <label for="Nachtschweiß_C"><input type="checkbox" id="Nachtschweiß_C">mit Wäschewechsel<input type="text" id="Nachtschweiß_CText" disabled></label>
+            <label for="Nachtschweiß_D"><input type="checkbox" id="Nachtschweiß_D">seit<input type="text" id="Nachtschweiß_DText" disabled></label>
+            <label for="Nachtschweiß_E"><input type="checkbox" id="Nachtschweiß_E"><input type="text" id="Nachtschweiß_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Aktuelles Gewicht</h3>
+          <div class="checkbox-group">
+            <label for="AktuellesGewicht_A"><input type="checkbox" id="AktuellesGewicht_A"><input type="text" id="AktuellesGewicht_AText" disabled></label>
+            <label for="AktuellesGewicht_B"><input type="checkbox" id="AktuellesGewicht_B">nicht bekannt </label>
+            <label for="AktuellesGewicht_C"><input type="checkbox" id="AktuellesGewicht_C"><input type="text" id="AktuellesGewicht_CText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Gewichtsverlauf</h3>
+          <div class="checkbox-group">
+            <label for="Gewichtsverlust_A"><input type="checkbox" id="Gewichtsverlust_A">stabil</label>
+            <label for="Gewichtsverlust_B"><input type="checkbox" id="Gewichtsverlust_B">Gewichtsverlust: -<input type="text" id="Gewichtsverlust_BText" disabled></label>
+            <label for="Gewichtsverlust_C"><input type="checkbox" id="Gewichtsverlust_C">Gewichtszunahme: +<input type="text" id="Gewichtsverlust_CText" disabled></label>
+            <label for="Gewichtsverlust_D"><input type="checkbox" id="Gewichtsverlust_D">in<input type="text" id="Gewichtsverlust_DText" disabled></label>
+            <label for="Gewichtsverlust_E"><input type="checkbox" id="Gewichtsverlust_E"><input type="text" id="Gewichtsverlust_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Miktion</h3>
+          <div class="checkbox-group">
+            <label for="Miktion_A"><input type="checkbox" id="Miktion_A">unauffällig</label>
+            <label for="Miktion_B"><input type="checkbox" id="Miktion_B">Algurie<input type="text" id="Miktion_BText" disabled></label>
+            <label for="Miktion_C"><input type="checkbox" id="Miktion_C">Makrohämaturie<input type="text" id="Miktion_CText" disabled></label>
+            <label for="Miktion_D"><input type="checkbox" id="Miktion_D">Harninkontinenz<input type="text" id="Miktion_DText" disabled></label>
+            <label for="Miktion_E"><input type="checkbox" id="Miktion_E"><input type="text" id="Miktion_EText" disabled></label>
+          </div>
+        </div>
+
+        <div class="aspect-container">
+          <h3>Trinkmenge</h3>
+          <div class="checkbox-group">
+            <label for="Trinkmenge_A"><input type="checkbox" id="Trinkmenge_A">täglich circa<input type="text" id="Trinkmenge_AText" disabled></label>
+            <label for="Trinkmenge_B"><input type="checkbox" id="Trinkmenge_B">nicht bekannt </label>
+            <label for="Trinkmenge_C"><input type="checkbox" id="Trinkmenge_C"><input type="text" id="Trinkmenge_CText" disabled></label>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="aspect-container" id="stuhlgang-container">
+        <h3>Stuhlgang</h3>
+        <div class="checkbox-group">
+          <label for="Stuhlgang_A"><input type="checkbox" id="Stuhlgang_A">unauffällig</label>
+          <label for="Stuhlgang_B"><input type="checkbox" id="Stuhlgang_B">Diarrhoe<input type="text" id="Stuhlgang_BText" disabled></label>
+          <label for="Stuhlgang_C"><input type="checkbox" id="Stuhlgang_C">Obstipation<input type="text" id="Stuhlgang_CText" disabled></label>
+          <label for="Stuhlgang_D"><input type="checkbox" id="Stuhlgang_D">Obstipationsneigung<input type="text" id="Stuhlgang_DText" disabled></label>
+          <label for="Stuhlgang_E"><input type="checkbox" id="Stuhlgang_E">Teerstuhl (Meläna)<input type="text" id="Stuhlgang_EText" disabled></label>
+          <label for="Stuhlgang_F"><input type="checkbox" id="Stuhlgang_F">frisches Blut im Stuhl (Hämatochezie)<input type="text" id="Stuhlgang_FText" disabled></label>
+          <label for="Stuhlgang_G"><input type="checkbox" id="Stuhlgang_G">letzter Stuhlgang:<input type="text" id="Stuhlgang_GText" disabled></label>
+          <label for="Stuhlgang_H"><input type="checkbox" id="Stuhlgang_H"><input type="text" id="Stuhlgang_HText" disabled></label>
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <!-- container 4 -->
+    <h2 class="item-name" id="item4">Suchtanamnese</h2>
+    <div class="survey-container" id="grid-container">
+      <div class="aspect-container">
+        <h3>Alkoholkonsum</h3>
+        <div class="checkbox-group">
+          <label for="Alkohol_A"><input type="checkbox" id="Alkohol_A">verneint</label>
+          <label for="Alkohol_B"><input type="checkbox" id="Alkohol_B">selten</label>
+          <label for="Alkohol_C"><input type="checkbox" id="Alkohol_C">gelegentlich</label>
+          <label for="Alkohol_D"><input type="checkbox" id="Alkohol_D">täglich<input type="text" id="Alkohol_DText" disabled></label>
+          <label for="Alkohol_E"><input type="checkbox" id="Alkohol_E"><input type="text" id="Alkohol_EText" disabled></label>
+
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Nikotinkonsum</h3>
+        <div class="checkbox-group">
+          <label for="Nikotin_A"><input type="checkbox" id="Nikotin_A">verneint</label>
+          <label for="Nikotin_B"><input type="checkbox" id="Nikotin_B">Zigaretten/d circa:<input type="text" id="Nikotin_BText" disabled></label>
+          <label for="Nikotin_C"><input type="checkbox" id="Nikotin_C">Nikotinkonsum bis:<input type="text" id="Nikotin_CText" disabled></label>
+          <label for="Nikotin_D"><input type="checkbox" id="Nikotin_D">p.y. kummulativ circa:<input type="text" id="Nikotin_DText" disabled></label>
+          <label for="Nikotin_E"><input type="checkbox" id="Nikotin_E"><input type="text" id="Nikotin_EText" disabled></label>
+
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Weitere Drogen</h3>
+        <div class="checkbox-group">
+          <label for="weitereDrogenA"><input type="checkbox" id="weitereDrogenA">keine</label>
+          <label for="weitereDrogenB"><input type="checkbox" id="weitereDrogenB"><input type="text" id="weitereDrogenBText" disabled></label>
+        </div>
       </div>
     </div>
 
-    <div id="right-sidebar">
-      <a class="img-container" href="index.html">
-        <img src="finished_icon.png" alt="DokuSwift Logo" id="logo-img">
-      </a>
+    <!-- container 5 -->
+    <h2 class="item-name" id="item5">Gyn-Anamnese</h2>
+    <div class="survey-container" id="grid-container">
 
-      <!-- New Content Container -->
-      <div id="sidebar-content">
-        <!-- Dynamic content will be injected here -->
+      <div class="aspect-container">
+        <h3>Orale Kontrazeption</h3>
+        <div class="checkbox-group">
+          <label for="OraleKontrazeption_A"><input type="checkbox" id="OraleKontrazeption_A">nein</label>
+          <label for="OraleKontrazeption_B"><input type="checkbox" id="OraleKontrazeption_B">ja<input type="text" id="OraleKontrazeption_BText" disabled></label>
+        </div>
       </div>
 
-      <div class="impressum-container">
-        <p style="font-size: 9px; text-align: right; cursor: default; color: black;">
-          <a href="impressum.html" style="text-decoration: none; color: black;">Impressum</a>
-        </p>
+      <div class="aspect-container">
+        <h3>Schwangerschaften</h3>
+        <div class="checkbox-group">
+          <label for="Schwangerschaften_A"><input type="checkbox" id="Schwangerschaften_A">Nulligravida, Nullipara</label>
+          <label for="Schwangerschaften_B"><input type="checkbox" id="Schwangerschaften_B"><input type="text" id="Schwangerschaften_BText" disabled></label>
+        </div>
       </div>
+
+
+    </div>
+
+    <!-- container 6 -->
+    <h2 class="item-name" id="item6">Familien-/Sozialanamnese</h2>
+    <div class="survey-container" id="grid-container">
+
+      <div class="aspect-container">
+        <h3>Wohnsituation</h3>
+        <div class="checkbox-group">
+          <label for="Wohnsituation_A"><input type="checkbox" id="Wohnsituation_A">alleine lebend</label>
+          <label for="Wohnsituation_B"><input type="checkbox" id="Wohnsituation_B">lebt mit Ehefrau/Partnerin </label>
+          <label for="Wohnsituation_C"><input type="checkbox" id="Wohnsituation_C">lebt mit Ehemann/Partner </label>
+          <label for="Wohnsituation_D"><input type="checkbox" id="Wohnsituation_D">lebt mit Familie </label>
+          <label for="Wohnsituation_E"><input type="checkbox" id="Wohnsituation_E">lebt in betreutem Wohnen </label>
+          <label for="Wohnsituation_F"><input type="checkbox" id="Wohnsituation_F">lebt in Pflegeheim </label>
+          <label for="Wohnsituation_G"><input type="checkbox" id="Wohnsituation_G">lebt in Männerwohnheim </label>
+          <label for="Wohnsituation_H"><input type="checkbox" id="Wohnsituation_H">ohne festen Wohnsitz </label>
+          <label for="Wohnsituation_I"><input type="checkbox" id="Wohnsituation_I"><input type="text" id="Wohnsituation_IText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Versorgungssituation</h3>
+        <div class="checkbox-group">
+          <label for="Versorgungssituation_A"><input type="checkbox" id="Versorgungssituation_A">selbstversorgend</label>
+          <label for="Versorgungssituation_B"><input type="checkbox" id="Versorgungssituation_B">Pflege durch Partner/Familie </label>
+          <label for="Versorgungssituation_C"><input type="checkbox" id="Versorgungssituation_C">Pflegedienst </label>
+          <label for="Versorgungssituation_D"><input type="checkbox" id="Versorgungssituation_D">Pflegesituation als unzureichend geschildert </label>
+          <label for="Versorgungssituation_E"><input type="checkbox" id="Versorgungssituation_E"><input type="text" id="Versorgungssituation_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Beruf</h3>
+        <div class="checkbox-group">
+          <label for="Beruf_A"><input type="checkbox" id="Beruf_A">tätig als<input type="text" id="Beruf_AText" disabled></label>
+          <label for="Beruf_B"><input type="checkbox" id="Beruf_B">momentan nicht berufstätig </label>
+          <label for="Beruf_C"><input type="checkbox" id="Beruf_C">Student/-in </label>
+          <label for="Beruf_D"><input type="checkbox" id="Beruf_D">im Ruhestand </label>
+          <label for="Beruf_E"><input type="checkbox" id="Beruf_E"><input type="text" id="Beruf_EText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Familie</h3>
+        <div class="checkbox-group">
+          <label for="Familie_A"><input type="checkbox" id="Familie_A">alleinstehend<input type="text" id="Familie_AText" disabled></label>
+          <label for="Familie_B"><input type="checkbox" id="Familie_B">verheiratet </label>
+          <label for="Familie_C"><input type="checkbox" id="Familie_C">hat Partner/in </label>
+          <label for="Familie_D"><input type="checkbox" id="Familie_D">verwitwet</label>
+          <label for="Familie_E"><input type="checkbox" id="Familie_E">Kinder: keine </label>
+          <label for="Familie_F"><input type="checkbox" id="Familie_F">Kinder:<input type="text" id="Familie_FText" disabled></label>
+          <label for="Familie_G"><input type="checkbox" id="Familie_G"><input type="text" id="Familie_GText" disabled></label>
+        </div>
+      </div>
+
+      <div class="aspect-container">
+        <h3>Betreuung/Vorsorge</h3>
+        <div class="checkbox-group">
+          <label for="BetreuungVorsorge_A"><input type="checkbox" id="BetreuungVorsorge_A">gesetzliche Betreuung besteht nicht</label>
+          <label for="BetreuungVorsorge_B"><input type="checkbox" id="BetreuungVorsorge_B">PV/VVM nicht vorhanden</label>
+          <label for="BetreuungVorsorge_C"><input type="checkbox" id="BetreuungVorsorge_C">gesetzliche Betreuung durch<input type="text" id="BetreuungVorsorge_CText" disabled></label>
+          <label for="BetreuungVorsorge_D"><input type="checkbox" id="BetreuungVorsorge_D">PV/VVM vorhanden </label>
+          <label for="BetreuungVorsorge_E"><input type="checkbox" id="BetreuungVorsorge_E">Dokumente in Kopie anbei</label>
+          <label for="BetreuungVorsorge_F"><input type="checkbox" id="BetreuungVorsorge_F">Dokumente nicht vorliegend</label>
+          <label for="BetreuungVorsorge_G"><input type="checkbox" id="BetreuungVorsorge_G"><input type="text" id="BetreuungVorsorge_GText" disabled></label>
+          <label for="BetreuungVorsorge_H"><input type="checkbox" id="BetreuungVorsorge_H">Therapielimitation:<input type="text" id="BetreuungVorsorge_HText" disabled></label>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Modal Structure -->
-  <div id="image-modal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="modal-image">
-    <div id="caption">Schweregradeinteilung</div>
+
+
+  <div class="doku-box" id="result-container">
+    <div class="header">
+      <img src="finished_icon.png" alt="DokuSwift Logo" class="logo-img">
+      <div class="ABS_link">Interaktive Resistenztabelle ⇨ <a href="abs.html" style="text-decoration: none; color: var(--primary-color);">HIER</a></div>
+
+    </div>
+    <textarea id="result-textarea" placeholder="Dokumentation"></textarea>
+    <button class="copy-button" onclick="copyToClipboard()">kopieren</button>
+    <div class="impressum-container">
+      <p style="font-size: 9px; text-align: right; cursor: default; color: black;">
+        <a href="impressum.html" style="text-decoration: none; color: black;">Impressum</a>
+      </p>
+    </div>
   </div>
 
-  <!-- Include D3.js library -->
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <!-- JavaScript code -->
+
+
+
+
   <script>
-  // Desired order of antibiotics
-const desiredOrderAntibiotics = [
-"Penicillin G",
-"Flucloxacillin",
-"Amoxicillin",
-"Ampicillin",
-"Ampicillin Sulbactam",
-"Piperacillin Tazobactam",
-"Cefazolin",
-"Cefuroxim",
-"Ceftriaxon",
-"Cefotaxim",
-"Ceftazidim",
-"Cefepim",
-"Ceftazidime_Avibactam",
-"Ceftaroline",
-"Ceftolozane_Tazobactam",
-"Cefiderocol",
-"Imipenem",
-"Meropenem",
-"Ertapenem",
-"Ciprofloxacin",
-"Levofloxacin",
-"Moxifloxacin",
-"Azithromycin",
-"Clarithromycin",
-"Vancomycin",
-"Teicoplanin",
-"Gentamicin",
-"Doxycycline",
-"Clindamycin",
-"Cotrimoxazole",
-"Metronidazole",
-"Tigecycline",
-"Linezolid",
-"Daptomycin",
-"Rifampicin",
-"Fosfomycin",
-"Colistin"
-];
-
-// Desired order of bacteria
-const desiredOrderBacteria = [
-"Streptococcus pneumoniae",
-"Streptococcus pyogenes",
-"Methicillinsensibler Staph. aureus (MSSA)",
-"Methicillinresistenter Staph. aureus (MRSA)",
-"Koagulasenegative Staphylokokken",
-"Enterococcus faecalis",
-"Enterococcus faecium",
-"Listeria monocytogenes",
-"Escherichia coli",
-"Enterobacter cloacae",
-"Klebsiella spp.",
-"Proteus mirabilis",
-"Proteus vulgaris",
-"Citrobacter spp.",
-"Morganella morganii",
-"Serratia spp.",
-"Acinetobacter spp.",
-"Pseudomonas aeruginosa",
-"Stenotrophomonas maltophilia",
-"Salmonella spp.",
-"Shigella spp.",
-"Neisseria gonorrhoeae (Gonokokken)",
-"Neisseria meningitidis (Meningokokken)",
-"Haemophilus influenzae",
-"Bacteroides spp.",
-"Clostridioides difficile",
-"Chlamydophila pneumoniae",
-"Legionella spp.",
-"Mycoplasma pneumoniae"
-];
-
-// Bacterial group data
-const bacteriaGroups = {
-"Streptococcus pneumoniae": "grampositiv",
-"Streptococcus pyogenes": "grampositiv",
-"Methicillinsensibler Staph. aureus (MSSA)": "grampositiv",
-"Methicillinresistenter Staph. aureus (MRSA)": "grampositiv",
-"Koagulasenegative Staphylokokken": "grampositiv",
-"Enterococcus faecalis": "grampositiv",
-"Enterococcus faecium": "grampositiv",
-"Listeria monocytogenes": "grampositiv",
-"Escherichia coli": "gramnegativ",
-"Enterobacter cloacae": "gramnegativ",
-"Klebsiella spp.": "gramnegativ",
-"Proteus mirabilis": "gramnegativ",
-"Proteus vulgaris": "gramnegativ",
-"Citrobacter spp.": "gramnegativ",
-"Morganella morganii": "gramnegativ",
-"Serratia spp.": "gramnegativ",
-"Acinetobacter spp.": "gramnegativ",
-"Pseudomonas aeruginosa": "gramnegativ",
-"Stenotrophomonas maltophilia": "gramnegativ",
-"Salmonella spp.": "gramnegativ",
-"Shigella spp.": "gramnegativ",
-"Neisseria gonorrhoeae (Gonokokken)": "gramnegativ",
-"Neisseria meningitidis (Meningokokken)": "gramnegativ",
-"Haemophilus influenzae": "gramnegativ",
-"Bacteroides spp.": "Anaerobier",
-"Clostridioides difficile": "Anaerobier",
-"Chlamydophila pneumoniae": "Atypiker",
-"Legionella spp.": "Atypiker",
-"Mycoplasma pneumoniae": "Atypiker"
-};
-
-// Define a fixed mapping of antibiotic groups to colors
-const groupToColor = {
-'Penicilline': '#bbd0cd',     // 'a9c4c0',
-'Cephalosporine': '#8bb2b1',          // '6c9d9c',
-'Carbapeneme': '#a2c0bc',              //'95b7b3',
-'Chinolone': '#b5dfe1',                        //'#a4d8da',
-'Makrolide': '#8fa5c9',
-'Glykopeptide': '#bedfcc',                    //'#aed7bf',
-'Sonstige':  '#abcebc'                       //'#97c2ac',
-};
-
-// Define a fixed mapping of bacterial groups to colors
-const bacteriaGroupColors = {
-'grampositiv': '#92d0d5',
-'gramnegativ': '#92abd5',
-'Anaerobier': '#cdbaeb',
-'Atypiker': '#ba9bde'
-};
-
-// Severity button labels
-const severityLevels = [
-"Leichte Pneumonie",
-"Mittelschwere Pneumonie",
-"Schwere Pneumonie"
-];
-
-// State variables
-let selectedSeverityLevel = null; // Track the selected severity level
-let penicillinAllergy = false; // Track the penicillin allergy toggle state
-let frequentAntibiotics = true; // Track the "häufig eingesetzte Antibiotika" toggle state (default ON)
-
-// Load all four data files
-Promise.all([
-d3.json('antibiotics_data.json'),
-d3.json('disease_prevalence.json'),
-d3.json('CAP_recommendations.json'),
-d3.json('focus_antibiotics.json'),
-d3.json('guideline_info.json') // Load the new JSON file
-]).then(function([antibioticsData, diseasePrevalenceData, recommendationsData, focusAntibioticsData, severityInfoData]) {
-  // Initialize the application with all datasets
-  init(antibioticsData, diseasePrevalenceData, recommendationsData, focusAntibioticsData, severityInfoData);
-});
-
-function init(antibioticsData, diseasePrevalenceData, recommendationsData, focusAntibioticsData, severityInfoData) {
-let capFilterOn = false; // Track the filter state
-const disease = "Community Acquired Pneumonia"; // Current disease
-const diseaseData = diseasePrevalenceData[disease]; // Prevalence data for CAP
-// Store severity info data globally or in a scope accessible to other functions
-window.severityInfoData = severityInfoData;
-
-// Store recommendations data globally or within a scope accessible to other functions
-window.CAPRecommendations = recommendationsData;
-
-// Store focus antibiotics globally
-window.focusAntibiotics = focusAntibioticsData.focus_antibiotics;
-
-// Add event listener to the CAP Filter button
-const capFilterButton = d3.select('#cap-filter-button');
-capFilterButton.on('click', function() {
-  capFilterOn = !capFilterOn; // Toggle the filter state
-  capFilterButton.classed('pressed', capFilterOn); // Toggle the 'pressed' class
-
-  // Show or hide the severity container
-  if (capFilterOn) {
-    d3.select('#severity-container').style('display', 'flex');
-    createSeverityButtons(); // Dynamically generate severity buttons and "Einteilung" link
-  } else {
-    d3.select('#severity-container').style('display', 'none');
-    // Reset severity level selection
-    selectedSeverityLevel = null;
-    d3.selectAll('.severity-button').classed('pressed', false);
-    // Remove all recommendation highlights
-    d3.selectAll('.antibiotic-name')
-      .classed('primary-recommendation', false)
-      .classed('secondary-recommendation', false)
-      .classed('tertiary-recommendation', false);
-  }
-
-  createTable(antibioticsData, capFilterOn, diseaseData);
-});
-
-// Add event listener to the "häufig eingesetzte Antibiotika" toggle
-d3.select('#frequent-antibiotics-toggle').on('change', function(event) {
-  frequentAntibiotics = d3.select(this).property('checked');
-  console.log('Häufig eingesetzte Antibiotika toggle is now', frequentAntibiotics ? 'ON' : 'OFF');
-
-  // Recreate the table with the new filter state
-  createTable(antibioticsData, capFilterOn, diseaseData);
-});
-
-// Initial table creation
-createTable(antibioticsData, capFilterOn, diseaseData);
-}
-
-// Maps to store references
-const bacteriumHeaderCells = {};
-const dataCellsByBacterium = {};
-const antibioticNameCells = {};
-
-// Function to create severity buttons and toggle
-function createSeverityButtons() {
-const container = d3.select('#severity-container');
-
-// Clear any existing content
-container.html('');
-
-// Add the header
-container.append('div')
-  .attr('id', 'severity-header')
-  .style('display', 'flex') // Ensure it's visible
-  .text('Leitlinienempfehlung');
-
-// Add the "Einteilung" link
-container.append('a')
-  .attr('href', '#')
-  .attr('id', 'einteilung-link')
-  .attr('class', 'einteilung-button')
-  .text('Einteilung');
-
-// Create a button for each severity level
-container.selectAll('.severity-button')
-  .data(severityLevels)
-  .enter()
-  .append('button')
-  .attr('class', 'severity-button')
-  .text(d => d)
-  .on('click', function(event, d) {
-    // If the clicked button is already selected, unselect it
-    if (selectedSeverityLevel === d) {
-      selectedSeverityLevel = null;
-      d3.select(this).classed('pressed', false);
-
-      // Clear the right sidebar
-      updateRightSidebar(null);
-    } else {
-      // Deselect any previously selected button
-      container.selectAll('.severity-button').classed('pressed', false);
-
-      // Select the clicked button
-      selectedSeverityLevel = d;
-      d3.select(this).classed('pressed', true);
-
-      // Update the right sidebar with new content
-      updateRightSidebar(d);
+    function scrollToBottom(textarea) {
+      textarea.scrollTop = textarea.scrollHeight;
     }
 
-    // Update recommendations highlighting
-    updateRecommendationsHighlighting();
-  });
 
+    function updateResult() {
+      const surveyContainers = document.querySelectorAll('.survey-container');
+      const h2Elements = document.querySelectorAll('.item-name');
 
-//////////////////////// RIGHT SIDEBAR ///////////////////
-function updateRightSidebar(severityLevel) {
-  const sidebarContent = d3.select('#sidebar-content');
+      const resultText = Array.from(surveyContainers)
+        .map((container, index) => {
+          const itemName = h2Elements[index].textContent;
+          const aspectContainers = container.querySelectorAll('.aspect-container');
 
-  // Clear previous content
-  sidebarContent.selectAll('*').remove();
+          const aspectText = Array.from(aspectContainers)
+            .map(aspectContainer => {
+              const aspectName = aspectContainer.querySelector('h3').textContent;
+              const checkboxes = aspectContainer.querySelectorAll('input[type="checkbox"]');
+              const textInputs = aspectContainer.querySelectorAll('input[type="text"]');
 
-  if (severityLevel && window.severityInfoData[severityLevel]) {
-    const info = window.severityInfoData[severityLevel];
+              if (checkboxes.length > 0) {
+                const checkedOptions = Array.from(checkboxes)
+                  .map(checkbox => {
+                    if (checkbox.type === 'checkbox' && checkbox.checked) {
+                      const label = checkbox.closest('label');
+                      const customTextInput = label.querySelector('input[type="text"]');
+                      return customTextInput ? `${label.textContent} ${customTextInput.value}` : `${label.textContent}`;
+                    }
+                    return '';
+                  })
+                  .filter(Boolean)
+                  .join(', ');
 
-    // Add title
-    sidebarContent.append('h2')
-      .attr('class', 'right-sidebar-title')
-      .text(info.title);
+                return checkedOptions ? `${aspectName}: ${checkedOptions}` : '';
+              } else if (textInputs.length > 0) {
+                const textInputValues = Array.from(textInputs)
+                  .map(textInput => {
+                    if (textInput.value.trim() !== '') {
+                      return `${textInput.labels[0].textContent}: ${textInput.value}`;
+                    }
+                    return '';
+                  })
+                  .filter(Boolean)
+                  .join(', ');
 
-    // Add content
-    sidebarContent.append('p')
-      .attr('class', 'right-sidebar-content')
-      .html(info.content);
+                return textInputValues ? `${aspectName}: ${textInputValues}` : '';
+              }
 
-    // Add image if it exists
-    if (info.image) {
-      sidebarContent.append('img')
-        .attr('src', info.image)
-        .attr('alt', info.title)
-        .attr('class', 'right-sidebar-image');
+              return '';
+            })
+            .filter(Boolean)
+            .join('\n');
+
+          return aspectText ? `${itemName}\n${aspectText}` : '';
+        })
+        .filter(Boolean)
+        .join('\n\n');
+
+      const resultTextarea = document.getElementById('result-textarea');
+      resultTextarea.value = resultText;
+      scrollToBottom(resultTextarea);
     }
 
-    // Add table if it exists
-    if (info.table) {
-      const table = sidebarContent.append('table')
-        .attr('class', 'right-sidebar-table');
-
-      // Add table headers
-      const thead = table.append('thead');
-      const headerRow = thead.append('tr');
-      headerRow.selectAll('th')
-        .data(info.table.headers)
-        .enter()
-        .append('th')
-        .text(d => d);
-
-      // Add table rows
-      const tbody = table.append('tbody');
-      info.table.rows.forEach(rowData => {
-        const row = tbody.append('tr');
-        row.selectAll('td')
-          .data(rowData)
-          .enter()
-          .append('td')
-          .text(d => d);
-      });
-    }
-  } else {
-    // If no severity level is selected, clear the sidebar content
-    sidebarContent.selectAll('*').remove();
-  }
-}
-
-/////////////////////////////////////////////////
 
 
-// Create a container for the toggle switch with some top margin
-const toggleContainer = container.append('div')
-  .attr('class', 'toggle-container')
-  .style('margin-top', '20px'); // Adjust spacing as needed
+    // Attach the updateResult function to the change/input event of checkboxes and text input fields
+    const inputs = document.querySelectorAll('input[type="checkbox"], input[type="text"]');
+    inputs.forEach(input => {
+      // Add a 'change' event listener to each input
+      input.addEventListener('change', () => {
+        // Call the updateResult function when the input changes
+        updateResult();
 
-// Append the toggle switch elements
-toggleContainer.append('label')
-  .attr('class', 'toggle-switch')
-  .html(`
-    <input type="checkbox" id="penicillin-toggle">
-    <span class="toggle-slider"></span>
-  `);
+        // If the input is a checkbox, check if there is a corresponding text input
+        if (input.type === 'checkbox') {
+          const customTextInput = document.getElementById(input.id + 'Text');
 
-// Append the toggle label separately to prevent overlap
-toggleContainer.append('span')
-  .attr('class', 'toggle-label')
-  .text('Penicillin-Allergie');
-
-// Add an event listener to handle toggle changes
-d3.select('#penicillin-toggle').on('change', function(event) {
-  penicillinAllergy = d3.select(this).property('checked');
-  console.log('Penicillin-Allergie toggle is now', penicillinAllergy ? 'ON' : 'OFF');
-
-  // Update recommendations highlighting
-  updateRecommendationsHighlighting();
-});
-
-// Attach event listener to the "Einteilung" link
-const einteilungLink = document.getElementById("einteilung-link");
-const modal = document.getElementById("image-modal");
-const modalImg = document.getElementById("modal-image");
-const captionText = document.getElementById("caption");
-const closeBtn = document.getElementsByClassName("close")[0];
-
-if (einteilungLink) {
-  einteilungLink.onclick = function(event) {
-    event.preventDefault(); // Prevent default link behavior
-    modal.style.display = "block";
-    modalImg.src = "CAP_schweregradeinteilung.jpg"; // Path to your image
-    captionText.innerHTML = "Schweregradeinteilung"; // Optional caption
-  }
-}
-
-// When the user clicks on the close button, close the modal
-if (closeBtn) {
-  closeBtn.onclick = function() {
-    modal.style.display = "none";
-  }
-}
-
-// When the user clicks anywhere outside of the modal content, close the modal
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-// Close modal on 'Escape' key press
-document.addEventListener('keydown', function(event) {
-  if (event.key === "Escape") {
-    modal.style.display = "none";
-  }
-});
-}
-
-function createTable(data, capFilterOn, diseaseData) {
-
-// Remove existing table
-d3.select('#table-container').select('table').remove();
-
-// Get the table container
-const container = d3.select('#table-container');
-
-// Prepare data for table
-const bacteriaSet = new Set();
-const antibioticToGroup = {};
-
-// Collect all bacteria and map antibiotics to groups
-for (const group in data) {
-  for (const antibiotic in data[group]) {
-    antibioticToGroup[antibiotic] = group;
-    for (const bacterium in data[group][antibiotic]) {
-      bacteriaSet.add(bacterium);
-    }
-  }
-}
-
-// Convert the set to an array and filter based on CAP filter
-let bacteria = Array.from(bacteriaSet);
-
-if (capFilterOn) {
-  bacteria = bacteria.filter(bacterium => bacterium in diseaseData);
-}
-
-// Sort bacteria based on desiredOrderBacteria
-bacteria.sort((a, b) => {
-  const indexA = desiredOrderBacteria.indexOf(a);
-  const indexB = desiredOrderBacteria.indexOf(b);
-  if (indexA === -1 && indexB === -1) return 0;
-  if (indexA === -1) return 1;
-  if (indexB === -1) return -1;
-  return indexA - indexB;
-});
-
-// Map bacteria to their groups and determine where groups start
-let bacteriaGroupsOrdered = [];
-let currentGroup = null;
-
-bacteria.forEach((bacterium, index) => {
-  const group = bacteriaGroups[bacterium] || 'Unknown';
-  const isGroupStart = group !== currentGroup;
-  if (isGroupStart) {
-    currentGroup = group;
-  }
-  bacteriaGroupsOrdered.push({
-    name: bacterium,
-    group: group,
-    isGroupStart: isGroupStart
-  });
-});
-
-// Compute the spans for each group
-let groupSpans = [];
-currentGroup = null;
-let currentSpan = 0;
-
-bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
-  if (bacteriumData.group !== currentGroup) {
-    if (currentGroup !== null) {
-      groupSpans.push({ group: currentGroup, span: currentSpan });
-    }
-    currentGroup = bacteriumData.group;
-    currentSpan = 1;
-  } else {
-    currentSpan++;
-  }
-  if (index === bacteriaGroupsOrdered.length - 1) {
-    groupSpans.push({ group: currentGroup, span: currentSpan });
-  }
-});
-
-// Create a flat list of antibiotics sorted according to desiredOrderAntibiotics
-let antibiotics = desiredOrderAntibiotics.map(antibiotic => {
-  const group = antibioticToGroup[antibiotic];
-  if (group && data[group][antibiotic]) {
-    return {
-      group: group,
-      antibiotic: antibiotic,
-      sensitivities: data[group][antibiotic]
-    };
-  } else {
-    return null;
-  }
-}).filter(entry => entry !== null);
-
-// Apply the "häufig eingesetzte Antibiotika" filter if the toggle is ON
-if (frequentAntibiotics) {
-  antibiotics = antibiotics.filter(entry => window.focusAntibiotics.includes(entry.antibiotic));
-}
-
-// Calculate the number of antibiotics in each group
-const groupCounts = {};
-antibiotics.forEach(entry => {
-  if (groupCounts[entry.group]) {
-    groupCounts[entry.group]++;
-  } else {
-    groupCounts[entry.group] = 1;
-  }
-});
-
-// Prepare prevalence data and calculate total prevalence
-let prevalenceData = {};
-if (capFilterOn) {
-  prevalenceData = diseaseData;
-} else {
-  bacteria.forEach(bacterium => {
-    prevalenceData[bacterium] = 1; // Equal prevalence
-  });
-}
-
-// Calculate total prevalence
-let totalPrevalence = 0;
-for (const bacterium of bacteria) {
-  totalPrevalence += prevalenceData[bacterium] || 0;
-}
-
-// Decide total width for bacteria columns (adjust as needed)
-const totalBacteriaWidth = window.innerWidth - 800; // Total width is 100vw minus 250px
-
-
-// Calculate width in pixels for each bacterium
-const bacteriaWidths = {};
-for (const bacterium of bacteria) {
-  const prevalence = prevalenceData[bacterium] || 0;
-  const widthPx = (prevalence / totalPrevalence) * totalBacteriaWidth;
-  bacteriaWidths[bacterium] = widthPx;
-}
-
-// Create the table element
-const table = container.append('table');
-
-// Create the colgroup
-const colgroup = table.append('colgroup');
-
-// Add cols for the two fixed columns ('Group' and 'Antibiotic')
-colgroup.append('col')
-  .attr('class', 'group-col')
-  .style('width', '135px'); // Adjust as needed
-
-colgroup.append('col')
-  .attr('class', 'antibiotic-col')
-  .style('width', '135px'); // Adjust as needed
-
-// Add cols for each bacterium with dynamic widths
-colgroup.selectAll('col.bacterium-col')
-  .data(bacteriaGroupsOrdered)
-  .enter()
-  .append('col')
-  .attr('class', 'bacterium-col')
-  .style('width', d => bacteriaWidths[d.name] + 'px');
-
-// Create the table header
-const thead = table.append('thead');
-
-// First row: bacterial groups
-const groupHeaderRow = thead.append('tr');
-
-// The first two cells are empty (for 'Group' and 'Antibiotic')
-groupHeaderRow.append('th').attr('colspan', 2);
-
-// Add group headers with colspan
-groupHeaderRow.selectAll('th.bacteria-group')
-  .data(groupSpans)
-  .enter()
-  .append('th')
-  .attr('class', (d, i) => {
-    let classes = 'bacteria-group';
-    // Classes for the first cell only if needed
-    if (i === 0 || i > 0) {
-      classes += ' bacterial-group-start';
-    }
-    return classes;
-  })
-  .attr('colspan', d => d.span)
-  .style('background-color', d => bacteriaGroupColors[d.group] || '#e2e3e5')
-  .text(d => d.group);
-
-// Second row: bacteria names
-const headerRow = thead.append('tr');
-
-// Add 'Group' and 'Antibiotic' headers
-headerRow.append('th').text('');
-headerRow.append('th').text('');
-
-// Add bacteria names as headers
-headerRow.selectAll('th.bacterium')
-  .data(bacteriaGroupsOrdered)
-  .enter()
-  .append('th')
-  .attr('class', d => {
-    let classes = 'bacterium';
-    if (d.isGroupStart) {
-      classes += ' bacterial-group-start';
-    }
-    return classes;
-  })
-  .style('background-color', d => bacteriaGroupColors[d.group] || '#f2f2f2') // Apply background color
-  .text(d => d.name)
-  .each(function(d) {
-    // Store reference to the header cell
-    bacteriumHeaderCells[d.name] = d3.select(this);
-  })
-  .on('mouseover', function(event, d) {
-    const bacterium = d.name;
-    const bacteriumCell = d3.select(this);
-    bacteriumCell.classed('bacterium-name-hover', true);
-
-    // Highlight the column
-    const dataCells = dataCellsByBacterium[bacterium];
-    if (dataCells) {
-      dataCells.forEach(cellData => {
-        cellData.cell.classed('highlighted-column', true);
-      });
-    }
-
-    // For each antibiotic, modify the antibiotic name cells based on the sensitivity
-    antibiotics.forEach(entry => {
-      const sensitivity = entry.sensitivities[bacterium];
-      const antibioticNameCell = antibioticNameCells[entry.antibiotic];
-      if (sensitivity === 0.0) {
-        antibioticNameCell.classed('antibiotic-low-sensitivity', true);
-      } else if (sensitivity === 0.5) {
-        antibioticNameCell.classed('antibiotic-intermedium-sensitivity', true);
-      } else if (sensitivity === 1.0) { // New condition for high sensitivity
-        antibioticNameCell.classed('antibiotic-high-sensitivity', true);
-      }
-    });
-  })
-  .on('mouseout', function(event, d) {
-    const bacterium = d.name;
-    const bacteriumCell = d3.select(this);
-    bacteriumCell.classed('bacterium-name-hover', false);
-
-    // Remove highlight from the column
-    const dataCells = dataCellsByBacterium[bacterium];
-    if (dataCells) {
-      dataCells.forEach(cellData => {
-        cellData.cell.classed('highlighted-column', false);
-      });
-    }
-
-    // Remove styles from antibiotic name cells
-    antibiotics.forEach(entry => {
-      const antibioticNameCell = antibioticNameCells[entry.antibiotic];
-      antibioticNameCell.classed('antibiotic-low-sensitivity', false);
-      antibioticNameCell.classed('antibiotic-intermedium-sensitivity', false);
-      antibioticNameCell.classed('antibiotic-high-sensitivity', false);
-    });
-  });
-
-// Create the table body
-const tbody = table.append('tbody');
-
-// Initialize previous group tracker
-let previousGroup = null;
-
-// Add rows for each antibiotic
-antibiotics.forEach(entry => {
-  const row = tbody.append('tr');
-
-  // If the group is different from the previous, insert the group cell with rowspan
-  if (entry.group !== previousGroup) {
-    row.classed('antibiotic-group-start', true); // Add class to indicate start of a new group
-
-    row.append('td')
-      .attr('class', 'group-name')
-      .attr('rowspan', groupCounts[entry.group])
-      .style('background-color', groupToColor[entry.group]) // Set background color
-      .text(entry.group);
-
-    // Update the previousGroup
-    previousGroup = entry.group;
-  }
-
-  // Add antibiotic name with event listeners for hover effect
-  const antibioticNameCell = row.append('td')
-    .attr('class', 'antibiotic-name')
-    .style('background-color', groupToColor[entry.group]) // Set background color
-    .text(entry.antibiotic)
-    .datum(entry.antibiotic) // Bind the antibiotic name as datum
-    .on('mouseover', function() {
-      d3.select(this).classed('antibiotic-name-hover', true);
-      d3.select(this.parentNode).classed('highlighted-row', true);
-
-      // Highlight bacterium headers based on sensitivity
-      const sensitivities = entry.sensitivities;
-      for (const bacterium in sensitivities) {
-        if (sensitivities[bacterium] === 0.0) {
-          if (bacteriumHeaderCells[bacterium]) {
-            bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', true);
-          }
-        } else if (sensitivities[bacterium] === 0.5) {
-          if (bacteriumHeaderCells[bacterium]) {
-            bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', true);
-          }
-        } else if (sensitivities[bacterium] === 1.0) { // New condition for high sensitivity
-          if (bacteriumHeaderCells[bacterium]) {
-            bacteriumHeaderCells[bacterium].classed('bacterium-high-sensitivity', true);
+          // Disable the text input if the checkbox is not checked
+          if (customTextInput) {
+            customTextInput.disabled = !input.checked;
           }
         }
-      }
+      });
 
-    })
-    .on('mouseout', function() {
-      d3.select(this).classed('antibiotic-name-hover', false);
-      d3.select(this.parentNode).classed('highlighted-row', false);
-
-      // Remove highlight from bacterium headers
-      const sensitivities = entry.sensitivities;
-      for (const bacterium in sensitivities) {
-        if (bacteriumHeaderCells[bacterium]) {
-          bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', false);
-          bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', false);
-          bacteriumHeaderCells[bacterium].classed('bacterium-high-sensitivity', false);
-        }
-      }
+      // Add an 'input' event listener to each input
+      input.addEventListener('input', updateResult);
     });
 
-  // Store reference to the antibiotic name cell
-  antibioticNameCells[entry.antibiotic] = antibioticNameCell;
-
-  // Add cells for each bacterium
-  bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
-    const bacterium = bacteriumData.name;
-    const isGroupStart = bacteriumData.isGroupStart;
-
-    const sensitivity = entry.sensitivities[bacterium];
-    const cell = row.append('td')
-      .attr('class', () => {
-        let classes = 'data-cell';
-        if (isGroupStart) {
-          classes += ' bacterial-group-start';
-        }
-        if (sensitivity === 1.0) {
-          classes += ' sensitivity-high';
-        } else if (sensitivity === 0.5) {
-          classes += ' sensitivity-medium';
-        } else if (sensitivity === 0.0) {
-          classes += ' sensitivity-low';
-        }
-        return classes;
-      })
 
 
-      .datum({
-            antibiotic: entry.antibiotic,
-            bacterium: bacterium,
-            sensitivity: sensitivity
-          })
-          .on('mouseover', function(event, d) {
-            const cellData = d3.select(this).datum();
-            const antibiotic = cellData.antibiotic;
-            const bacterium = cellData.bacterium;
 
-            // Add the hover effect to the data cell
-            d3.select(this).classed('data-cell-hover', true);
+    // SCROLLING PART /////////////////////////////////////////////////////
 
-            // Highlight the antibiotic name cell
-            if (antibioticNameCells[antibiotic]) {
-              antibioticNameCells[antibiotic].classed('antibiotic-name-hover', true);
-              d3.select(antibioticNameCells[antibiotic].node().parentNode).classed('highlighted-row', true);
+    document.addEventListener('DOMContentLoaded', function() {
+      const headerHeight = document.querySelector('.header').offsetHeight; // Get the height of the header.
+
+      document.querySelectorAll('.navbar div').forEach((anchor, index) => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          const clickedIndex = index;
+
+          if (clickedIndex === 0) { // Special case for the first heading
+            // Scroll directly to the top of the page
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          } else {
+            // Find the corresponding section by index
+            const targetSection = document.querySelectorAll('.main-content h2')[clickedIndex];
+            // Attempt to get the previous element to base the scroll position off of its bottom
+            const previousElement = targetSection.previousElementSibling;
+
+            let targetOffsetTop;
+            if (previousElement) {
+              // Calculate the target offset using the bottom of the previous element
+              targetOffsetTop = previousElement.getBoundingClientRect().bottom + window.pageYOffset + 20;
+            } else {
+              // If no previous element (fallback, though logically unnecessary given the 'if' for first item)
+              targetOffsetTop = targetSection.offsetTop - headerHeight;
             }
 
-            // Highlight the bacterium header cell
-            if (bacteriumHeaderCells[bacterium]) {
-              bacteriumHeaderCells[bacterium].classed('bacterium-name-hover', true);
-            }
+            // Ensure that the scroll position never goes below zero
+            targetOffsetTop = Math.max(targetOffsetTop, 0);
 
-            // Highlight all cells in the same row (data cells)
-            d3.select(this.parentNode).selectAll('td.data-cell').classed('highlighted-row', true);
+            window.scrollTo({
+              top: targetOffsetTop,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
 
-            // Highlight all cells in the same column
-            const dataCells = dataCellsByBacterium[bacterium];
-            if (dataCells) {
-              dataCells.forEach(cellData => {
-                cellData.cell.classed('highlighted-column', true);
-              });
-            }
-          })
-          .on('mouseout', function(event, d) {
-            const cellData = d3.select(this).datum();
-            const antibiotic = cellData.antibiotic;
-            const bacterium = cellData.bacterium;
 
-            // Remove the hover effect from the data cell
-            d3.select(this).classed('data-cell-hover', false);
 
-            // Remove highlight from the antibiotic name cell
-            if (antibioticNameCells[antibiotic]) {
-              antibioticNameCells[antibiotic].classed('antibiotic-name-hover', false);
-              d3.select(antibioticNameCells[antibiotic].node().parentNode).classed('highlighted-row', false);
-            }
 
-            // Remove highlight from the bacterium header cell
-            if (bacteriumHeaderCells[bacterium]) {
-              bacteriumHeaderCells[bacterium].classed('bacterium-name-hover', false);
-            }
 
-            // Remove highlight from all cells in the same row
-            d3.select(this.parentNode).selectAll('td.data-cell').classed('highlighted-row', false);
 
-            // Remove highlight from all cells in the same column
-            const dataCells = dataCellsByBacterium[bacterium];
-            if (dataCells) {
-              dataCells.forEach(cellData => {
-                cellData.cell.classed('highlighted-column', false);
-              });
-            }
+
+
+    // COPY TO CLIPBOARD PART /////////////////////////////////////////////////////
+    // Function to copy the text from the textarea to the clipboard
+    function showAlertMessage() {
+      const alertMessage = document.createElement('div');
+      alertMessage.classList.add('alert-message');
+      alertMessage.textContent = 'In Zwischenablage kopiert!';
+      document.body.appendChild(alertMessage);
+
+      // Trigger show animation
+      setTimeout(() => {
+        alertMessage.classList.add('show');
+      }, 10); // Slight delay to ensure transition is applied
+
+      // Hide the alert after 2 seconds
+      setTimeout(() => {
+        alertMessage.classList.remove('show');
+        alertMessage.classList.add('hide');
+
+        // Remove the element after the hide animation is done
+        setTimeout(() => {
+          document.body.removeChild(alertMessage);
+        }, 300); // Match the duration of the hide animation
+      }, 1300);
+    }
+
+    // Function to copy text and show alert
+    function copyToClipboard() {
+      const resultText = document.getElementById('result-textarea');
+      resultText.select();
+      document.execCommand('copy');
+      showAlertMessage();
+    }
+
+
+
+
+
+
+    // NAVBAR STATE PART /////////////////////////////////////////////////////
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const navbarItems = document.querySelectorAll('.navbar .nav-item-outer');
+      const sections = document.querySelectorAll('.main-content h2');
+
+      function setActiveSection() {
+        let currentSectionIndex = sections.length - 1;
+
+        sections.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2) {
+            currentSectionIndex = index;
+          }
+        });
+
+        navbarItems.forEach((item, index) => {
+          item.classList.toggle('active', index === currentSectionIndex);
+        });
+      }
+
+      document.addEventListener('scroll', setActiveSection);
+      setActiveSection();
+
+      navbarItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+          sections[index].scrollIntoView({
+            behavior: 'smooth'
           });
-
-
-    // Remove the text from the cell
-    cell.text(''); // Set cell text to empty string
-
-    // Store reference to the data cell
-    if (!dataCellsByBacterium[bacterium]) {
-      dataCellsByBacterium[bacterium] = [];
-    }
-    dataCellsByBacterium[bacterium].push({
-      cell: cell,
-      sensitivity: sensitivity,
-      antibiotic: entry.antibiotic,
+          setActiveSection();
+        });
+      });
     });
-  });
-});
-
-// After table is created, apply current recommendations highlighting
-updateRecommendationsHighlighting();
-}
-
-function updateRecommendationsHighlighting() {
-if (!selectedSeverityLevel) {
-  // If no severity is selected, remove all recommendation highlights
-  d3.selectAll('.antibiotic-name')
-    .classed('primary-recommendation', false)
-    .classed('secondary-recommendation', false)
-    .classed('tertiary-recommendation', false);
-  return;
-}
-
-// Determine the allergy status key
-const allergyKey = penicillinAllergy ? 'penicillin_allergy' : 'no_penicillin_allergy';
-
-// Retrieve recommendations for the current severity and allergy status
-const recommendations = window.CAPRecommendations[selectedSeverityLevel][allergyKey];
-
-// Extract primary, secondary, and tertiary recommendations
-const primary = recommendations.primary_recommendation || [];
-const secondary = recommendations.secondary_recommendation || [];
-const tertiary = recommendations.tertiary_recommendation || [];
-
-// Log recommendations for debugging
-console.log('Current Recommendations:', { primary, secondary, tertiary });
-
-// Apply styles to antibiotics
-d3.selectAll('.antibiotic-name')
-  .classed('primary-recommendation', function() {
-    const antibiotic = d3.select(this).datum();
-    return primary.includes(antibiotic);
-  })
-  .classed('secondary-recommendation', function() {
-    const antibiotic = d3.select(this).datum();
-    return secondary.includes(antibiotic);
-  })
-  .classed('tertiary-recommendation', function() {
-    const antibiotic = d3.select(this).datum();
-    return tertiary.includes(antibiotic);
-  });
-}
-
-
-
-
-
-    // Note: The modal functionality has been moved inside the createSeverityButtons function
-    // to ensure that the "Einteilung" link exists when the event listener is attached.
-
   </script>
+
 </body>
+
 </html>
