@@ -12,9 +12,9 @@
     --extra-accent-color: #3CB371;
     --background-color: #FFFFFF;
     --text-color: #333333;
-    --primary-recommendation-color: #3CB371;
-    --secondary-recommendation-color: #ffc107;
-    --tertiary-recommendation-color:#fd7e14;
+    --primary-recommendation-color: #005e18;    /*    #3CB371;*/
+    --secondary-recommendation-color: #ca9800;       /*  #ffc107; */
+    --tertiary-recommendation-color: #d75000;          /*    #fd7e14;*/
     --sensitivity-high-color: #a7dca7;
     --sensitivity-medium-color: #ffe594;
     --sensitivity-low-color: #ffb4b4;
@@ -205,7 +205,8 @@ word-wrap: break-word;
       border-style: solid;
       border-width: 1px;
       border-color: #fff;
-      padding: 5px;
+      padding: 4px;
+      padding-left: 5px;
       text-align: center;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -216,13 +217,14 @@ word-wrap: break-word;
     th {
       background-color: none;
       font-weight: normal;
-      font-size: 12px;
+      font-size: 12.5px;
     }
 
     /* Style for the group names */
     td.group-name {
       font-size: 14px;
       font-weight: bold;
+      padding-left: 6px;
       color: #000; /* Ensure group names are black */
       text-align: left;
       vertical-align: middle; /* Center text vertically */
@@ -231,7 +233,7 @@ word-wrap: break-word;
 
     /* Style for the antibiotic names */
     td.antibiotic-name {
-      font-size: 10px;
+      font-size: 12px;
       color: #000; /* Ensure antibiotic names are black */
       text-align: left;
       cursor: pointer; /* Indicate that the cell is interactive */
@@ -251,7 +253,7 @@ word-wrap: break-word;
       writing-mode: vertical-rl; /* Vertical writing mode right to left */
       text-orientation: mixed;
       white-space: normal; /* Allow wrapping */
-      padding: 5px;
+      padding: 4.5px;
       vertical-align: middle;
       height: 150px; /* Adjust as needed */
       overflow: visible;
@@ -774,13 +776,13 @@ const bacteriaGroups = {
 
 // Define a fixed mapping of antibiotic groups to colors
 const groupToColor = {
-'Penicilline': '#a9c4c0',
-'Cephalosporine': '#6c9d9c',
-'Carbapeneme': '#95b7b3',
-'Chinolone': '#a4d8da',
+'Penicilline': '#bbd0cd',     // 'a9c4c0',
+'Cephalosporine': '#8bb2b1',          // '6c9d9c',
+'Carbapeneme': '#a2c0bc',              //'95b7b3',
+'Chinolone': '#b5dfe1',                        //'#a4d8da',
 'Makrolide': '#8fa5c9',
-'Glykopeptide': '#aed7bf',
-'Sonstige': '#97c2ac',
+'Glykopeptide': '#bedfcc',                    //'#aed7bf',
+'Sonstige':  '#abcebc'                       //'#97c2ac',
 };
 
 // Define a fixed mapping of bacterial groups to colors
