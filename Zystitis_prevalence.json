@@ -1,0 +1,9 @@
+{
+  "Escherichia coli": 0.75,
+  "Klebsiella spp.": 0.067,
+  "Proteus mirabilis": 0.046,
+  "Enterococcus faecalis": 0.01,
+  "Citrobacter spp.": 0.022,
+  "Staphylococcus saprophyticus": 0.024,
+"Methicillinsensibler Staph. aureus (MSSA)": 0.012
+}

@@ -1,0 +1,85 @@
+{
+  "Leichte Pneumonie": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": [
+        "Amoxicillin"
+      ],
+      "secondary_recommendation": [
+        "Doxycycline",
+        "Azithromycin"
+      ],
+      "tertiary_recommendation": [
+        "Clarithromycin",
+        "Moxifloxacin",
+        "Levofloxacin"
+      ]
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": [
+        "Doxycycline",
+        "Azithromycin"
+      ],
+      "secondary_recommendation": [
+        "Clarithromycin"
+      ],
+      "tertiary_recommendation": [
+        "Clarithromycin",
+        "Moxifloxacin",
+        "Levofloxacin"
+      ]
+    }
+  },
+  "Mittelschwere Pneumonie": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": [
+        "Ampicillin Sulbactam",
+        "Cefuroxim",
+        "Ceftriaxon",
+        "Cefotaxim"
+      ],
+      "primary_recommendation_addon": [
+        "Azithromycin"
+      ],
+      "secondary_recommendation": [],
+      "tertiary_recommendation": [
+        "Moxifloxacin",
+        "Levofloxacin"
+      ]
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": [
+        "Moxifloxacin",
+        "Levofloxacin"
+      ],
+      "secondary_recommendation": [],
+      "tertiary_recommendation": []
+    }
+  },
+  "Schwere Pneumonie": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": [
+        "Piperacillin Tazobactam",
+        "Ceftriaxon",
+        "Cefotaxim"
+      ],
+      "primary_recommendation_addon": [
+        "Azithromycin"
+      ],
+      "secondary_recommendation": [
+        "Moxifloxacin",
+        "Levofloxacin"
+      ],
+      "tertiary_recommendation": []
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": [
+        "Moxifloxacin",
+        "Levofloxacin"
+      ],
+      "secondary_recommendation": [
+        "Meropenem"
+      ],
+      "tertiary_recommendation": []
+    }
+  }
+}
