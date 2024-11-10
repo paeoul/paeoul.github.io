@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>DokuSwift: Resistenztabelle</title>
@@ -50,7 +51,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     /* Sidebar Styles */
@@ -67,7 +68,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex-shrink: 1;
+    /*  flex-shrink: 1;*/
     }
 
     /* Right Sidebar Styles */
@@ -198,7 +199,8 @@
       background-color: #ffffff;
     }
 
-    th, td {
+    th,
+    td {
       border-style: solid;
       border-width: 1px;
       border-color: #fff;
@@ -353,7 +355,7 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.7);
+      background-color: rgba(0, 0, 0, 0.7);
     }
 
     /* Data cell hover effect */
@@ -429,12 +431,14 @@
     }
 
     .bottom-toggle {
-      margin-top: auto; /* Pushes the element to the bottom */
+      margin-top: auto;
+      /* Pushes the element to the bottom */
     }
 
     /* Optional: Adjust spacing between the two toggles */
     .toggle-container:not(:last-child) {
-      margin-bottom: 40px; /* Adds space below each toggle, except the last one */
+      margin-bottom: 40px;
+      /* Adds space below each toggle, except the last one */
     }
 
     .toggle-switch {
@@ -475,15 +479,15 @@
       border-radius: 50%;
     }
 
-    .toggle-switch input:checked + .toggle-slider {
+    .toggle-switch input:checked+.toggle-slider {
       background-color: #28a745;
     }
 
-    .toggle-switch input:focus + .toggle-slider {
+    .toggle-switch input:focus+.toggle-slider {
       box-shadow: 0 0 1px #28a745;
     }
 
-    .toggle-switch input:checked + .toggle-slider:before {
+    .toggle-switch input:checked+.toggle-slider:before {
       transform: translateX(25px);
     }
 
@@ -556,7 +560,7 @@
       /* Style for the default option */
       font-style: italic;
       font-size:
-      color: red;
+        color: red;
     }
 
     #disease-selection-container label {
@@ -566,10 +570,73 @@
       display: block;
       text-align: center;
     }
+
+    #dynamic-header {
+      font-size: 26px;
+      text-align: center;
+      margin: 40px 0;
+      color: var(--primary-color);
+    }
+
+    #header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 10px; /* Add some padding to separate it from the edges */
+    }
+
+    #dynamic-header {
+      flex: 1; /* This allows the header to take up remaining space */
+      font-size: 26px;
+      text-align: center;
+      margin: 40px 0;
+      color: var(--primary-color);
+
+    }
+
+    /*//////////////////// Zoom Button /////////////////////*/
+    .zoom-buttons {
+      box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .zoom-buttons div:hover {
+      background: #eee;
+    }
+
+    .zoom-buttons div {
+      text-align: center;
+      background: white;
+      font: bold 24px/30px sans-serif;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 0;
+      border-bottom: 1px solid #e2e2e2;
+    }
+
+    .zoom-buttons div:first-child {
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+
+    .zoom-buttons div:last-child {
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-bottom: 0;
+    }
+
+    /*////////////////////////////////////////////////////////*/
   </style>
 
 
 </head>
+
 <body>
   <div id="dashboard">
     <div id="left-sidebar">
@@ -587,7 +654,7 @@
       </div>
 
       <!-- Penicillin Allergy Toggle -->
-      <div class="toggle-container">
+      <div class="toggle-container" id="penicillin-toggle-container" style="display: none;">
         <label class="toggle-switch">
           <input type="checkbox" id="penicillin-toggle">
           <span class="toggle-slider"></span>
@@ -606,6 +673,14 @@
     </div>
 
     <div id="header_table_container">
+      <div id="header-container">
+        <h1 id="dynamic-header">Antibiotikaresistenztabelle</h1>
+        <div class="zoom-buttons">
+          <div id="zoom-in"><span>+</span></div>
+          <div id="zoom-out"><span>–</span></div>
+        </div>
+      </div>
+
       <div id="table-container">
         <!-- Table will be generated here -->
       </div>
@@ -819,11 +894,17 @@
         if (selectedDisease === '') {
           // User selected the default option to deselect disease
           selectedDisease = null;
+        }
+        // Update header
+        updateHeader();
+
+        if (selectedDisease === null) {
           loadDefaultData();
         } else {
           loadDiseaseData(selectedDisease);
         }
       });
+
     }
 
 
@@ -847,6 +928,9 @@
 
         // Hide the severity container in default view
         d3.select('#severity-container').style('display', 'none');
+
+        // **Hide the Penicillin Allergy Toggle**
+        d3.select('#penicillin-toggle-container').style('display', 'none');
 
         // Clear the right sidebar
         updateRightSidebar(null);
@@ -888,6 +972,9 @@
         d3.select('#penicillin-toggle').property('checked', false);
         d3.select('#frequent-antibiotics-toggle').property('checked', true);
 
+
+        // **Show the Penicillin Allergy Toggle**
+        d3.select('#penicillin-toggle-container').style('display', 'flex');
         // Show and create the severity container
         d3.select('#severity-container').style('display', 'flex');
         createSeverityButtons();
@@ -931,14 +1018,14 @@
         .style('display', 'flex')
         .text('Leitlinienempfehlung');
 
-        // Only add the "Einteilung" link if there is an image
-        if (currentSeverityImage) {
-          container.append('a')
-            .attr('href', '#')
-            .attr('id', 'einteilung-link')
-            .attr('class', 'einteilung-button')
-            .text('Einteilung');
-        }
+      // Only add the "Einteilung" link if there is an image
+      if (currentSeverityImage) {
+        container.append('a')
+          .attr('href', '#')
+          .attr('id', 'einteilung-link')
+          .attr('class', 'einteilung-button')
+          .text('Einteilung');
+      }
 
       // Create a button for each severity level
       container.selectAll('.severity-button')
@@ -974,13 +1061,13 @@
       // Attach event listener to the "Einteilung" link
       const einteilungLink = document.getElementById("einteilung-link");
       if (einteilungLink) {
-    einteilungLink.onclick = function(event) {
-      event.preventDefault(); // Prevent default link behavior
-      modal.style.display = "block";
-      modalImg.src = currentSeverityImage; // Use the current severity image
-      captionText.innerHTML = "Schweregradeinteilung"; // Optional caption
-    }
-  }
+        einteilungLink.onclick = function(event) {
+          event.preventDefault(); // Prevent default link behavior
+          modal.style.display = "block";
+          modalImg.src = currentSeverityImage; // Use the current severity image
+          captionText.innerHTML = "Schweregradeinteilung"; // Optional caption
+        }
+      }
       const modal = document.getElementById("image-modal");
       const modalImg = document.getElementById("modal-image");
       const captionText = document.getElementById("caption");
@@ -988,18 +1075,18 @@
 
       if (einteilungLink) {
         einteilungLink.onclick = function(event) {
-              event.preventDefault(); // Prevent default link behavior
+          event.preventDefault(); // Prevent default link behavior
 
-              if (currentSeverityImage) {
-                modal.style.display = "block";
-                modalImg.src = currentSeverityImage; // Use the current severity image
-                captionText.innerHTML = "Schweregradeinteilung"; // Optional caption
-              } else {
-                // Handle the case where there is no image for the current disease
-                alert("Keine Schweregradeinteilung verfügbar.");
-              }
-            }
+          if (currentSeverityImage) {
+            modal.style.display = "block";
+            modalImg.src = currentSeverityImage; // Use the current severity image
+            captionText.innerHTML = "Schweregradeinteilung"; // Optional caption
+          } else {
+            // Handle the case where there is no image for the current disease
+            alert("Keine Schweregradeinteilung verfügbar.");
+          }
         }
+      }
 
       // When the user clicks on the close button, close the modal
       if (closeBtn) {
@@ -1149,7 +1236,10 @@
       bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
         if (bacteriumData.group !== currentGroup) {
           if (currentGroup !== null) {
-            groupSpans.push({ group: currentGroup, span: currentSpan });
+            groupSpans.push({
+              group: currentGroup,
+              span: currentSpan
+            });
           }
           currentGroup = bacteriumData.group;
           currentSpan = 1;
@@ -1157,7 +1247,10 @@
           currentSpan++;
         }
         if (index === bacteriaGroupsOrdered.length - 1) {
-          groupSpans.push({ group: currentGroup, span: currentSpan });
+          groupSpans.push({
+            group: currentGroup,
+            span: currentSpan
+          });
         }
       });
 
@@ -1544,6 +1637,36 @@
           return tertiary.includes(antibiotic);
         });
     }
+
+    function updateHeader() {
+      const header = d3.select('#dynamic-header');
+      if (selectedDisease) {
+        header.text('Filter: ' + selectedDisease);
+      } else {
+        header.text('Antibiotikaresistenztabelle');
+      }
+    }
+
+    ///////////////////// Zoom function ///////////////////////////
+    let currentZoom = 1;
+
+    function applyZoom() {
+      const tableContainer = document.getElementById('table-container');
+      tableContainer.style.zoom = currentZoom;
+    }
+
+    document.getElementById('zoom-in').addEventListener('click', () => {
+      currentZoom += 0.05;
+      applyZoom();
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', () => {
+      currentZoom = Math.max(0.5, currentZoom - 0.05);
+      applyZoom();
+    });
+
+    /////////////////////////////////////////////////////////////////////////////
   </script>
 </body>
+
 </html>
