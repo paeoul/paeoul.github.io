@@ -1,13 +1,14 @@
 {
   "focus_antibiotics": [
     "Penicillin G",
-    "Flucloxacillin",
+    "Pivmecillinam",
     "Amoxicillin",
     "Ampicillin",
     "Ampicillin Sulbactam",
     "Piperacillin Tazobactam",
     "Cefazolin",
     "Cefuroxim",
+    "Cefpodoxim",
     "Ceftriaxon",
     "Cefotaxim",
     "Ceftazidim",
@@ -17,18 +18,9 @@
     "Ciprofloxacin",
     "Levofloxacin",
     "Moxifloxacin",
-    "Azithromycin",
-    "Clarithromycin",
-    "Vancomycin",
-    "Gentamicin",
-    "Doxycycline",
-    "Clindamycin",
-    "Cotrimoxazole",
-    "Metronidazole",
-    "Tigecycline",
-    "Linezolid",
-    "Daptomycin",
-    "Rifampicin",
-    "Fosfomycin"
+    "Fosfomycin",
+    "Nitrofurantoin",
+    "Trimethoprim",
+    "Cotrimoxazol (HWI)"
   ]
 }

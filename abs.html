@@ -68,7 +68,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-    /*  flex-shrink: 1;*/
+      /*  flex-shrink: 1;*/
     }
 
     /* Right Sidebar Styles */
@@ -273,6 +273,11 @@
       background-color: var(--sensitivity-low-color);
       color: #fff;
     }
+
+  td.sensitivity-unknown {
+  background-color: #cccccc; /* Light grey background */
+  color: #666666; /* Optional: Adjust text color for better readability */
+}
 
     /* Thicker border-top for the first row of each antibiotic group */
     tr.antibiotic-group-start td {
@@ -583,12 +588,14 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 0 10px; /* Add some padding to separate it from the edges */
+      padding: 0 10px;
+      /* Add some padding to separate it from the edges */
     }
 
     #dynamic-header {
-      flex: 1; /* This allows the header to take up remaining space */
-      font-size: 26px;
+      flex: 1;
+      /* This allows the header to take up remaining space */
+      font-size: 30px;
       text-align: center;
       margin: 40px 0;
       color: var(--primary-color);
@@ -607,6 +614,7 @@
 
     .zoom-buttons div:hover {
       background: #eee;
+      transition: background 0.3s;
     }
 
     .zoom-buttons div {
@@ -718,6 +726,7 @@
     // Desired order of antibiotics
     const desiredOrderAntibiotics = [
       "Penicillin G",
+      "Pivmecillinam",
       "Flucloxacillin",
       "Amoxicillin",
       "Ampicillin",
@@ -725,6 +734,7 @@
       "Piperacillin Tazobactam",
       "Cefazolin",
       "Cefuroxim",
+      "Cefpodoxim",
       "Ceftriaxon",
       "Cefotaxim",
       "Ceftazidim",
@@ -753,7 +763,10 @@
       "Daptomycin",
       "Rifampicin",
       "Fosfomycin",
-      "Colistin"
+      "Colistin",
+      "Nitrofurantoin",
+      "Trimethoprim",
+      "Cotrimoxazol (HWI)"
     ];
 
     // Desired order of bacteria
@@ -763,6 +776,7 @@
       "Methicillinsensibler Staph. aureus (MSSA)",
       "Methicillinresistenter Staph. aureus (MRSA)",
       "Koagulasenegative Staphylokokken",
+      "Staphylococcus saprophyticus",
       "Enterococcus faecalis",
       "Enterococcus faecium",
       "Listeria monocytogenes",
@@ -796,6 +810,7 @@
       "Methicillinsensibler Staph. aureus (MSSA)": "grampositiv",
       "Methicillinresistenter Staph. aureus (MRSA)": "grampositiv",
       "Koagulasenegative Staphylokokken": "grampositiv",
+      "Staphylococcus saprophyticus": "grampositiv",
       "Enterococcus faecalis": "grampositiv",
       "Enterococcus faecium": "grampositiv",
       "Listeria monocytogenes": "grampositiv",
@@ -1391,7 +1406,7 @@
 
           // For each antibiotic, modify the antibiotic name cells based on the sensitivity
           antibiotics.forEach(entry => {
-            const sensitivity = entry.sensitivities[bacterium];
+            const sensitivity = entry.sensitivities ? entry.sensitivities[bacterium] : null;
             const antibioticNameCell = antibioticNameCells[entry.antibiotic];
             if (sensitivity === 0.0) {
               antibioticNameCell.classed('antibiotic-low-sensitivity', true);
@@ -1399,8 +1414,11 @@
               antibioticNameCell.classed('antibiotic-intermedium-sensitivity', true);
             } else if (sensitivity === 1.0) {
               antibioticNameCell.classed('antibiotic-high-sensitivity', true);
+            } else if (sensitivity === null) {
+              antibioticNameCell.classed('antibiotic-unknown-sensitivity', true);
             }
           });
+
         })
         .on('mouseout', function(event, d) {
           const bacterium = d.name;
@@ -1421,6 +1439,7 @@
             antibioticNameCell.classed('antibiotic-low-sensitivity', false);
             antibioticNameCell.classed('antibiotic-intermedium-sensitivity', false);
             antibioticNameCell.classed('antibiotic-high-sensitivity', false);
+            antibioticNameCell.classed('antibiotic-unknown-sensitivity', false);
           });
         });
 
@@ -1513,6 +1532,8 @@
                 classes += ' sensitivity-medium';
               } else if (sensitivity === 0.0) {
                 classes += ' sensitivity-low';
+              } else if (sensitivity == null) { //sensitivity == null to catch both null and undefined (instead of ===)
+                classes += ' sensitivity-unknown'; // For null values
               }
               return classes;
             })
