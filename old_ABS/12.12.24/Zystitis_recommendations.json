@@ -1,0 +1,40 @@
+{
+  "Frauen ohne relevante Begleiterkrankungen mit akuter unkomplizierter Zystitis": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": ["Fosfomycin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": ["Fosfomycin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    }
+  },
+  "Akute unkomplizierte Zystitis bei Schwangeren": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": ["Fosfomycin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": ["Fosfomycin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    }
+  },
+
+  "Akute unkomplizierte Zystitis bei jüngeren Männern": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": ["Pivmecillinam", "Nitrofurantoin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": ["Pivmecillinam", "Nitrofurantoin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    }
+  }
+
+}
