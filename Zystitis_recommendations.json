@@ -1,5 +1,5 @@
 {
-  "Frauen ohne relevante Begleiterkrankungen mit akuter unkomplizierter Zystitis": {
+  "Akute unkomplizierte Zystitis bei Frauen ohne relevante Begleiterkrankungen": {
     "no_penicillin_allergy": {
       "primary_recommendation": ["Fosfomycin", "Pivmecillinam", "Nitrofurantoin", "Trimethoprim"],
       "secondary_recommendation": [""],
