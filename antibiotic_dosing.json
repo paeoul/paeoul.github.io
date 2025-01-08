@@ -1,0 +1,78 @@
+{
+  "Fosfomycin": {
+    "default": "<span class='antibiotic-dosing-name'>Fosfomycin</span><br/>3 g p.o. einmalig",
+    "Zystitis": "<span class='antibiotic-dosing-name'>Fosfomycin</span><br/>3 g p.o. einmalig"
+  },
+  "Pivmecillinam": {
+    "default": "<span class='antibiotic-dosing-name'>Pivmecillinam</span><br/>400 mg p.o. 1-1-1 für 3 Tage",
+    "Zystitis": "<span class='antibiotic-dosing-name'>Pivmecillinam</span><br/>400 mg p.o. 1-1-1 für 3 Tage"
+  },
+  "Nitrofurantoin": {
+    "default": "<span class='antibiotic-dosing-name'>Nitrofurantoin</span><br/>100 mg p.o. 1-0-1 für 5 Tage,<br>kontraindiziert bei Niereninsuffizienz jeden Grades!",
+    "Zystitis": "<span class='antibiotic-dosing-name'>Nitrofurantoin</span><br/>100 mg p.o. 1-0-1 für 5 Tage,<br>kontraindiziert bei Niereninsuffizienz jeden Grades!"
+  },
+  "Trimethoprim": {
+    "default": "<span class='antibiotic-dosing-name'>Trimethoprim</span><br/>200 mg p.o. 1-0-1 für 3 Tage,<br/>bei GFR&lt;25 mL/min: Dosisreduktion",
+    "Zystitis": "<span class='antibiotic-dosing-name'>Trimethoprim</span><br/>200 mg p.o. 1-0-1 für 3 Tage,<br/>bei GFR&lt;25 mL/min: Dosisreduktion"
+  },
+  "Cefuroxim": {
+    "default": "<span class='antibiotic-dosing-name'>Cefuroxim</span><br/>500 mg p.o. 1-0-1",
+    "Zystitis": "<span class='antibiotic-dosing-name'>Cefuroxim</span><br/>250 mg p.o. 1-0-1 für 3d,<br/>ab GFR&lt;20/30 mL/min: Dosisreduktion",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Cefuroxim</span><br/>1,5 g i.v. 1-1-1 für 5–7 Tage,<br/>bei GFR&lt;20 ml/min: Dosisreduktion"
+  },
+  "Cefpodoxim": {
+    "default": "<span class='antibiotic-dosing-name'>Cefpodoxim</span><br/>200 mg p.o. 1-0-1",
+    "Pyelonephritis": "<span class='antibiotic-dosing-name'>Cefpodoxim</span><br/>200 mg 1-0-1 für 10 Tage,<br/>bei GFR&lt;40 mL/min: Dosisreduktion"
+  },
+  "Ciprofloxacin": {
+    "default": "<span class='antibiotic-dosing-name'>Ciprofloxacin</span><br/>500 mg p.o. 1-0-1",
+    "Pyelonephritis": "<span class='antibiotic-dosing-name'>Ciprofloxacin</span><br/>500 mg p.o. 1-0-1 für 7 d"
+  },
+  "Levofloxacin": {
+    "default": "<span class='antibiotic-dosing-name'>Levofloxacin</span><br/>500 mg p.o. 1-0-0",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Levofloxacin</span><br/>500 mg p.o. 1-0-0 für 5–7d",
+    "Pyelonephritis": "<span class='antibiotic-dosing-name'>Levofloxacin</span><br/> 750 mg p.o. 1×/d für 5 d,<br/>bei GFR&lt;50 mL/min: Dosisreduktion"
+  },
+  "Ceftriaxon": {
+    "default": "<span class='antibiotic-dosing-name'>Ceftriaxon</span><br/>2 g i.v. 1-0-0",
+    "Pyelonephritis": "<span class='antibiotic-dosing-name'>Ceftriaxon</span><br/>2 g i.v. 1-0-0",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Ceftriaxon</span><br/>2 g i.v. 1-0-0 für 5–7 Tage,<br/>keine Dosisreduktion bei Niereninsuffizienz"
+  },
+  "Cefotaxim": {
+    "default": "<span class='antibiotic-dosing-name'>Cefotaxim</span><br/>2 g i.v. 1-1-1",
+    "Pyelonephritis": "<span class='antibiotic-dosing-name'>Cefotaxim</span><br/>2 g i.v. 1-1-1",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Cefotaxim</span><br/>2 g i.v. 1-1-1"
+  },
+  "Amoxicillin": {
+    "default": "<span class='antibiotic-dosing-name'>Amoxicillin</span><br/>1 g p.o. 1-1-1",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Amoxicillin</span><br/>1 g p.o. 1-1-1 (<70 kg: 750 mg) für 5-7d,<br/>bei GFR&lt;30 ml/min: Dosisreduktion"
+  },
+  "Doxycycline": {
+    "default": "<span class='antibiotic-dosing-name'>Doxycycline</span><br/>200 mg p.o. 1-0-0",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Doxycycline</span><br/>200 mg (bei <70 kg ab Tag 2 100 mg) p.o. 1-0-0 für 5–7d"
+  },
+  "Azithromycin": {
+    "default": "<span class='antibiotic-dosing-name'>Azithromycin</span><br/>500 mg p.o. 1-0-0",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Azithromycin</span><br/>500 mg p.o. 1-0-0 für 3d"
+  },
+  "Clarithromycin": {
+    "default": "<span class='antibiotic-dosing-name'>Clarithromycin</span><br/>500 mg p.o. 1-0-1",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Clarithromycin</span><br/>Clarithromycin 500 mg p.o. 1-0-1 für 5–7d,<br/>bei GFR&lt;30 mL/min: 250 mg p.o. 1-0-1"
+  },
+  "Moxifloxacin": {
+    "default": "<span class='antibiotic-dosing-name'>Moxifloxacin</span><br/>400 mg p.o. 1-0-0",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Moxifloxacin</span><br/>400 mg p.o. 1-0-0 für 5-7d"
+  },
+  "Ampicillin Sulbactam": {
+    "default": "<span class='antibiotic-dosing-name'>Ampicillin Sulbactam</span><br/>3 g i.v. 1-1-1",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Ampicillin Sulbactam</span><br/>2/1 g i.v. 1-1-1 für 5–7 Tage, bei GFR&lt;30 ml/min: Dosisreduktion"
+  },
+  "Piperacillin Tazobactam": {
+    "default": "<span class='antibiotic-dosing-name'>Piperacillin Tazobactam</span><br/>4.5 g i.v. 1-1-1",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Piperacillin Tazobactam</span><br/>4/0.5 g i.v. 3-4x/d für 8–15 Tage,<br/>ab GFR&lt; 40 mL/min: max. 3×/d,<br/>ab GFR&lt; 20 mL/min: max. 2×/d"
+  },
+  "Meropenem": {
+    "default": "<span class='antibiotic-dosing-name'>Meropenem</span><br/>1 g i.v. 1-1-1",
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Meropenem</span><br/>1 g i.v. 1-1-1"
+  }
+}

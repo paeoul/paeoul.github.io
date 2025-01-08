@@ -6,10 +6,10 @@
       ],
       "secondary_recommendation": [
         "Doxycycline",
-        "Azithromycin"
+        "Azithromycin",
+        "Clarithromycin"
       ],
       "tertiary_recommendation": [
-        "Clarithromycin",
         "Moxifloxacin",
         "Levofloxacin"
       ]
@@ -17,11 +17,10 @@
     "penicillin_allergy": {
       "primary_recommendation": [
         "Doxycycline",
-        "Azithromycin"
-      ],
-      "secondary_recommendation": [
+        "Azithromycin",
         "Clarithromycin"
       ],
+      "secondary_recommendation": [],
       "tertiary_recommendation": [
         "Clarithromycin",
         "Moxifloxacin",
@@ -40,11 +39,11 @@
       "primary_recommendation_addon": [
         "Azithromycin"
       ],
-      "secondary_recommendation": [],
-      "tertiary_recommendation": [
+      "secondary_recommendation": [
         "Moxifloxacin",
         "Levofloxacin"
-      ]
+      ],
+      "tertiary_recommendation": []
     },
     "penicillin_allergy": {
       "primary_recommendation": [

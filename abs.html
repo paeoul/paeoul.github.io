@@ -14,9 +14,9 @@
       --extra-accent-color: #3CB371;
       --background-color: #FFFFFF;
       --text-color: #333333;
-      --primary-recommendation-color: #005e18;
-      --secondary-recommendation-color: #ca9800;
-      --tertiary-recommendation-color: #d75000;
+      --primary-recommendation-color: #00EE6B;
+      --secondary-recommendation-color: #FBE550;
+      --tertiary-recommendation-color: #EB740D;
       --sensitivity-high-color: #a7dca7;
       --sensitivity-medium-color: #ffe594;
       --sensitivity-low-color: #ffb4b4;
@@ -274,10 +274,12 @@
       color: #fff;
     }
 
-  td.sensitivity-unknown {
-  background-color: #cccccc; /* Light grey background */
-  color: #666666; /* Optional: Adjust text color for better readability */
-}
+    td.sensitivity-unknown {
+      background-color: #cccccc;
+      /* Light grey background */
+      color: #666666;
+      /* Optional: Adjust text color for better readability */
+    }
 
     /* Thicker border-top for the first row of each antibiotic group */
     tr.antibiotic-group-start td {
@@ -507,20 +509,17 @@
     /* Recommendations Styles */
     .primary-recommendation {
       font-weight: bold;
-      box-shadow: inset 0 0 0 4px var(--primary-recommendation-color);
-      filter: brightness(125%) !important;
+      box-shadow: inset 0 0 0 6px var(--primary-recommendation-color);
     }
 
     .secondary-recommendation {
       font-weight: bold;
-      box-shadow: inset 0 0 0 4px var(--secondary-recommendation-color);
-      filter: brightness(125%) !important;
+      box-shadow: inset 0 0 0 6px var(--secondary-recommendation-color);
     }
 
     .tertiary-recommendation {
       font-weight: bold;
-      box-shadow: inset 0 0 0 4px var(--tertiary-recommendation-color);
-      filter: brightness(125%) !important;
+      box-shadow: inset 0 0 0 6px var(--tertiary-recommendation-color);
     }
 
     /* Antibiotic name cell hover style */
@@ -639,6 +638,52 @@
       border-bottom: 0;
     }
 
+
+    /* TOOLTIP DESIGN */
+
+    #antibiotic-tooltip {
+      position: absolute;
+      top:-11px;
+      z-index: 9999;
+      max-width: 400px;
+      /* or whatever suits your layout */
+      background: #ffffff;
+      color: var(--secondary-color);
+      border: 1px solid #EAEAEA;
+      border-radius: 6px;
+      /* rounded corners */
+      padding: 14px;
+      padding-top: 8px;
+      box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.15);
+      font-size: 16px;
+      line-height: 1.4;
+      white-space: normal;
+      /* allow line wrap */
+      word-break: break-word;
+      /* wrap text to next line if too long */
+    }
+
+    #antibiotic-tooltip::before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      z-index: 1;
+      top: -10px; /* Adjust as needed */
+      left: 13px;
+      transform: translate(-10%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid #ffffff;
+    }
+
+    .antibiotic-dosing-name {
+      color: var(--primary-color);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+
     /*////////////////////////////////////////////////////////*/
   </style>
 
@@ -711,6 +756,11 @@
       </div>
     </div>
   </div>
+
+
+  <div id="antibiotic-tooltip" style="display: none;"></div>
+
+
 
   <!-- Modal Structure -->
   <div id="image-modal" class="modal">
@@ -839,21 +889,21 @@
 
     // Define a fixed mapping of antibiotic groups to colors
     const groupToColor = {
-      'Penicilline': '#bbd0cd',
-      'Cephalosporine': '#8bb2b1',
-      'Carbapeneme': '#a2c0bc',
-      'Chinolone': '#b5dfe1',
-      'Makrolide': '#8fa5c9',
-      'Glykopeptide': '#bedfcc',
-      'Sonstige': '#abcebc',
+      'Penicilline': '#d6e3e1',
+      'Cephalosporine': '#b1c3c2',
+      'Carbapeneme': '#c7d9d7',
+      'Chinolone': '#d3eced',
+      'Makrolide': '#c7d2e4',
+      'Glykopeptide': '#deefe7',
+      'Sonstige': '#cbe0d6',
     };
 
     // Define a fixed mapping of bacterial groups to colors
     const bacteriaGroupColors = {
-      'grampositiv': '#92d0d5',
-      'gramnegativ': '#92abd5',
-      'Anaerobier': '#cdbaeb',
-      'Atypiker': '#ba9bde'
+      'grampositiv': '#bee3e6',
+      'gramnegativ': '#becde6',
+      'Anaerobier': '#e6ddf5',
+      'Atypiker': '#ddcdef'
     };
 
     // State variables
@@ -874,11 +924,38 @@
     let severityLevels = [];
     let diseaseRecommendations = {};
 
-    // Load disease configuration
-    d3.json('disease_config.json').then(function(config) {
+
+    // Global variables
+    let antibioticDosingData = {};
+
+    // Helper function to retrieve dose
+    function getDoseForAntibiotic(antibioticName) {
+      const doseInfo = antibioticDosingData[antibioticName];
+      if (!doseInfo) {
+        // No entry for this antibiotic => no tooltip
+        return null;
+      }
+
+      // If no disease is selected, use default (if available)
+      if (!selectedDisease) {
+        return doseInfo.default || null;
+      }
+
+      // Otherwise, we have a disease; only show if there's disease-specific dosing
+      return doseInfo[selectedDisease] || null;
+    }
+
+
+    // Load disease_config and antibiotic_dosing together
+    Promise.all([
+      d3.json('disease_config.json'),
+      d3.json('antibiotic_dosing.json')
+    ]).then(function([config, dosingData]) {
       diseaseConfig = config;
+      antibioticDosingData = dosingData; // global variable
       initializeDiseaseSelector(config);
     });
+
 
     function initializeDiseaseSelector(config) {
       const diseases = Object.keys(config);
@@ -899,6 +976,7 @@
         .text(d => d);
 
       // Do not set selectedDisease yet
+
 
       // Load initial data without a specific disease
       loadDefaultData();
@@ -998,6 +1076,39 @@
       });
     }
 
+    /**
+     * Positions #antibiotic-tooltip below (if space) or above (if space),
+     * or fails to show if neither fits.
+     * 'text' is what we display inside the tooltip.
+     */
+     function showAntibioticTooltip(referenceElement, text) {
+     const tooltip = document.getElementById('antibiotic-tooltip');
+     tooltip.innerHTML = text;
+     tooltip.style.display = 'block';
+
+     const tooltipRect = tooltip.getBoundingClientRect();
+     const tooltipHeight = tooltipRect.height;
+     const tooltipWidth = tooltipRect.width;
+     const refRect = referenceElement.getBoundingClientRect();
+
+     // Always place below
+     tooltip.style.top = `${window.scrollY + refRect.bottom + 4}px`;
+
+     // Shift horizontally, e.g. partial overlap on the right:
+     const overlapOffset = 40;
+     const leftPos = refRect.right - overlapOffset + window.scrollX;
+     tooltip.style.left = `${leftPos}px`;
+   }
+
+
+    /** Hide the global tooltip. */
+    function hideAntibioticTooltip() {
+      const tooltip = document.getElementById('antibiotic-tooltip');
+      tooltip.style.display = 'none';
+    }
+
+
+
     function init() {
       // Add event listener to the "häufig eingesetzte Antibiotika" toggle
       d3.select('#frequent-antibiotics-toggle').on('change', function(event) {
@@ -1019,6 +1130,99 @@
     const bacteriumHeaderCells = {};
     const dataCellsByBacterium = {};
     const antibioticNameCells = {};
+    // Track the currently locked antibiotic (null if none)
+    let lockedAntibiotic = null;
+
+    /**
+     * Highlights (same as on mouseover) the row/headers for the given antibiotic.
+     */
+    function highlightAntibiotic(antibiotic) {
+      // 1. Highlight antibiotic name cell
+      const antibioticNameCell = antibioticNameCells[antibiotic];
+      if (!antibioticNameCell) return;
+
+      antibioticNameCell.classed('antibiotic-name-hover', true);
+      d3.select(antibioticNameCell.node().parentNode).classed('highlighted-row', true);
+
+      // 2. Highlight bacterium header cells based on sensitivity
+      //    We can reuse the same logic from the mouseover event:
+      const entry = findAntibioticEntryByName(antibiotic);
+      if (!entry) return;
+
+      const sensitivities = entry.sensitivities;
+      for (const bacterium in sensitivities) {
+        const val = sensitivities[bacterium];
+        if (bacteriumHeaderCells[bacterium]) {
+          if (val === 0.0) {
+            bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', true);
+          } else if (val === 0.5) {
+            bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', true);
+          } else if (val === 1.0) {
+            bacteriumHeaderCells[bacterium].classed('bacterium-high-sensitivity', true);
+          }
+        }
+      }
+    }
+
+    /**
+     * Unhighlights (same as on mouseout) the row/headers for the given antibiotic.
+     */
+    function unhighlightAntibiotic(antibiotic) {
+      // 1. Unhighlight antibiotic name cell
+      const antibioticNameCell = antibioticNameCells[antibiotic];
+      if (!antibioticNameCell) return;
+
+      antibioticNameCell.classed('antibiotic-name-hover', false);
+      d3.select(antibioticNameCell.node().parentNode).classed('highlighted-row', false);
+
+      // 2. Unhighlight the bacterium header cells
+      const entry = findAntibioticEntryByName(antibiotic);
+      if (!entry) return;
+
+      const sensitivities = entry.sensitivities;
+      for (const bacterium in sensitivities) {
+        if (bacteriumHeaderCells[bacterium]) {
+          bacteriumHeaderCells[bacterium]
+            .classed('bacterium-low-sensitivity', false)
+            .classed('bacterium-intermedium-sensitivity', false)
+            .classed('bacterium-high-sensitivity', false);
+        }
+      }
+    }
+
+    /**
+     * Locks the given antibiotic, unhighlighting any previously locked antibiotic.
+     */
+    function lockAntibiotic(antibiotic) {
+      // If another antibiotic is locked, unhighlight it first.
+      if (lockedAntibiotic && lockedAntibiotic !== antibiotic) {
+        unhighlightAntibiotic(lockedAntibiotic);
+      }
+      lockedAntibiotic = antibiotic;
+      highlightAntibiotic(antibiotic);
+    }
+
+    /**
+     * Clears the locked antibiotic (if any), restoring normal hover behavior.
+     */
+    function clearLockedAntibiotic() {
+      if (lockedAntibiotic) {
+        unhighlightAntibiotic(lockedAntibiotic);
+        lockedAntibiotic = null;
+      }
+    }
+
+    /**
+     * Helper: find the antibiotic entry (with .sensitivities) by antibiotic name.
+     * We can search inside the global 'antibiotics' array we create in createTable().
+     * We'll store it in a global variable so this function can find it.
+     */
+    let globalAntibioticsList = [];
+
+    function findAntibioticEntryByName(antibioticName) {
+      return globalAntibioticsList.find(e => e.antibiotic === antibioticName) || null;
+    }
+
 
     // Function to create severity buttons and toggle
     function createSeverityButtons() {
@@ -1288,6 +1492,10 @@
         antibiotics = antibiotics.filter(entry => focusAntibioticsData.focus_antibiotics.includes(entry.antibiotic));
       }
 
+      // Store this in a global so we can access .sensitivities in highlightAntibiotic()
+      globalAntibioticsList = antibiotics;
+
+
       // Calculate the number of antibiotics in each group
       const groupCounts = {};
       antibiotics.forEach(entry => {
@@ -1392,6 +1600,8 @@
           bacteriumHeaderCells[d.name] = d3.select(this);
         })
         .on('mouseover', function(event, d) {
+          // NEW CHECK
+          if (lockedAntibiotic !== null) return;
           const bacterium = d.name;
           const bacteriumCell = d3.select(this);
           bacteriumCell.classed('bacterium-name-hover', true);
@@ -1421,6 +1631,8 @@
 
         })
         .on('mouseout', function(event, d) {
+          // NEW CHECK
+          if (lockedAntibiotic !== null) return;
           const bacterium = d.name;
           const bacteriumCell = d3.select(this);
           bacteriumCell.classed('bacterium-name-hover', false);
@@ -1473,7 +1685,10 @@
           .style('background-color', groupToColor[entry.group])
           .text(entry.antibiotic)
           .datum(entry.antibiotic)
+          // >>> We modify the .on('mouseover') and .on('mouseout') sections <<<
           .on('mouseover', function() {
+            // ADD THIS CHECK:
+            if (lockedAntibiotic !== null) return;
             d3.select(this).classed('antibiotic-name-hover', true);
             d3.select(this.parentNode).classed('highlighted-row', true);
 
@@ -1497,6 +1712,8 @@
 
           })
           .on('mouseout', function() {
+            // ADD THIS CHECK:
+            if (lockedAntibiotic !== null) return;
             d3.select(this).classed('antibiotic-name-hover', false);
             d3.select(this.parentNode).classed('highlighted-row', false);
 
@@ -1507,6 +1724,30 @@
                 bacteriumHeaderCells[bacterium].classed('bacterium-low-sensitivity', false);
                 bacteriumHeaderCells[bacterium].classed('bacterium-intermedium-sensitivity', false);
                 bacteriumHeaderCells[bacterium].classed('bacterium-high-sensitivity', false);
+              }
+            }
+          })
+
+          // >>> NEW CLICK HANDLER <<<
+          .on('click', function(event, antibioticName) {
+            // Prevent the click from propagating up to document
+            event.stopPropagation(); // so it won't bubble up to the document
+            if (lockedAntibiotic === antibioticName) {
+              // Already locked, so unlock
+              clearLockedAntibiotic();
+              // Hide tooltip
+              hideAntibioticTooltip();
+            } else {
+              // lock this antibiotic
+              lockAntibiotic(antibioticName);
+              // Hide tooltip
+              hideAntibioticTooltip();
+
+              // Show tooltip for the antibiotic
+              const dose = getDoseForAntibiotic(antibioticName);
+              // If dose is null => don't show the tooltip
+              if (dose) {
+                showAntibioticTooltip(this, dose);
               }
             }
           });
@@ -1543,6 +1784,7 @@
               sensitivity: sensitivity
             })
             .on('mouseover', function(event, d) {
+              if (lockedAntibiotic !== null) return;
               const cellData = d3.select(this).datum();
               const antibiotic = cellData.antibiotic;
               const bacterium = cellData.bacterium;
@@ -1573,6 +1815,7 @@
               }
             })
             .on('mouseout', function(event, d) {
+              if (lockedAntibiotic !== null) return;
               const cellData = d3.select(this).datum();
               const antibiotic = cellData.antibiotic;
               const bacterium = cellData.bacterium;
@@ -1617,6 +1860,18 @@
           });
         });
       });
+
+
+      // When user clicks anywhere not on '.antibiotic-name', unlock
+      document.addEventListener('click', function(event) {
+        // If the click is NOT inside an element with class 'antibiotic-name'
+        if (!event.target.closest('.antibiotic-name')) {
+          clearLockedAntibiotic();
+          hideAntibioticTooltip();
+        }
+      });
+
+
 
       // After table is created, apply current recommendations highlighting
       updateRecommendationsHighlighting();
