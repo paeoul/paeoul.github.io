@@ -57,7 +57,7 @@
   },
   "Clarithromycin": {
     "default": "<span class='antibiotic-dosing-name'>Clarithromycin</span><br/>500 mg p.o. 1-0-1",
-    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Clarithromycin</span><br/>Clarithromycin 500 mg p.o. 1-0-1 für 5–7d,<br/>bei GFR&lt;30 mL/min: 250 mg p.o. 1-0-1"
+    "Ambulant erworbene Pneumonie": "<span class='antibiotic-dosing-name'>Clarithromycin</span><br/>500 mg p.o. 1-0-1 für 5–7d,<br/>bei GFR&lt;30 mL/min: 250 mg p.o. 1-0-1"
   },
   "Moxifloxacin": {
     "default": "<span class='antibiotic-dosing-name'>Moxifloxacin</span><br/>400 mg p.o. 1-0-0",
