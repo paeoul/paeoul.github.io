@@ -11,7 +11,7 @@
       --primary-color: #008DCA;
       --secondary-color: #0f4067;
       --accent-color: #CDE4F6;
-      --extra-accent-color: #3CB371;
+      --extra-accent-color: #28a745;
       --background-color: #FFFFFF;
       --text-color: #333333;
       --primary-recommendation-color: #00EE6B;
@@ -68,6 +68,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+       overflow-y: auto; /* Allow scrolling if content exceeds viewport */
       /*  flex-shrink: 1;*/
     }
 
@@ -162,7 +163,7 @@
       border: none;
       cursor: pointer;
       margin-bottom: 10px;
-      font-size: 14px;
+      font-size: 17px;
       border-radius: 4px;
       transition: background-color 0.3s;
       text-align: center;
@@ -197,6 +198,10 @@
       border-radius: 12px;
       overflow: hidden;
       background-color: #ffffff;
+      user-select: none;
+-webkit-user-select: none; /* Safari */
+-moz-user-select: none;    /* Firefox */
+-ms-user-select: none;     /* Internet Explorer/Edge */
     }
 
     th,
@@ -487,16 +492,20 @@
     }
 
     .toggle-switch input:checked+.toggle-slider {
-      background-color: #28a745;
+      background-color: var(--extra-accent-color);
     }
 
     .toggle-switch input:focus+.toggle-slider {
-      box-shadow: 0 0 1px #28a745;
+      box-shadow: 0 0 1px var(--extra-accent-color);
     }
 
     .toggle-switch input:checked+.toggle-slider:before {
       transform: translateX(25px);
     }
+
+
+
+
 
     /* Style for the toggle label */
     .toggle-label {
@@ -552,12 +561,25 @@
     #disease-selection-container {
       width: 100%;
       margin-bottom: 20px;
+       position: relative; /* For positioning pseudo-elements if needed */
     }
 
     #disease-selector {
       width: 100%;
-      padding: 6px;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 16px;
+      border: 2px solid var(--primary-color); /* Thicker border for emphasis */
+      border-radius: 6px;
+      background-color: #f0f8ff; /* Light background to contrast */
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    /* Focus and Hover States */
+    #disease-selector:hover,
+    #disease-selector:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 10px rgba(0, 141, 202, 0.5);
+      outline: none;
     }
 
     #disease-selector option[value=""] {
@@ -575,11 +597,109 @@
       text-align: center;
     }
 
+    /* Pulsating Border Animation */
+@keyframes pulsate {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 141, 202, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 141, 202, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 141, 202, 0);
+  }
+}
+
+#disease-selection-container.animated #disease-selector {
+  animation: pulsate 2s infinite;
+}
+
+
+    /*//////////////////// THREE_WAY_TOGGLE /////////////////////*/
+
+    /* Push the filter toggle to the bottom */
+    #three-way-toggle-container {
+      margin-top: auto; /* This pushes the container to the bottom */
+      width: 100%; /* Ensure it spans the full width of the sidebar */
+      padding-bottom: 20px; /* Optional: Add some padding at the bottom */
+    }
+
+    .three-way-toggle {
+      display: flex;
+      flex-direction: column; /* Vertical arrangement */
+      align-items: stretch; /* Stretch to fill width */
+      background: #f0f0f0; /* Light background for contrast */
+      border-radius: 12px; /* Rounded corners */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+      overflow: hidden; /* Clip child elements */
+      width: 100%; /* Full width */
+      box-sizing: border-box; /* Include padding and border in width */
+    }
+
+    .three-way-toggle input[type="radio"] {
+      display: none; /* Hide the actual radio */
+    }
+
+    .three-way-toggle label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 0; /* Vertical padding */
+      cursor: pointer;
+      background-color: #e0e0e0; /* Default background */
+      color: #333; /* Default text color */
+      font-size: 16px; /* Increased font size for readability */
+      transition: background-color 0.3s, color 0.3s, transform 0.2s;
+      user-select: none; /* Prevent text selection */
+      outline: none; /* Remove default focus outline */
+    }
+
+    /* Add border-top to all labels except the first one */
+    .three-way-toggle label:not(:first-of-type) {
+      border-top: 1.5px solid #d0d0d0; /* Fine separator line */
+    }
+
+    /* Active (Checked) State */
+    .three-way-toggle input[type="radio"]:checked + label {
+      background-color: var(--extra-accent-color);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Hover Effect */
+    .three-way-toggle label:hover {
+      background-color: #d0d0d0; /* Slightly darker on hover */
+    /*  transform: translateY(-2px);  Subtle lift effect */
+    }
+
+    /* Rounded Corners for First and Last Labels */
+    .three-way-toggle label:first-of-type {
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .three-way-toggle label:last-of-type {
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    /* Optional: Transition for Active State */
+    .three-way-toggle input[type="radio"]:checked + label {
+      transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    }
+
+
+
+    /*//////////////////// DYNAMIC HEADER /////////////////////*/
+
+
+
     #dynamic-header {
       font-size: 26px;
       text-align: center;
       margin: 40px 0;
       color: var(--primary-color);
+      user-select: none;
     }
 
     #header-container {
@@ -625,6 +745,7 @@
       padding: 0;
       border: 0;
       border-bottom: 1px solid #e2e2e2;
+      user-select: none;
     }
 
     .zoom-buttons div:first-child {
@@ -643,7 +764,7 @@
 
     #antibiotic-tooltip {
       position: absolute;
-      top:-11px;
+      top: -11px;
       z-index: 9999;
       max-width: 400px;
       /* or whatever suits your layout */
@@ -669,7 +790,8 @@
       width: 0;
       height: 0;
       z-index: 1;
-      top: -10px; /* Adjust as needed */
+      top: -10px;
+      /* Adjust as needed */
       left: 13px;
       transform: translate(-10%);
       border-left: 10px solid transparent;
@@ -695,7 +817,7 @@
     <div id="left-sidebar">
       <!-- Disease Selection -->
       <div id="disease-selection-container">
-        <label for="disease-selector">Erkrankung auswählen:</label>
+        <label for="disease-selector">Krankheitsbild auswählen:</label>
         <select id="disease-selector">
           <!-- Options will be populated dynamically -->
         </select>
@@ -715,14 +837,20 @@
         <span class="toggle-label">Penicillin-Allergie</span>
       </div>
 
-      <!-- Frequent Antibiotics Toggle -->
-      <div class="toggle-container bottom-toggle">
-        <label class="toggle-switch">
-          <input type="checkbox" id="frequent-antibiotics-toggle" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-label">Fokus</span>
+      <!-- Focus Antibiotics Toggle -->
+      <div id="three-way-toggle-container" style="display: none;">
+        <div class="three-way-toggle">
+          <input type="radio" name="filterMode" id="filterMode0" value="0">
+          <label for="filterMode0">Alle</label>
+
+          <input type="radio" name="filterMode" id="filterMode1" value="1" checked>
+          <label for="filterMode1">Fokus</label>
+
+          <input type="radio" name="filterMode" id="filterMode2" value="2">
+          <label for="filterMode2">Empfehlung</label>
+        </div>
       </div>
+
     </div>
 
     <div id="header_table_container">
@@ -909,7 +1037,6 @@
     // State variables
     let selectedSeverityLevel = null; // Track the selected severity level
     let penicillinAllergy = false; // Track the penicillin allergy toggle state
-    let frequentAntibiotics = true; // Track the "häufig eingesetzte Antibiotika" toggle state (default ON)
     let selectedDisease = null; // Currently selected disease
     let currentSeverityImage = null; // Variable to store the current disease's severity image path
 
@@ -920,13 +1047,14 @@
     let diseasePrevalenceData = {};
     let recommendationsData = {};
     let focusAntibioticsData = {};
+    let highFocusAntibioticsData = {};
     let severityInfoData = {};
     let severityLevels = [];
     let diseaseRecommendations = {};
-
-
-    // Global variables
     let antibioticDosingData = {};
+    let filterMode = 1;
+    // 0 => no filter, 1 => focus, 2 => highFocus
+
 
     // Helper function to retrieve dose
     function getDoseForAntibiotic(antibioticName) {
@@ -944,6 +1072,43 @@
       // Otherwise, we have a disease; only show if there's disease-specific dosing
       return doseInfo[selectedDisease] || null;
     }
+
+    // Right after all your global variable declarations and helper functions:
+
+    function initThreeWayToggle() {
+      const radioButtons = document.querySelectorAll('.three-way-toggle input[type="radio"]');
+      radioButtons.forEach(rb => {
+        rb.addEventListener('change', function() {
+          filterMode = parseInt(this.value, 10); // 0, 1, or 2
+          createTable(); // re-generate table with new filter
+        });
+      });
+    }
+
+    function updateFilterModeOptions() {
+      const highFocusRadio = document.getElementById('filterMode2');
+      const highFocusLabel = document.querySelector('label[for="filterMode2"]');
+
+      if (!selectedDisease) {
+        // Hide the third radio if no disease
+        highFocusRadio.style.display = 'none';
+        highFocusLabel.style.display = 'none';
+
+        // If the user had it selected before, revert to "Alle" or "Fokus"
+        if (filterMode === 2) {
+          filterMode = 1; // e.g. reset to "Alle"
+          document.getElementById('filterMode1').checked = true;
+        }
+
+      } else {
+        // Show the third radio
+        highFocusLabel.style.display = 'flex';
+        filterMode = 2;
+        document.getElementById('filterMode2').checked = true;
+      }
+    }
+
+
 
 
     // Load disease_config and antibiotic_dosing together
@@ -977,9 +1142,14 @@
 
       // Do not set selectedDisease yet
 
+      // after we add .options to diseaseSelector, call:
+      initThreeWayToggle();
+      document.getElementById('three-way-toggle-container').style.display = 'block';
+
 
       // Load initial data without a specific disease
       loadDefaultData();
+      updateFilterModeOptions();
 
       // Add event listener for disease selection
       diseaseSelector.on('change', function() {
@@ -993,8 +1163,10 @@
 
         if (selectedDisease === null) {
           loadDefaultData();
+          updateFilterModeOptions();
         } else {
           loadDiseaseData(selectedDisease);
+          updateFilterModeOptions();
         }
       });
 
@@ -1017,7 +1189,6 @@
         selectedSeverityLevel = null; // No severity levels in default view
         severityLevels = []; // Clear severity levels
         penicillinAllergy = false; // Reset allergy toggle
-        frequentAntibiotics = true; // Reset frequent antibiotics toggle
 
         // Hide the severity container in default view
         d3.select('#severity-container').style('display', 'none');
@@ -1048,18 +1219,26 @@
         d3.json(diseaseSettings.prevalenceFile),
         d3.json(diseaseSettings.recommendationsFile),
         d3.json(diseaseSettings.focusAntibioticsFile),
+        d3.json(diseaseSettings.highFocusAntibioticsFile),
         d3.json(diseaseSettings.severityInfoFile)
-      ]).then(function([loadedAntibioticsData, loadedPrevalenceData, loadedRecommendationsData, loadedFocusAntibioticsData, loadedSeverityInfoData]) {
+      ]).then(function([
+        loadedAntibioticsData,
+        loadedPrevalenceData,
+        loadedRecommendationsData,
+        loadedFocusAntibioticsData,
+        loadedHighFocusAntibioticsData,
+        loadedSeverityInfoData
+      ]) {
         antibioticsData = loadedAntibioticsData;
         diseasePrevalenceData = loadedPrevalenceData;
         recommendationsData = loadedRecommendationsData;
         focusAntibioticsData = loadedFocusAntibioticsData;
+        highFocusAntibioticsData = loadedHighFocusAntibioticsData;
         severityInfoData = loadedSeverityInfoData;
 
         severityLevels = diseaseSettings.severityLevels;
         selectedSeverityLevel = null; // Reset severity level
         penicillinAllergy = false; // Reset allergy toggle
-        frequentAntibiotics = true; // Reset frequent antibiotics toggle
 
         // Update UI elements
         d3.select('#penicillin-toggle').property('checked', false);
@@ -1081,24 +1260,24 @@
      * or fails to show if neither fits.
      * 'text' is what we display inside the tooltip.
      */
-     function showAntibioticTooltip(referenceElement, text) {
-     const tooltip = document.getElementById('antibiotic-tooltip');
-     tooltip.innerHTML = text;
-     tooltip.style.display = 'block';
+    function showAntibioticTooltip(referenceElement, text) {
+      const tooltip = document.getElementById('antibiotic-tooltip');
+      tooltip.innerHTML = text;
+      tooltip.style.display = 'block';
 
-     const tooltipRect = tooltip.getBoundingClientRect();
-     const tooltipHeight = tooltipRect.height;
-     const tooltipWidth = tooltipRect.width;
-     const refRect = referenceElement.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      const tooltipHeight = tooltipRect.height;
+      const tooltipWidth = tooltipRect.width;
+      const refRect = referenceElement.getBoundingClientRect();
 
-     // Always place below
-     tooltip.style.top = `${window.scrollY + refRect.bottom + 4}px`;
+      // Always place below
+      tooltip.style.top = `${window.scrollY + refRect.bottom + 4}px`;
 
-     // Shift horizontally, e.g. partial overlap on the right:
-     const overlapOffset = 40;
-     const leftPos = refRect.right - overlapOffset + window.scrollX;
-     tooltip.style.left = `${leftPos}px`;
-   }
+      // Shift horizontally, e.g. partial overlap on the right:
+      const overlapOffset = 40;
+      const leftPos = refRect.right - overlapOffset + window.scrollX;
+      tooltip.style.left = `${leftPos}px`;
+    }
 
 
     /** Hide the global tooltip. */
@@ -1111,11 +1290,7 @@
 
     function init() {
       // Add event listener to the "häufig eingesetzte Antibiotika" toggle
-      d3.select('#frequent-antibiotics-toggle').on('change', function(event) {
-        frequentAntibiotics = d3.select(this).property('checked');
-        createTable();
-      });
-
+      //removed
       // Add event listener to the Penicillin Allergy toggle
       d3.select('#penicillin-toggle').on('change', function(event) {
         penicillinAllergy = d3.select(this).property('checked');
@@ -1235,7 +1410,7 @@
       container.append('div')
         .attr('id', 'severity-header')
         .style('display', 'flex')
-        .text('Leitlinienempfehlung');
+        .text('');
 
       // Only add the "Einteilung" link if there is an image
       if (currentSeverityImage) {
@@ -1252,7 +1427,7 @@
         .enter()
         .append('button')
         .attr('class', 'severity-button')
-        .text(d => d)
+        .html(d => d)
         .on('click', function(event, d) {
           // If the clicked button is already selected, unselect it
           if (selectedSeverityLevel === d) {
@@ -1487,10 +1662,34 @@
         }
       }).filter(entry => entry !== null);
 
-      // Apply the "häufig eingesetzte Antibiotika" filter if the toggle is ON
-      if (frequentAntibiotics) {
-        antibiotics = antibiotics.filter(entry => focusAntibioticsData.focus_antibiotics.includes(entry.antibiotic));
+      switch (filterMode) {
+        case 0: // Alle
+          // No filter
+          break;
+        case 1: // Fokus
+          // If no disease => do the default's focusAntibioticsData
+          // If disease => do the disease's focusAntibioticsData
+          // Either way you have some "focusAntibioticsData" loaded
+          antibiotics = antibiotics.filter(entry =>
+            focusAntibioticsData.focus_antibiotics.includes(entry.antibiotic)
+          );
+          break;
+        case 2: // High-Fokus
+          if (!selectedDisease) {
+            // If no disease => maybe treat like case 1 or no filter
+            // Or forcibly hide?
+          } else {
+            if (highFocusAntibioticsData && highFocusAntibioticsData.high_focus_antibiotics) {
+              antibiotics = antibiotics.filter(entry =>
+                highFocusAntibioticsData.high_focus_antibiotics.includes(entry.antibiotic)
+              );
+            }
+          }
+          break;
       }
+
+
+
 
       // Store this in a global so we can access .sensitivities in highlightAntibiotic()
       globalAntibioticsList = antibiotics;
@@ -1942,6 +2141,18 @@
     });
 
     /////////////////////////////////////////////////////////////////////////////
+
+    document.addEventListener('DOMContentLoaded', function() {
+  // Add the 'animated' class to trigger the pulsate animation
+  const diseaseContainer = document.getElementById('disease-selection-container');
+  diseaseContainer.classList.add('animated');
+
+  // Optionally, remove the animation after a few cycles to prevent distraction
+  setTimeout(() => {
+    diseaseContainer.classList.remove('animated');
+  }, 4000); // Stops after 2 pulsates (2s each)
+});
+
   </script>
 </body>
 
