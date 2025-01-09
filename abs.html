@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+
+<!--
+  No License Granted
+  This project is all rights reserved. No license is granted for the reproduction, distribution, or modification of this work without my explicit consent.
+  © 2024
+-->
+
 <html lang="en">
 
 <head>
@@ -68,7 +75,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-       overflow-y: auto; /* Allow scrolling if content exceeds viewport */
+      overflow-y: auto;
+      /* Allow scrolling if content exceeds viewport */
       /*  flex-shrink: 1;*/
     }
 
@@ -91,13 +99,23 @@
     /* Right Sidebar Content */
     #right-sidebar h2 {
       font-size: 18px;
-      margin-bottom: 10px;
+      margin-bottom: 18px;
       text-align: center;
+    }
+
+    #right-sidebar h3 {
+      font-size: 22px;
+      margin-top: 0px;
+      margin-bottom: 26px;
+      text-align: center;
+      color: var(--primary-color)
+
     }
 
     #right-sidebar p {
       font-size: 14px;
       line-height: 1.5;
+      margin-top: 0px;
       margin-bottom: 10px;
       font-style: oblique;
     }
@@ -199,9 +217,12 @@
       overflow: hidden;
       background-color: #ffffff;
       user-select: none;
--webkit-user-select: none; /* Safari */
--moz-user-select: none;    /* Firefox */
--ms-user-select: none;     /* Internet Explorer/Edge */
+      -webkit-user-select: none;
+      /* Safari */
+      -moz-user-select: none;
+      /* Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
     }
 
     th,
@@ -561,16 +582,19 @@
     #disease-selection-container {
       width: 100%;
       margin-bottom: 20px;
-       position: relative; /* For positioning pseudo-elements if needed */
+      position: relative;
+      /* For positioning pseudo-elements if needed */
     }
 
     #disease-selector {
       width: 100%;
       padding: 8px 12px;
       font-size: 16px;
-      border: 2px solid var(--primary-color); /* Thicker border for emphasis */
+      border: 2px solid var(--primary-color);
+      /* Thicker border for emphasis */
       border-radius: 6px;
-      background-color: #f0f8ff; /* Light background to contrast */
+      background-color: #f0f8ff;
+      /* Light background to contrast */
       transition: border-color 0.3s, box-shadow 0.3s;
     }
 
@@ -590,7 +614,8 @@
     }
 
     #disease-selection-container label {
-      font-size: 14px;
+      font-size: 18px;
+      font-weight: bold;
       color: #343a40;
       margin-bottom: 5px;
       display: block;
@@ -598,69 +623,101 @@
     }
 
     /* Pulsating Border Animation */
-@keyframes pulsate {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 141, 202, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(0, 141, 202, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 141, 202, 0);
-  }
-}
+    @keyframes pulsate {
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 141, 202, 0.7);
+      }
 
-#disease-selection-container.animated #disease-selector {
-  animation: pulsate 2s infinite;
-}
+      70% {
+        box-shadow: 0 0 0 10px rgba(0, 141, 202, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 141, 202, 0);
+      }
+    }
+
+    #disease-selection-container.animated #disease-selector {
+      animation: pulsate 2s infinite;
+    }
 
 
     /*//////////////////// THREE_WAY_TOGGLE /////////////////////*/
 
     /* Push the filter toggle to the bottom */
     #three-way-toggle-container {
-      margin-top: auto; /* This pushes the container to the bottom */
-      width: 100%; /* Ensure it spans the full width of the sidebar */
-      padding-bottom: 20px; /* Optional: Add some padding at the bottom */
+      margin-top: auto;
+      /* This pushes the container to the bottom */
+      width: 100%;
+      /* Ensure it spans the full width of the sidebar */
+      padding-bottom: 20px;
+      /* Optional: Add some padding at the bottom */
+    }
+
+    /* Header for the toggle group */
+    .three-way-toggle-header h3 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 8px;
+      /* Space between header and toggle buttons */
+      text-align: center;
+      /* Center the header text */
     }
 
     .three-way-toggle {
       display: flex;
-      flex-direction: column; /* Vertical arrangement */
-      align-items: stretch; /* Stretch to fill width */
-      background: #f0f0f0; /* Light background for contrast */
-      border-radius: 12px; /* Rounded corners */
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-      overflow: hidden; /* Clip child elements */
-      width: 100%; /* Full width */
-      box-sizing: border-box; /* Include padding and border in width */
+      flex-direction: column;
+      /* Vertical arrangement */
+      align-items: stretch;
+      /* Stretch to fill width */
+      background: #f0f0f0;
+      /* Light background for contrast */
+      border-radius: 12px;
+      /* Rounded corners */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      /* Subtle shadow for depth */
+      overflow: hidden;
+      /* Clip child elements */
+      width: 100%;
+      /* Full width */
+      box-sizing: border-box;
+      /* Include padding and border in width */
     }
 
     .three-way-toggle input[type="radio"] {
-      display: none; /* Hide the actual radio */
+      display: none;
+      /* Hide the actual radio */
     }
 
     .three-way-toggle label {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 0; /* Vertical padding */
+      padding: 12px 0;
+      /* Vertical padding */
       cursor: pointer;
-      background-color: #e0e0e0; /* Default background */
-      color: #333; /* Default text color */
-      font-size: 16px; /* Increased font size for readability */
+      background-color: #e0e0e0;
+      /* Default background */
+      color: #333;
+      /* Default text color */
+      font-size: 16px;
+      /* Increased font size for readability */
       transition: background-color 0.3s, color 0.3s, transform 0.2s;
-      user-select: none; /* Prevent text selection */
-      outline: none; /* Remove default focus outline */
+      user-select: none;
+      /* Prevent text selection */
+      outline: none;
+      /* Remove default focus outline */
     }
 
     /* Add border-top to all labels except the first one */
     .three-way-toggle label:not(:first-of-type) {
-      border-top: 1.5px solid #d0d0d0; /* Fine separator line */
+      border-top: 1.5px solid #d0d0d0;
+      /* Fine separator line */
     }
 
     /* Active (Checked) State */
-    .three-way-toggle input[type="radio"]:checked + label {
+    .three-way-toggle input[type="radio"]:checked+label {
       background-color: var(--extra-accent-color);
       color: #fff;
       font-weight: bold;
@@ -668,8 +725,9 @@
 
     /* Hover Effect */
     .three-way-toggle label:hover {
-      background-color: #d0d0d0; /* Slightly darker on hover */
-    /*  transform: translateY(-2px);  Subtle lift effect */
+      background-color: #d0d0d0;
+      /* Slightly darker on hover */
+      /*  transform: translateY(-2px);  Subtle lift effect */
     }
 
     /* Rounded Corners for First and Last Labels */
@@ -684,7 +742,7 @@
     }
 
     /* Optional: Transition for Active State */
-    .three-way-toggle input[type="radio"]:checked + label {
+    .three-way-toggle input[type="radio"]:checked+label {
       transition: background-color 0.3s, color 0.3s, transform 0.2s;
     }
 
@@ -839,6 +897,9 @@
 
       <!-- Focus Antibiotics Toggle -->
       <div id="three-way-toggle-container" style="display: none;">
+        <div class="three-way-toggle-header">
+          <h3>Antibiotika-Filter</h3>
+        </div>
         <div class="three-way-toggle">
           <input type="radio" name="filterMode" id="filterMode0" value="0">
           <label for="filterMode0">Alle</label>
@@ -1240,10 +1301,12 @@
         selectedSeverityLevel = null; // Reset severity level
         penicillinAllergy = false; // Reset allergy toggle
 
+        // **Clear the Right Sidebar Content**
+        updateRightSidebar(null);
+
         // Update UI elements
         d3.select('#penicillin-toggle').property('checked', false);
         d3.select('#frequent-antibiotics-toggle').property('checked', true);
-
 
         // **Show the Penicillin Allergy Toggle**
         d3.select('#penicillin-toggle-container').style('display', 'flex');
@@ -1511,6 +1574,11 @@
       sidebarContent.selectAll('*').remove();
 
       if (severityLevel && severityInfoData[severityLevel]) {
+        //Append "Leitlinienempfehlung"
+        sidebarContent.append('h2')
+          .attr('class', 'leitlinien-header') // optional class for styling
+          .text('Leitlinienempfehlung');
+
         const info = severityInfoData[severityLevel];
 
         // Debugging: Log the info object
@@ -1518,7 +1586,7 @@
         console.log('Info:', info);
 
         // Add title
-        sidebarContent.append('h2')
+        sidebarContent.append('h3')
           .attr('class', 'right-sidebar-title')
           .text(info.title);
 
@@ -2143,16 +2211,15 @@
     /////////////////////////////////////////////////////////////////////////////
 
     document.addEventListener('DOMContentLoaded', function() {
-  // Add the 'animated' class to trigger the pulsate animation
-  const diseaseContainer = document.getElementById('disease-selection-container');
-  diseaseContainer.classList.add('animated');
+      // Add the 'animated' class to trigger the pulsate animation
+      const diseaseContainer = document.getElementById('disease-selection-container');
+      diseaseContainer.classList.add('animated');
 
-  // Optionally, remove the animation after a few cycles to prevent distraction
-  setTimeout(() => {
-    diseaseContainer.classList.remove('animated');
-  }, 4000); // Stops after 2 pulsates (2s each)
-});
-
+      // Optionally, remove the animation after a few cycles to prevent distraction
+      setTimeout(() => {
+        diseaseContainer.classList.remove('animated');
+      }, 4000); // Stops after 2 pulsates (2s each)
+    });
   </script>
 </body>
 
