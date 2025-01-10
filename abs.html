@@ -131,7 +131,7 @@
     #disease-selector option[value=""] {
       /* Style for the default option */
       font-style: italic;
-        color: #0f4067;
+      color: #0f4067;
     }
 
     #disease-selection-container label {
@@ -557,6 +557,15 @@
       color: #000;
       text-align: left;
       cursor: pointer;
+      position: relative;
+
+
+
+      /* for right alignment:
+       display: flex;  Enable Flexbox
+      align-items: center; /* Vertically center the items
+      justify-content: space-between; /* Space between text and pill marker
+      padding-left: 12px; /* Optional: Adjust padding as needed */
     }
 
     /* Style for the bacteria group headers */
@@ -738,7 +747,7 @@
       display: block;
       margin-bottom: 10px;
       padding: 6px 12px;
-  font-size: 16px;
+      font-size: 16px;
       background-color: var(--extra-accent-color);
       color: #fff;
       text-align: center;
@@ -754,23 +763,23 @@
     }
 
     .einteilung-button:active {
-  transform: scale(0.98);
-  /* optional pressed effect */
-}
+      transform: scale(0.98);
+      /* optional pressed effect */
+    }
 
     .einteilung-button::before {
       content: "i";
-       display: inline-block;
-       width: 16px;
-       height: 16px;
-       font-size: 14px;
-       text-align: center;
-       line-height: 16px;
-       border-radius: 50%;
-       background-color: #fff;
-       color: var(--extra-accent-color);
-       margin-right: 6px;
-}
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      font-size: 14px;
+      text-align: center;
+      line-height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      color: var(--extra-accent-color);
+      margin-right: 6px;
+    }
 
 
 
@@ -965,6 +974,69 @@
 
 
     /*////////////////////////////////////////////////////////*/
+
+    /* Minimal styling for an inline pill marker */
+    .pill-marker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 13px;
+      height: 3.5px;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+      margin-left: 5px;
+      /* space between antibiotic text and marker */
+      border: 1px solid #555;
+      /* or a darker shade for contrast */
+      border-radius: 24px;
+      /* pill shape */
+      overflow: hidden;
+      font-size: 6px;
+      font-weight: 800;
+      line-height: 7px;
+      color: #333;
+      /* might adjust to #fff if your background is green */
+      cursor: default;
+      /* if it's not clickable, otherwise pointer */
+      cursor: pointer;
+      /* Rotate the pill 45 degrees counterclockwise */
+      transform: rotate(-45deg);
+      transform-origin: center;
+
+    }
+
+    /* Half color, half transparent or white */
+
+    /* Half color, half transparent or white */
+    .pill-marker::before,
+    .pill-marker::after {
+      height: 100%;
+
+      /* Center content within pseudo-elements */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* Remove any default margins or padding */
+      margin: 0;
+      padding: 0;
+    }
+
+    .pill-marker::before {
+      width: 45%;
+      content: "";
+      background-color: #fff;
+      /* your extra accent color */
+      color: #fff;
+    }
+
+    .pill-marker::after {
+      width: 55%;
+      content: "";
+      background-color: #555;
+      color: #555;
+    }
   </style>
 
 
@@ -2142,6 +2214,17 @@
             }
           });
 
+        // Inside createTable(), after constructing antibioticNameCell:
+        const antibiotic = entry.antibiotic;
+        const dose = getDoseForAntibiotic(antibiotic);
+
+        if (dose) {
+          // Append a <span> with the pill marker class
+          antibioticNameCell.append('span')
+            .attr('class', 'pill-marker');
+        }
+
+
         // Store reference to the antibiotic name cell
         antibioticNameCells[entry.antibiotic] = antibioticNameCell;
 
@@ -2275,11 +2358,10 @@
           .classed('secondary-recommendation', false)
           .classed('tertiary-recommendation', false);
 
-          // HIDE the allergy toggle container
- d3.select('#allergy-toggle-container').style('display', 'none');
- return;
-      }
-      else {
+        // HIDE the allergy toggle container
+        d3.select('#allergy-toggle-container').style('display', 'none');
+        return;
+      } else {
         // SHOW the allergy toggle container
         d3.select('#allergy-toggle-container').style('display', 'block');
       }
