@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Einkommensteuer-Berechnung</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>
+        <span
+          >Einkommensteuer-Berechnung: Grenz- und Durchschnittssteuersätze</span
+        >
+      </h1>
+    </header>
+
+    <!-- 3-column container -->
+    <div class="charts-container">
+      <!-- Left column (empty) -->
+      <div class="column-empty-left">
+        <div class="bracket-info">
+          <h3>Steuerzonen</h3>
+          <div class="bracket-list">
+            <div class="bracket-item" data-amount="12096" data-start-amount="0">
+              <span class="bracket-label">Grundfreibetrag</span>
+              <span class="bracket-amount">0 € - 12.096 €</span>
+            </div>
+            <div
+              class="bracket-item"
+              data-amount="17443"
+              data-start-amount="12097"
+            >
+              <span class="bracket-label">Progressionszone 1</span>
+              <span class="bracket-amount">12.097 € - 17.443 €</span>
+            </div>
+            <div
+              class="bracket-item"
+              data-amount="68480"
+              data-start-amount="17444"
+            >
+              <span class="bracket-label">Progressionszone 2</span>
+              <span class="bracket-amount">17.444 € - 68.480 €</span>
+            </div>
+            <div
+              class="bracket-item"
+              data-amount="277825"
+              data-start-amount="68481"
+            >
+              <span class="bracket-label">Spitzensteuersatz</span>
+              <span class="bracket-amount">68.481 € - 277.825 €</span>
+            </div>
+            <div
+              class="bracket-item"
+              data-amount="277826"
+              data-start-amount="277826"
+            >
+              <span class="bracket-label">Reichensteuersatz</span>
+              <span class="bracket-amount">ab 277.826 €</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center column (charts-left) -->
+      <div class="charts-left">
+        <!-- Canvas for Durchschnittssteuersatz -->
+        <div class="chart-wrapper">
+          <h2>Durchschnittssteuersatz (%)</h2>
+          <canvas id="avgRateChart" width="800" height="400"></canvas>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+          <div class="input-group">
+            <label for="zveSlider"
+              >Zu versteuerndes Einkommen (zvE) in €:</label
+            >
+            <div class="input-with-buttons">
+              <input
+                type="text"
+                id="zveInput"
+                min="0"
+                max="200000"
+                step="1"
+                value="0"
+                pattern="[0-9.]*"
+                inputmode="numeric"
+              />
+              <div class="input-buttons">
+                <button class="input-button" id="incrementBtn">▲</button>
+                <button class="input-button" id="decrementBtn">▼</button>
+              </div>
+            </div>
+          </div>
+
+          <input
+            type="range"
+            id="zveSlider"
+            min="0"
+            max="200000"
+            step="1"
+            value="0"
+          />
+        </div>
+
+        <!-- Canvas for Grenzsteuersatz -->
+        <div class="chart-wrapper">
+          <h2>Grenzsteuersatz (%)</h2>
+          <canvas id="margRateChart" width="800" height="400"></canvas>
+        </div>
+      </div>
+
+      <!-- Right column (tax-info) -->
+      <div class="tax-info">
+        <div id="bracketIndicator"></div>
+        <div class="tax-display">
+          <div class="tax-item">
+            <span class="tax-label">Durchschnittssteuersatz:</span>
+            <span class="tax-value" id="avgRateDisplay">0,00 %</span>
+          </div>
+          <div class="tax-item">
+            <span class="tax-label">Grenzsteuersatz:</span>
+            <span class="tax-value" id="margRateDisplay">0,00 %</span>
+          </div>
+          <div class="tax-item">
+            <span class="tax-label">Steuerbetrag:</span>
+            <span class="tax-value" id="taxAmountDisplay">0,00 €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Die Berechnungen basieren auf dem deutschen Einkommensteuertarif 2025.
+    </p>
+
+    <script src="script.js"></script>
+  </body>
+</html>
