@@ -57,7 +57,7 @@ h1 {
   gap: 1.5rem;
   padding: 1rem;
   box-sizing: border-box;
-  height: calc(100vh - 4rem);
+  height: auto;
 }
 
 /* Left column (empty) - same width as .tax-info to balance */
