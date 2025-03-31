@@ -1,0 +1,421 @@
+/* Dark background and base font */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1b1a1f;
+  color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main container (card style) */
+.calc-container {
+  background-color: #2a2a32;
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: sticky;
+  top: 1rem;
+}
+
+.calc-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Add header to the calculator */
+.calc-container::before {
+  content: "Brutto-zvE-Rechner";
+  display: block;
+  color: #ff0080;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Subcontainers */
+.input-section,
+.result-section,
+.breakdown-section {
+  background-color: rgba(255, 0, 128, 0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.input-section:hover,
+.result-section:hover,
+.breakdown-section:hover {
+  background-color: rgba(255, 0, 128, 0.1);
+}
+
+/* Labels and inputs */
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #ff0080;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+/* Children input container */
+.children-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+
+.children-input-container .form-label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.children-select {
+  width: auto;
+  min-width: 60px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 0;
+  height: 32px;
+  background: #2a2a32;
+  color: #fff;
+  border: 2px solid #666;
+  border-radius: 8px;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid #666;
+  background: #2a2a32;
+  color: #fff;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  transition: all 0.2s;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+#grossSalary {
+  height: 48px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: right;
+  padding: 0 1rem 0 0.5rem;
+  border-color: #00ffc2;
+  background: linear-gradient(
+    to right,
+    rgba(0, 255, 194, 0.05),
+    rgba(0, 255, 194, 0.15)
+  );
+  box-shadow: 0 0 10px rgba(0, 255, 194, 0.15);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+/* Add subtle highlight effect */
+#grossSalary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at right center,
+    rgba(0, 255, 194, 0.2),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  border-radius: 6px;
+}
+
+#grossSalary:hover::before {
+  opacity: 1;
+}
+
+#grossSalary:focus {
+  border-color: #00ffc2;
+  box-shadow: 0 0 15px rgba(0, 255, 194, 0.3);
+  background: linear-gradient(
+    to right,
+    rgba(0, 255, 194, 0.1),
+    rgba(0, 255, 194, 0.2)
+  );
+  outline: none;
+}
+
+/* Override margin-bottom for children select since it's in a container */
+.children-input-container .form-select {
+  margin-bottom: 0;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #ff0080;
+  box-shadow: 0 0 0 1px #ff0080;
+  background-color: rgba(255, 0, 128, 0.05);
+}
+
+/* Werbungskosten section */
+.werbungskosten-section {
+  margin-bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.section-header {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ff0080;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.werbungskosten-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.werbungskosten-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.form-radio {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  background-color: #2a2a32;
+}
+
+.form-radio:checked {
+  border-color: #ff0080;
+}
+
+.form-radio:checked::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff0080;
+}
+
+.radio-label {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.custom-adcost-input {
+  width: 100%;
+  min-width: 120px;
+  margin: 0.5rem 0 0 1.8rem;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+  text-align: right;
+}
+
+/* Result section */
+.result-section {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 128, 0.1),
+    rgba(255, 0, 128, 0.05)
+  );
+  border: 1px solid rgba(255, 0, 128, 0.1);
+}
+
+.result-section p {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fff;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-section p .result-value-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+#zveResult {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: inline;
+  position: relative;
+  margin-right: 0.2rem;
+}
+
+/* Add connection indicator */
+#zveResult::after {
+  content: "➜";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #00ffc2;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.result-section:hover #zveResult::after {
+  opacity: 1;
+  right: -15px;
+}
+
+/* Breakdown section */
+.breakdown-section {
+  margin-top: 0.5rem;
+}
+
+.breakdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdown-item,
+.breakdown-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.breakdown-total {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.25rem;
+  border-radius: 4px;
+}
+
+.breakdown-label {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.85rem;
+  flex: 1;
+  padding-right: 0.5rem;
+  /* Prevent extremely long labels from taking too much space */
+  max-width: 75%;
+}
+
+.breakdown-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: right;
+  /* Ensure minimum width for values */
+  min-width: 75px;
+  /* Prevent long values from wrapping */
+  white-space: nowrap;
+}
+
+/* Responsive adjustments to match main site */
+@media (max-width: 600px) {
+  .calc-container {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .calc-container::before {
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .input-section,
+  .result-section,
+  .breakdown-section {
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+
+  .form-label,
+  .section-header {
+    font-size: 0.8rem;
+  }
+
+  .form-input,
+  .form-select {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  #grossSalary {
+    font-size: 1rem;
+  }
+
+  .breakdown-label {
+    font-size: 0.8rem;
+  }
+
+  #zveResult {
+    font-size: 1.2rem;
+  }
+
+  .children-input-container {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .werbungskosten-section {
+    padding: 0.5rem;
+  }
+
+  #zveResult::after {
+    display: none;
+  }
+}

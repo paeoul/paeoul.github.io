@@ -4,6 +4,9 @@
 // Track last bracket for comparison
 let lastBracket = null;
 
+// Flag to prevent circular updates
+let isUpdatingFromCalc = false;
+
 function calculateTax(zvE) {
   zvE = Math.max(0, zvE);
 
@@ -58,7 +61,7 @@ function getBracketCase(zvE) {
   return "Reichensteuersatz";
 }
 
-// Add this function after the getBracketCase function
+// Update bracket highlighting with optimized animation
 function updateBracketHighlighting(zvE) {
   // Remove active class from all bracket items
   document.querySelectorAll(".bracket-item").forEach((item) => {
@@ -297,7 +300,10 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 /****************************************************************************
  * 3. Interactivity: slider, input, bracket indicator, marker updates
  ****************************************************************************/
-function updateUI(zvE) {
+function updateUI(zvE, skipCalcUpdate = false) {
+  // Skip if this update was triggered by calculator
+  if (isUpdatingFromCalc) return;
+
   zvE = Math.max(0, Math.min(zvE, maxIncome));
 
   const slider = document.getElementById("zveSlider");
@@ -333,7 +339,28 @@ function updateUI(zvE) {
   // Redraw charts with bracket indicators
   drawLineChart("avgRateChart", avgRatePoints, 50, zvE, avgR);
   drawLineChart("margRateChart", margRatePoints, 50, zvE, margR);
+
+  // Update calculator with new zvE value (if available and no rapid slider changes)
+  if (!skipCalcUpdate && typeof window.updateCalcFromZVE === "function") {
+    try {
+      isUpdatingFromCalc = true;
+
+      // Throttle calculator updates during rapid slider movement
+      if (
+        !window.lastCalcUpdateValue ||
+        Math.abs(window.lastCalcUpdateValue - zvE) > 500
+      ) {
+        window.updateCalcFromZVE(zvE);
+        window.lastCalcUpdateValue = zvE;
+      }
+    } finally {
+      isUpdatingFromCalc = false;
+    }
+  }
 }
+
+// Make updateUI globally accessible
+window.updateUI = updateUI;
 
 window.addEventListener("DOMContentLoaded", () => {
   // Set up responsive canvas sizing
@@ -341,7 +368,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById(canvasId);
     const wrapper = canvas.parentElement;
     canvas.width = wrapper.clientWidth;
-    canvas.height = wrapper.clientWidth * 0.5; // maintain 2:1 ratio
+    const desiredHeight = Math.min(wrapper.clientWidth * 0.5, 370);
+    canvas.height = desiredHeight;
   }
 
   // Initial resize
@@ -370,10 +398,49 @@ window.addEventListener("DOMContentLoaded", () => {
 
   updateUI(0);
 
+  // Throttle function to limit update frequency
+  function throttle(func, limit) {
+    let lastFunc;
+    let lastRan;
+    return function () {
+      const context = this;
+      const args = arguments;
+      if (!lastRan) {
+        func.apply(context, args);
+        lastRan = Date.now();
+      } else {
+        clearTimeout(lastFunc);
+        lastFunc = setTimeout(function () {
+          if (Date.now() - lastRan >= limit) {
+            func.apply(context, args);
+            lastRan = Date.now();
+          }
+        }, limit - (Date.now() - lastRan));
+      }
+    };
+  }
+
+  // Create a smoother animation for slider updates
+  let lastSliderValue = 0;
+  let animationFrameId = null;
+
+  function updateSliderValue(value) {
+    lastSliderValue = parseInt(value, 10);
+
+    if (!animationFrameId) {
+      animationFrameId = requestAnimationFrame(function animateUpdate() {
+        updateUI(lastSliderValue);
+        animationFrameId = null;
+      });
+    }
+  }
+
+  // Handle slider input with improved smoothness
   document.getElementById("zveSlider").addEventListener("input", (e) => {
-    updateUI(parseInt(e.target.value, 10));
+    updateSliderValue(e.target.value);
   });
 
+  // Handle direct numeric input changes
   document.getElementById("zveInput").addEventListener("input", (e) => {
     const val = parseInt(e.target.value.replace(/\./g, ""), 10);
     if (!isNaN(val)) updateUI(val);
