@@ -2,55 +2,57 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #1b1a1f;
-  color: #ffffff;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  transition: var(--theme-transition);
 }
 
 /* Main container (card style) */
 .calc-container {
-  background-color: #2a2a32;
+  background-color: var(--color-bg-card);
   border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px var(--color-black-40);
   width: 100%;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   margin: 0;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
   position: sticky;
   top: 1rem;
 }
 
 .calc-container:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 16px var(--color-black-50);
 }
 
 /* Add header to the calculator */
 .calc-container::before {
   content: "Brutto-zvE-Rechner";
   display: block;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-align: center;
   margin-bottom: 0.5rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--color-white-10);
+  transition: color 0.3s ease;
 }
 
 /* Subcontainers */
 .input-section,
 .result-section,
 .breakdown-section {
-  background-color: rgba(255, 0, 128, 0.05);
+  background-color: var(--color-accent-pink-05);
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 0.5rem;
@@ -60,7 +62,7 @@ body {
 .input-section:hover,
 .result-section:hover,
 .breakdown-section:hover {
-  background-color: rgba(255, 0, 128, 0.1);
+  background-color: var(--color-accent-pink-10);
 }
 
 /* Labels and inputs */
@@ -69,9 +71,10 @@ body {
   margin-bottom: 0.5rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   text-transform: uppercase;
   font-size: 0.85rem;
+  transition: color 0.3s ease;
 }
 
 /* Children input container */
@@ -80,7 +83,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: var(--color-white-03);
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
 }
@@ -91,17 +94,62 @@ body {
 }
 
 .children-select {
+  /* Let width adjust naturally; ensure it's wide enough for the text & arrow */
   width: auto;
-  min-width: 60px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.95rem;
+  min-width: 80px;
+
+  /* Slightly taller to fit text comfortably */
+  height: 45px;
+  padding: 0 2.5rem 0 1rem; /* room on right for arrow */
+  font-size: 1.2rem;
+  font-weight: 700;
   text-align: center;
-  margin-bottom: 0;
-  height: 32px;
-  background: #2a2a32;
-  color: #fff;
-  border: 2px solid #666;
+
+  background-color: var(--color-bg-input-dark);
+  color: var(--color-text);
+  border: 2px solid var(--color-accent-teal);
   border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  /* Remove forcing line-height so text isn't cropped */
+  line-height: normal;
+
+  /* Custom arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ffc2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  /* Position arrow slightly in from the right edge */
+  background-position: right 0.75rem center;
+  background-size: 1.1em;
+
+  box-shadow: 0 0 8px var(--color-accent-teal-20);
+}
+
+:root.light-theme .children-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a91e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.children-select:focus {
+  outline: none;
+  border-color: var(--color-accent-teal);
+  box-shadow: 0 0 12px var(--color-accent-teal-40);
+}
+
+.children-select:hover {
+  background-color: var(--color-bg-dark-highlight);
+}
+
+/* Option styling */
+.children-select option {
+  background-color: var(--color-bg-input-dark);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 10px;
+  text-align: center;
 }
 
 .form-input,
@@ -109,9 +157,9 @@ body {
   width: 100%;
   padding: 0.75rem;
   border-radius: 8px;
-  border: 2px solid #666;
-  background: #2a2a32;
-  color: #fff;
+  border: 2px solid var(--color-border-gray);
+  background: var(--color-bg-card);
+  color: var(--color-text);
   margin-bottom: 1rem;
   box-sizing: border-box;
   transition: all 0.2s;
@@ -123,16 +171,16 @@ body {
   height: 48px;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-text);
   text-align: right;
   padding: 0 1rem 0 0.5rem;
-  border-color: #00ffc2;
+  border-color: var(--color-accent-teal);
   background: linear-gradient(
     to right,
-    rgba(0, 255, 194, 0.05),
-    rgba(0, 255, 194, 0.15)
+    var(--color-accent-teal-05),
+    var(--color-accent-teal-15)
   );
-  box-shadow: 0 0 10px rgba(0, 255, 194, 0.15);
+  box-shadow: 0 0 10px var(--color-accent-teal-15);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
@@ -149,7 +197,7 @@ body {
   height: 100%;
   background: radial-gradient(
     circle at right center,
-    rgba(0, 255, 194, 0.2),
+    var(--color-accent-teal-20),
     transparent 60%
   );
   opacity: 0;
@@ -163,12 +211,12 @@ body {
 }
 
 #grossSalary:focus {
-  border-color: #00ffc2;
-  box-shadow: 0 0 15px rgba(0, 255, 194, 0.3);
+  border-color: var(--color-accent-teal);
+  box-shadow: 0 0 15px var(--color-accent-teal-30);
   background: linear-gradient(
     to right,
-    rgba(0, 255, 194, 0.1),
-    rgba(0, 255, 194, 0.2)
+    var(--color-accent-teal-10),
+    var(--color-accent-teal-20)
   );
   outline: none;
 }
@@ -181,15 +229,15 @@ body {
 .form-input:focus,
 .form-select:focus {
   outline: none;
-  border-color: #ff0080;
-  box-shadow: 0 0 0 1px #ff0080;
-  background-color: rgba(255, 0, 128, 0.05);
+  border-color: var(--color-accent-pink);
+  box-shadow: 0 0 0 1px var(--color-accent-pink);
+  background-color: var(--color-accent-pink-05);
 }
 
 /* Werbungskosten section */
 .werbungskosten-section {
   margin-bottom: 1rem;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: var(--color-white-03);
   padding: 0.75rem;
   border-radius: 8px;
 }
@@ -198,9 +246,10 @@ body {
   margin: 0 0 0.75rem 0;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
 
 .werbungskosten-options {
@@ -220,16 +269,17 @@ body {
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid #666;
+  border: 2px solid var(--color-border-gray);
   border-radius: 50%;
   margin: 0;
   cursor: pointer;
   position: relative;
-  background-color: #2a2a32;
+  background-color: var(--color-bg-card);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .form-radio:checked {
-  border-color: #ff0080;
+  border-color: var(--color-accent-pink);
 }
 
 .form-radio:checked::after {
@@ -240,13 +290,16 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #ff0080;
+  background-color: var(--color-accent-pink);
+  transition: background-color 0.3s ease;
 }
 
 .radio-label {
   cursor: pointer;
   font-weight: 500;
   font-size: 0.9rem;
+  color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 .custom-adcost-input {
@@ -264,21 +317,23 @@ body {
   padding: 1rem;
   background: linear-gradient(
     135deg,
-    rgba(255, 0, 128, 0.1),
-    rgba(255, 0, 128, 0.05)
+    var(--color-accent-pink-10),
+    var(--color-accent-pink-05)
   );
-  border: 1px solid rgba(255, 0, 128, 0.1);
+  border: 1px solid var(--color-accent-pink-10);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .result-section p {
   margin: 0;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: #fff;
+  color: var(--color-text);
   font-size: 0.95rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: color 0.3s ease;
 }
 
 .result-section p .result-value-container {
@@ -289,12 +344,13 @@ body {
 }
 
 #zveResult {
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
   font-size: 1.5rem;
   display: inline;
   position: relative;
   margin-right: 0.2rem;
+  transition: color 0.3s ease;
 }
 
 /* Add connection indicator */
@@ -305,7 +361,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
-  color: #00ffc2;
+  color: var(--color-accent-teal);
   opacity: 0;
   transition: all 0.3s ease;
 }
@@ -337,25 +393,27 @@ body {
 .breakdown-total {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--color-white-10);
   font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--color-white-05);
   padding: 0.5rem 0.25rem;
   border-radius: 4px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .breakdown-label {
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 500;
   font-size: 0.85rem;
   flex: 1;
   padding-right: 0.5rem;
   /* Prevent extremely long labels from taking too much space */
   max-width: 75%;
+  transition: color 0.3s ease;
 }
 
 .breakdown-value {
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 600;
   font-size: 0.9rem;
   text-align: right;
@@ -363,6 +421,7 @@ body {
   min-width: 75px;
   /* Prevent long values from wrapping */
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 /* Responsive adjustments to match main site */

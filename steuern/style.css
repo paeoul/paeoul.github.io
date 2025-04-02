@@ -1,6 +1,139 @@
 /*********************************************
   Global resets & base
 *********************************************/
+:root {
+  /* Theme variables */
+  --theme-transition: color 0.5s ease, background-color 0.5s ease,
+    border-color 0.5s ease, box-shadow 0.5s ease, background 0.5s ease,
+    opacity 0.5s ease, transform 0.3s ease;
+
+  /* Dark theme (default) */
+  --color-bg-dark: #1b1a1f;
+  --color-bg-card: #2a2a32;
+  --color-bg-dark-highlight: #3a3a42;
+  --color-bg-input-dark: #121218;
+
+  /* Text colors */
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.9);
+
+  /* Accent colors */
+  --color-accent-pink: #ff0080;
+  --color-accent-teal: #00ffc2;
+
+  /* Border colors */
+  --color-border-gray: #666;
+  --color-border-light-gray: #888;
+
+  /* Utility colors */
+  --color-slider-bg: #555;
+  --color-slider-hover: #666;
+  --color-input-active: #444;
+  --color-shadow-dark: #111;
+
+  /* Transparency variants */
+  --color-accent-pink-05: rgba(255, 0, 128, 0.05);
+  --color-accent-pink-10: rgba(255, 0, 128, 0.1);
+  --color-accent-pink-20: rgba(255, 0, 128, 0.2);
+  --color-accent-pink-30: rgba(255, 0, 128, 0.3);
+  --color-accent-pink-40: rgba(255, 0, 128, 0.4);
+  --color-accent-pink-50: rgba(255, 0, 128, 0.5);
+
+  --color-accent-teal-05: rgba(0, 255, 194, 0.05);
+  --color-accent-teal-10: rgba(0, 255, 194, 0.1);
+  --color-accent-teal-15: rgba(0, 255, 194, 0.15);
+  --color-accent-teal-20: rgba(0, 255, 194, 0.2);
+  --color-accent-teal-30: rgba(0, 255, 194, 0.3);
+
+  --color-black-40: rgba(0, 0, 0, 0.4);
+  --color-black-50: rgba(0, 0, 0, 0.5);
+
+  --color-white-03: rgba(255, 255, 255, 0.03);
+  --color-white-05: rgba(255, 255, 255, 0.05);
+  --color-white-10: rgba(255, 255, 255, 0.1);
+
+  /* Chart colors */
+  --chart-bg: #2a2a32;
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-bracket: rgba(255, 0, 128, 0.4);
+  --chart-axis: #888;
+  --chart-text: #ccc;
+  --chart-line: #ff0080;
+  --chart-marker: #00ffc2;
+
+  /* Toggle colors (reversed from theme) */
+  --toggle-color-1: #003785; /* Light theme pink */
+  --toggle-color-2: #ffffff; /* Light theme teal */
+}
+
+/* Light theme */
+:root.light-theme {
+  /* Primary colors */
+  --color-bg-dark: #f8f9fa;
+  --color-bg-card: #ffffff;
+  --color-bg-dark-highlight: #f1f3f5;
+  --color-bg-input-dark: #f0f2f5;
+
+  /* Text colors */
+  --color-text: #212529;
+  --color-text-muted: rgba(33, 37, 41, 0.9);
+
+  /* Accent colors - bolder variants with more variety */
+  --color-accent-pink: #003785; /* Deep royal blue base - more saturated */
+  --color-accent-teal: #a91e50; /* Deep raspberry red for contrast */
+
+  /* Highlight accents for bold elements */
+  --color-accent-highlight: #0070ff; /* Vibrant electric blue for highlights */
+  --color-accent-alternative: #0052b0; /* Rich medium blue for variety */
+  --color-accent-pop: #00a0ff; /* Ultra-bright blue for small pops of color */
+
+  /* Border colors */
+  --color-border-gray: #c5c5c5;
+  --color-border-light-gray: #e0e0e0;
+
+  /* Utility colors */
+  --color-slider-bg: #e9ecef;
+  --color-slider-hover: #dee2e6;
+  --color-input-active: #e9ecef;
+  --color-shadow-dark: rgba(0, 0, 0, 0.1);
+
+  /* Transparency variants - bold accents */
+  --color-accent-pink-05: rgba(0, 55, 133, 0.05);
+  --color-accent-pink-10: rgba(0, 55, 133, 0.1);
+  --color-accent-pink-15: rgba(0, 55, 133, 0.15);
+  --color-accent-pink-20: rgba(0, 55, 133, 0.2);
+  --color-accent-pink-30: rgba(0, 55, 133, 0.3);
+  --color-accent-pink-40: rgba(0, 55, 133, 0.4);
+  --color-accent-pink-50: rgba(0, 55, 133, 0.5);
+
+  --color-accent-teal-05: rgba(169, 30, 80, 0.05);
+  --color-accent-teal-10: rgba(169, 30, 80, 0.1);
+  --color-accent-teal-15: rgba(169, 30, 80, 0.15);
+  --color-accent-teal-20: rgba(169, 30, 80, 0.2);
+  --color-accent-teal-30: rgba(169, 30, 80, 0.3);
+  --color-accent-teal-40: rgba(169, 30, 80, 0.4);
+
+  --color-black-40: rgba(0, 0, 0, 0.07);
+  --color-black-50: rgba(0, 0, 0, 0.09);
+
+  --color-white-03: rgba(0, 0, 0, 0.03);
+  --color-white-05: rgba(0, 0, 0, 0.05);
+  --color-white-10: rgba(0, 0, 0, 0.1);
+
+  /* Chart colors for light theme - more vibrant but still professional */
+  --chart-bg: #ffffff;
+  --chart-grid: rgba(0, 0, 0, 0.05);
+  --chart-bracket: rgba(0, 55, 133, 0.4);
+  --chart-axis: #555;
+  --chart-text: #333;
+  --chart-line: #0052b0; /* Deep bold blue for line */
+  --chart-marker: #a91e50; /* Brighter blue for marker - pop of color */
+
+  /* Toggle colors (reversed from theme) */
+  --toggle-color-1: #ff0080; /* Dark theme pink */
+  --toggle-color-2: #00ffc2; /* Dark theme teal */
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,21 +142,88 @@
 
 html,
 body {
-  height: 100%;
+  /* height: 100%; <-- remove this line */
   margin: 0;
   padding: 0;
 }
 
 body {
-  /* Bold, high-contrast background */
-  background: #1b1a1f; /* Very dark background */
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  background: var(--color-bg-dark);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #ffffff;
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   align-items: center;
   line-height: 1.4;
-  min-height: 100vh;
+  min-height: 100vh; /* Keeping this is usually fine */
+  transition: var(--theme-transition);
+}
+
+/*********************************************
+  Theme toggle button
+*********************************************/
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    45deg,
+    var(--toggle-color-1),
+    var(--toggle-color-2)
+  );
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 10px var(--color-black-40);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  overflow: hidden;
+  color: white;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px var(--color-black-50);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle-icon {
+  width: 24px;
+  height: 24px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: absolute;
+  color: white;
+}
+
+.theme-toggle-icon.sun {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.theme-toggle-icon.moon {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+:root.light-theme .theme-toggle-icon.sun {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+:root.light-theme .theme-toggle-icon.moon {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /*********************************************
@@ -39,7 +239,7 @@ h1 {
   font-size: 1.8rem;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #ff0080; /* Vibrant pink accent */
+  color: var(--color-accent-pink); /* Vibrant pink accent */
   text-transform: uppercase;
 }
 
@@ -88,9 +288,9 @@ h1 {
 /* Chart wrapper with a bold card style */
 .chart-wrapper {
   width: 100%;
-  background: #2a2a32;
+  background: var(--color-bg-card);
   border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px var(--color-black-40);
   text-align: center;
   padding: 0.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -100,11 +300,11 @@ h1 {
 }
 .chart-wrapper:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 16px var(--color-black-50);
 }
 .chart-wrapper h2 {
   margin-top: 0.5rem;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -125,9 +325,9 @@ h1 {
 .controls {
   width: 100%;
   max-width: 800px;
-  background: #2a2a32;
+  background: var(--color-bg-card);
   border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px var(--color-black-40);
   padding: 1rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -144,7 +344,7 @@ h1 {
 
 .input-group label {
   font-weight: 600;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   flex-shrink: 0;
   text-transform: uppercase;
 }
@@ -154,33 +354,52 @@ h1 {
   width: 100%;
   appearance: none;
   height: 8px;
-  background: #555;
+  background: var(--color-slider-bg);
   border-radius: 4px;
   outline: none;
   cursor: pointer;
   transition: background 0.15s;
 }
 #zveSlider:hover {
-  background: #666;
+  background: var(--color-slider-hover);
 }
 #zveSlider::-webkit-slider-thumb {
   appearance: none;
   width: 24px;
   height: 24px;
-  background: #ff0080;
-  border: 2px solid #2a2a32;
+  background: var(--color-accent-pink);
+  border: 2px solid var(--color-bg-card);
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(255, 0, 128, 0.5);
+  box-shadow: 0 0 6px var(--color-accent-pink-50);
   cursor: pointer;
 }
 #zveSlider::-moz-range-thumb {
   width: 24px;
   height: 24px;
-  background: #ff0080;
-  border: 2px solid #2a2a32;
+  background: var(--color-accent-pink);
+  border: 2px solid var(--color-bg-card);
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(255, 0, 128, 0.5);
+  box-shadow: 0 0 6px var(--color-accent-pink-50);
   cursor: pointer;
+}
+
+/* Enhanced slider thumb for light theme */
+:root.light-theme #zveSlider::-webkit-slider-thumb {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-pink),
+    var(--color-accent-pop)
+  );
+  box-shadow: 0 0 8px var(--color-accent-pop);
+}
+
+:root.light-theme #zveSlider::-moz-range-thumb {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-pink),
+    var(--color-accent-pop)
+  );
+  box-shadow: 0 0 8px var(--color-accent-pop);
 }
 
 /*********************************************
@@ -198,29 +417,29 @@ h1 {
   height: 48px;
   font-size: 1.2rem;
   padding: 0 1rem 0 0.5rem;
-  border: 2px solid #00ffc2;
+  border: 2px solid var(--color-accent-teal);
   border-radius: 8px;
   background: linear-gradient(
     to right,
-    rgba(0, 255, 194, 0.05),
-    rgba(0, 255, 194, 0.15)
+    var(--color-accent-teal-05),
+    var(--color-accent-teal-15)
   );
-  color: #fff;
+  color: var(--color-text);
   text-align: right;
   font-weight: 600;
-  box-shadow: 0 0 10px rgba(0, 255, 194, 0.15);
+  box-shadow: 0 0 10px var(--color-accent-teal-15);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
 }
 
 #zveInput:focus {
-  border-color: #00ffc2;
-  box-shadow: 0 0 15px rgba(0, 255, 194, 0.3);
+  border-color: var(--color-accent-teal);
+  box-shadow: 0 0 15px var(--color-accent-teal-30);
   background: linear-gradient(
     to right,
-    rgba(0, 255, 194, 0.1),
-    rgba(0, 255, 194, 0.2)
+    var(--color-accent-teal-10),
+    var(--color-accent-teal-20)
   );
   outline: none;
 }
@@ -235,7 +454,7 @@ h1 {
   height: 48px;
   background: radial-gradient(
     circle at right center,
-    rgba(0, 255, 194, 0.2),
+    var(--color-accent-teal-20),
     transparent 60%
   );
   opacity: 0;
@@ -255,9 +474,9 @@ h1 {
 .input-button {
   width: 32px;
   height: 22px;
-  border: 2px solid #666;
-  background-color: #2a2a32;
-  color: #00ffc2;
+  border: 2px solid var(--color-border-gray);
+  background-color: var(--color-bg-card);
+  color: var(--color-accent-teal);
   font-size: 12px;
   cursor: pointer;
   border-radius: 6px;
@@ -269,13 +488,13 @@ h1 {
   margin: 1px 0;
 }
 .input-button:hover {
-  background-color: #3a3a42;
-  border-color: #888;
+  background-color: var(--color-bg-dark-highlight);
+  border-color: var(--color-border-light-gray);
 }
 .input-button:active {
-  background-color: #444;
+  background-color: var(--color-input-active);
   transform: translateY(1px);
-  box-shadow: inset 0 2px 4px #111;
+  box-shadow: inset 0 2px 4px var(--color-shadow-dark);
 }
 
 /*********************************************
@@ -285,7 +504,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  position: sticky;
   top: 1rem;
   align-self: flex-start;
   margin-bottom: 1.5rem;
@@ -299,10 +517,10 @@ h1 {
   font-size: 1.1rem;
   text-align: center;
   padding: 1rem;
-  background-color: #2a2a32;
-  color: #ff0080;
+  background-color: var(--color-bg-card);
+  color: var(--color-accent-pink);
   border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px var(--color-black-40);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
@@ -313,14 +531,15 @@ h1 {
 }
 
 #bracketIndicator.highlight {
-  box-shadow: 0 6px 12px rgba(255, 0, 128, 0.4), 0 0 0 2px #ff0080;
+  box-shadow: 0 6px 12px var(--color-accent-pink-40),
+    0 0 0 2px var(--color-accent-pink);
 }
 
 /* Add styles for bracket boundary indicators on charts */
 .bracket-boundary {
   position: absolute;
   width: 2px;
-  background: rgba(255, 0, 128, 0.3);
+  background: var(--color-accent-pink-30);
   pointer-events: none;
 }
 
@@ -330,11 +549,11 @@ h1 {
   top: -20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 0, 128, 0.1);
+  background: var(--color-accent-pink-10);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 12px;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   white-space: nowrap;
 }
 
@@ -345,10 +564,10 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  background: #2a2a32;
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px var(--color-black-40);
 }
 
 .tax-item {
@@ -356,19 +575,19 @@ h1 {
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.8rem;
-  background: rgba(255, 0, 128, 0.05);
+  background: var(--color-accent-pink-05);
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .tax-item:hover {
-  background: rgba(255, 0, 128, 0.1);
+  background: var(--color-accent-pink-10);
   transform: translateX(4px);
 }
 
 .tax-label {
   font-size: 0.9rem;
-  color: #ff0080;
+  color: var(--color-accent-pink);
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -376,7 +595,7 @@ h1 {
 .tax-value {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #ffffff;
+  color: var(--color-text);
   opacity: 0.9;
 }
 
@@ -387,7 +606,7 @@ h1 {
   max-width: 800px;
   margin: 0.5rem auto;
   text-align: center;
-  color: #fff;
+  color: var(--color-text);
   font-size: 0.9rem;
   line-height: 1.4;
   opacity: 0.9;
@@ -419,7 +638,7 @@ h1 {
     right: 0;
     top: 0;
     bottom: 0;
-    background: #1b1a1f;
+    background: var(--color-bg-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -564,7 +783,8 @@ h1 {
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(255, 0, 128, 0.5), 0 0 0 2px #ff0080;
+    box-shadow: 0 0 15px var(--color-accent-pink-50),
+      0 0 0 2px var(--color-accent-pink);
   }
   100% {
     transform: scale(1);
@@ -575,15 +795,15 @@ h1 {
   Steuerzonen info styling
 *********************************************/
 .steuerzonen-info {
-  background: #2a2a32;
+  background: var(--color-bg-card);
   border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px var(--color-black-40);
   padding: 1.5rem;
   margin-top: 1.5rem;
 }
 
 .steuerzonen-info h3 {
-  color: #ff0080;
+  color: var(--color-accent-pink);
   font-size: 1.1rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -603,30 +823,38 @@ h1 {
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.8rem;
-  background: rgba(255, 0, 128, 0.05);
+  background: var(--color-accent-pink-05);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .bracket-item:hover {
-  background: rgba(255, 0, 128, 0.1);
+  background: var(--color-accent-pink-10);
   transform: translateX(4px);
 }
 
 .bracket-item.active {
-  background: rgba(255, 0, 128, 0.2);
+  background: var(--color-accent-pink-20);
+}
+
+/* Special styling for active bracket in light theme */
+:root.light-theme .bracket-item.active {
+  background: var(--color-accent-pink-30);
+  box-shadow: 0 0 10px var(--color-accent-pop);
+  border-left: 3px solid var(--color-accent-pop);
+  transform: translateX(4px);
 }
 
 .bracket-label {
-  color: #ff0080;
+  color: var(--color-accent-pink);
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
 }
 
 .bracket-amount {
-  color: #fff;
+  color: var(--color-text);
   font-size: 0.9rem;
   opacity: 0.9;
 }

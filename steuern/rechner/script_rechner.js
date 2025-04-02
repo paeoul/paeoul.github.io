@@ -71,58 +71,56 @@ function calculateTaxableIncome(annualGross, advCosts, childCount) {
 }
 
 /**
- * Approximates gross income from a given zvE using an iterative approach
- * @param {number} targetZvE - The target zvE to reach
- * @param {number} childCount - Number of children (affects PV rate)
- * @param {number} advCosts - Werbungskosten amount
- * @returns {number} Approximated gross income
+/**
+ * Binary-search approach to find the Brutto that yields a target zvE.
+ * 
+ * @param {number} targetZVE   - The desired zu versteuerndes Einkommen
+ * @param {number} childCount  - Number of children (affects PV rate)
+ * @param {number} advCosts    - Werbungskosten (either standard or custom)
+ * @returns {number} Gross salary that most closely produces the targetZVE
  */
-function approximateGrossFromZVE(targetZvE, childCount, advCosts) {
-  // Edge case handling
-  if (targetZvE <= 0) return 0;
-
-  // Initial guess: starting with slightly higher than zvE to account for deductions
-  let lowGuess = targetZvE; // Minimum possible gross is zvE itself
-  let highGuess = targetZvE * 2.5; // Conservative upper bound (accounts for high deductions)
-
-  // Start with a quick check of our upper bound
-  let result = calculateTaxableIncome(highGuess, advCosts, childCount);
-  if (result.zvE < targetZvE) {
-    // If our upper bound isn't high enough, increase it
-    highGuess = targetZvE * 4;
+function approximateGrossFromZVE(targetZVE, childCount, advCosts) {
+  // Edge case
+  if (targetZVE <= 0) {
+    return 0; // short-circuit: a zvE of 0 means Brutto is 0
   }
+  // We'll set an upper bound that should be high enough for most cases.
+  // For example: 2.5 * zvE, but never less than 300k.
+  let low = 0;
+  let high = Math.max(targetZVE * 2.5, 300000);
 
-  // Binary search to converge on the gross value that results in our target zvE
-  const tolerance = 5; // Acceptable difference in euros
-  let iterations = 0;
-  const maxIterations = 25; // Prevent infinite loops
+  // Keep track of which guess was best so far
+  let bestGuess = 0;
+  let bestDiff = Infinity;
 
-  while (iterations < maxIterations) {
-    const midGuess = Math.floor((lowGuess + highGuess) / 2);
-    result = calculateTaxableIncome(midGuess, advCosts, childCount);
+  // We'll do about 40 iterations, which is plenty to narrow down to 1 EUR
+  const maxIterations = 40;
+  for (let i = 0; i < maxIterations; i++) {
+    const mid = Math.floor((low + high) / 2);
 
-    // Check if we're within acceptable tolerance
-    if (Math.abs(result.zvE - targetZvE) <= tolerance) {
-      return midGuess;
+    // Forward-calculate what zvE we'd get if we had 'mid' as gross
+    const result = calculateTaxableIncome(mid, advCosts, childCount);
+    const diff = Math.abs(result.zvE - targetZVE);
+
+    // If this is the closest we've come so far, store it
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      bestGuess = mid;
     }
 
-    // Adjust our guesses based on result
-    if (result.zvE < targetZvE) {
-      lowGuess = midGuess;
+    // If we overshot (zvE is too high), lower the guess
+    // Otherwise, raise the guess
+    if (result.zvE > targetZVE) {
+      high = mid - 1;
     } else {
-      highGuess = midGuess;
+      low = mid + 1;
     }
 
-    // Exit if our search range gets too small (numerical precision limit)
-    if (highGuess - lowGuess <= 2) {
-      return midGuess;
-    }
-
-    iterations++;
+    // If we somehow got an exact match, we can just stop
+    if (bestDiff === 0) break;
   }
 
-  // Return our best approximation after max iterations
-  return Math.floor((lowGuess + highGuess) / 2);
+  return bestGuess;
 }
 
 // 1. On page load, hook up event listeners
@@ -213,21 +211,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Update calculator inputs based on zvE value from main visualization
   window.updateCalcFromZVE = function (zvE) {
-    if (zvE <= 0) return;
+    if (zvE <= 0) {
+      // Handle zero/negative zvE case
+      grossSalaryInput.value = "0";
+      zveResultSpan.textContent = "0";
+      document.getElementById("breakdownWerbungskosten").textContent = "0 €";
+      document.getElementById("breakdownRV").textContent = "0 €";
+      document.getElementById("breakdownALV").textContent = "0 €";
+      document.getElementById("breakdownKV").textContent = "0 €";
+      document.getElementById("breakdownPV").textContent = "0 €";
+      document.getElementById("breakdownTotal").textContent = "0 €";
+      return;
+    }
 
     // Skip updating if user is actively editing the gross input
     if (userIsEditingGross) return;
-
-    // Use a static cache for common zvE values to avoid repeated calculations
-    if (!window.zveToGrossCache) {
-      window.zveToGrossCache = new Map();
-    }
-
-    // For frequently changing values like slider movement, don't update on every small change
-    // Only update every ~500 increment during rapid changes to improve performance
-    const cacheKey = `${Math.round(zvE / 500) * 500}-${
-      childrenCountSelect.value
-    }-${adCostsIndividuell.checked ? customAdCostsInput.value || 0 : "std"}`;
 
     // Flag to prevent circular updates
     isUpdatingFromZVE = true;
@@ -245,30 +243,12 @@ document.addEventListener("DOMContentLoaded", () => {
             : STANDARD_WERBUNGSKOSTEN;
       }
 
-      // Check cache first before calculating
-      let approximateGross;
-      if (window.zveToGrossCache.has(cacheKey)) {
-        approximateGross = window.zveToGrossCache.get(cacheKey);
-      } else {
-        // Only do the expensive calculation if we don't have a cached value
-        approximateGross = approximateGrossFromZVE(
-          zvE,
-          childrenCount,
-          advertisingCosts
-        );
-
-        // Cache the result
-        window.zveToGrossCache.set(cacheKey, approximateGross);
-
-        // Limit cache size to prevent memory leaks
-        if (window.zveToGrossCache.size > 200) {
-          // Keep only the most recent values by clearing old ones
-          const keysIterator = window.zveToGrossCache.keys();
-          for (let i = 0; i < 50; i++) {
-            window.zveToGrossCache.delete(keysIterator.next().value);
-          }
-        }
-      }
+      // Always calculate the approximateGross value directly (no caching)
+      const approximateGross = approximateGrossFromZVE(
+        zvE,
+        childrenCount,
+        advertisingCosts
+      );
 
       // Update gross salary input with formatting
       grossSalaryInput.value = formatNumber(Math.round(approximateGross));

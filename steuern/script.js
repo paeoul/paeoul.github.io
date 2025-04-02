@@ -121,9 +121,11 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  // Clear & fill a dark background
+  // Clear & fill background using theme variable
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#2A2A32";
+  ctx.fillStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-bg")
+    .trim();
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Define padding for different areas
@@ -147,7 +149,9 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 
   // Draw grid lines first (so they appear behind everything)
   ctx.save();
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+  ctx.strokeStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-grid")
+    .trim();
   ctx.lineWidth = 1;
 
   // Vertical grid lines (every 25k)
@@ -174,7 +178,9 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
   // Draw bracket boundary lines
   const bracketBoundaries = [12096, 17443, 68480, 277825];
   ctx.save();
-  ctx.strokeStyle = "rgba(255, 0, 128, 0.4)";
+  ctx.strokeStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-bracket")
+    .trim();
   ctx.lineWidth = 1.5;
   ctx.setLineDash([5, 5]);
   bracketBoundaries.forEach((boundary) => {
@@ -190,9 +196,13 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 
   // Draw axes
   ctx.save();
-  ctx.strokeStyle = "#888";
+  ctx.strokeStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-axis")
+    .trim();
   ctx.lineWidth = 1.5;
-  ctx.fillStyle = "#ccc";
+  ctx.fillStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-text")
+    .trim();
   ctx.font = "bold 15px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
 
   // Draw X-axis line
@@ -234,7 +244,9 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 
   // Draw main data line
   ctx.save();
-  ctx.strokeStyle = "#FF0080";
+  ctx.strokeStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-line")
+    .trim();
   ctx.lineWidth = 2.5;
   ctx.beginPath();
   dataPoints.forEach((pt, idx) => {
@@ -251,7 +263,9 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 
   // Draw marker lines and dot
   ctx.save();
-  const markerColor = "#00FFC2";
+  const markerColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-marker")
+    .trim();
   ctx.strokeStyle = markerColor;
   ctx.lineWidth = 1.8;
   ctx.setLineDash([5, 5]);
@@ -270,7 +284,9 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 
   // Marker dot
   ctx.setLineDash([]);
-  ctx.fillStyle = "#FF0080";
+  ctx.fillStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--chart-line")
+    .trim();
   ctx.beginPath();
   ctx.arc(scaleX(markerX), scaleY(markerY), 6, 0, 2 * Math.PI);
   ctx.fill();
@@ -278,7 +294,9 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 
   // Draw axis labels last (so they appear on top)
   ctx.save();
-  ctx.fillStyle = "#ff0080";
+  ctx.fillStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--color-accent-pink")
+    .trim();
   ctx.font = "bold 16px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
 
   // X-axis label
@@ -300,7 +318,7 @@ function drawLineChart(canvasId, dataPoints, yMax, markerX, markerY) {
 /****************************************************************************
  * 3. Interactivity: slider, input, bracket indicator, marker updates
  ****************************************************************************/
-function updateUI(zvE, skipCalcUpdate = false) {
+function updateUI(zvE, skipCalcUpdate = false, bypassThrottle = false) {
   // Skip if this update was triggered by calculator
   if (isUpdatingFromCalc) return;
 
@@ -346,7 +364,9 @@ function updateUI(zvE, skipCalcUpdate = false) {
       isUpdatingFromCalc = true;
 
       // Throttle calculator updates during rapid slider movement
+      // Unless bypassThrottle is set to true
       if (
+        bypassThrottle ||
         !window.lastCalcUpdateValue ||
         Math.abs(window.lastCalcUpdateValue - zvE) > 500
       ) {
@@ -443,7 +463,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Handle direct numeric input changes
   document.getElementById("zveInput").addEventListener("input", (e) => {
     const val = parseInt(e.target.value.replace(/\./g, ""), 10);
-    if (!isNaN(val)) updateUI(val);
+    if (!isNaN(val)) updateUI(val, false, true);
   });
 
   let intervalId = null;
@@ -457,7 +477,7 @@ window.addEventListener("DOMContentLoaded", () => {
         document.getElementById("zveInput").value.replace(/\./g, ""),
         10
       );
-      if (!isNaN(val)) updateUI(val + STEP);
+      if (!isNaN(val)) updateUI(val + STEP, false, true);
     }, INTERVAL);
   }
 
@@ -468,7 +488,7 @@ window.addEventListener("DOMContentLoaded", () => {
         document.getElementById("zveInput").value.replace(/\./g, ""),
         10
       );
-      if (!isNaN(val)) updateUI(Math.max(0, val - STEP));
+      if (!isNaN(val)) updateUI(Math.max(0, val - STEP), false, true);
     }, INTERVAL);
   }
 
@@ -500,4 +520,75 @@ window.addEventListener("DOMContentLoaded", () => {
     startDecrement();
   });
   decrementBtn.addEventListener("touchend", stopChange);
+
+  // Add theme toggle button
+  const body = document.body;
+  const themeToggle = document.createElement("button");
+  themeToggle.className = "theme-toggle";
+  themeToggle.setAttribute("aria-label", "Designmodus wechseln");
+  themeToggle.setAttribute("title", "Designmodus wechseln");
+
+  // Create the icon elements for sun and moon
+  const sunIcon = document.createElement("span");
+  sunIcon.className = "theme-toggle-icon sun";
+  sunIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+
+  const moonIcon = document.createElement("span");
+  moonIcon.className = "theme-toggle-icon moon";
+  moonIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+  themeToggle.appendChild(sunIcon);
+  themeToggle.appendChild(moonIcon);
+  body.appendChild(themeToggle);
+
+  // Theme toggle functionality
+  themeToggle.addEventListener("click", () => {
+    const root = document.documentElement;
+    const isLightTheme = root.classList.toggle("light-theme");
+
+    // Save preference to localStorage
+    localStorage.setItem("theme", isLightTheme ? "light" : "dark");
+
+    // Force refresh of computed styles to get new theme colors
+    window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--chart-bg");
+
+    // Update chart background colors
+    const charts = document.querySelectorAll("canvas");
+    charts.forEach((canvas) => {
+      const ctx = canvas.getContext("2d");
+      // Clear and refill the background to match the theme
+      ctx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue("--chart-bg")
+        .trim();
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Redraw charts with new colors after a short delay to ensure CSS variables are updated
+    setTimeout(() => {
+      updateUI(
+        parseInt(
+          document.getElementById("zveInput").value.replace(/\./g, ""),
+          10
+        ) || 0
+      );
+    }, 50);
+  });
+
+  // Apply saved theme on initial page load
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "light") {
+    document.documentElement.classList.add("light-theme");
+
+    // Make sure charts are redrawn with the light theme colors
+    setTimeout(() => {
+      updateUI(
+        parseInt(
+          document.getElementById("zveInput").value.replace(/\./g, ""),
+          10
+        ) || 0
+      );
+    }, 0);
+  }
 });
