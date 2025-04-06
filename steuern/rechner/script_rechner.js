@@ -15,6 +15,8 @@ const STANDARD_WERBUNGSKOSTEN = 1230; // €
 let isUpdatingFromZVE = false;
 // Track if the user is actively editing the gross input
 let userIsEditingGross = false;
+// Store the current calculator result globally
+window.calculatorResult = null;
 
 // Helper functions for number formatting
 function formatNumber(num) {
@@ -57,8 +59,9 @@ function calculateTaxableIncome(annualGross, advCosts, childCount) {
   let zvE = partialIncome - totalSocialContributions;
   if (zvE < 0) zvE = 0;
 
-  return {
+  const result = {
     zvE: Math.round(zvE),
+    brutto: annualGross,
     breakdown: {
       werbungskosten: advCosts,
       rentenversicherung: Math.round(rvContribution),
@@ -68,6 +71,11 @@ function calculateTaxableIncome(annualGross, advCosts, childCount) {
       total: Math.round(advCosts + totalSocialContributions),
     },
   };
+
+  // Store the result globally
+  window.calculatorResult = result;
+
+  return result;
 }
 
 /**
@@ -221,6 +229,21 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("breakdownKV").textContent = "0 €";
       document.getElementById("breakdownPV").textContent = "0 €";
       document.getElementById("breakdownTotal").textContent = "0 €";
+
+      // Reset calculator result to avoid stale data affecting netto calculations
+      window.calculatorResult = {
+        zvE: 0,
+        brutto: 0,
+        breakdown: {
+          werbungskosten: 0,
+          rentenversicherung: 0,
+          arbeitslosenversicherung: 0,
+          krankenversicherung: 0,
+          pflegeversicherung: 0,
+          total: 0,
+        },
+      };
+
       return;
     }
 

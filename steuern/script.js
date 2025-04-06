@@ -102,16 +102,50 @@ function updateBracketHighlighting(zvE) {
  * 2. Chart Data Setup
  ****************************************************************************/
 const stepSize = 100;
-const maxIncome = 200000;
+let maxIncome = 200000; // Changed from const to let to allow modification
 let avgRatePoints = [];
 let margRatePoints = [];
 
-for (let x = 0; x <= maxIncome; x += stepSize) {
-  const avgR = calculateAverageRate(x);
-  const margR = calculateMarginalRate(x);
-  avgRatePoints.push({ x, y: avgR });
-  margRatePoints.push({ x, y: margR });
+// Function to recalculate chart data points based on current maxIncome
+function updateChartData() {
+  // Clear existing data points
+  avgRatePoints = [];
+  margRatePoints = [];
+
+  // Generate new data points based on current maxIncome
+  for (let x = 0; x <= maxIncome; x += stepSize) {
+    const avgR = calculateAverageRate(x);
+    const margR = calculateMarginalRate(x);
+    avgRatePoints.push({ x, y: avgR });
+    margRatePoints.push({ x, y: margR });
+  }
+
+  // Update slider max to match new maxIncome
+  const slider = document.getElementById("zveSlider");
+  if (slider) {
+    slider.max = maxIncome;
+  }
+
+  // Update input max to match new maxIncome
+  const input = document.getElementById("zveInput");
+  if (input) {
+    input.max = maxIncome;
+  }
+
+  // Update current UI to reflect changes
+  const currentZvE =
+    parseInt(
+      document.getElementById("zveInput").value.replace(/\./g, ""),
+      10
+    ) || 0;
+
+  // Ensure zvE doesn't exceed the new maxIncome
+  const cappedZvE = Math.min(currentZvE, maxIncome);
+  updateUI(cappedZvE);
 }
+
+// Initial chart data generation
+updateChartData();
 
 /****************************************************************************
  * 2B. Chart Drawing (NEW styling)
@@ -354,6 +388,33 @@ function updateUI(zvE, skipCalcUpdate = false, bypassThrottle = false) {
   document.getElementById("taxAmountDisplay").textContent =
     taxAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";
 
+  // Calculate and update netto values
+  // Get the current calculator result if available
+  let yearlyNetto = 0;
+  let monthlyNetto = 0;
+
+  if (zvE > 0) {
+    const result = window.calculatorResult;
+    const brutto = result.brutto || 0;
+    const rv = result.breakdown?.rentenversicherung || 0;
+    const alv = result.breakdown?.arbeitslosenversicherung || 0;
+    const kv = result.breakdown?.krankenversicherung || 0;
+    const pv = result.breakdown?.pflegeversicherung || 0;
+
+    // Calculate netto as: Brutto - RV - ALV - KV - PV - Steuerbetrag
+    yearlyNetto = brutto - rv - alv - kv - pv - taxAmount;
+    monthlyNetto = yearlyNetto / 12;
+  }
+
+  // Format the netto values consistently, always showing 2 decimal places for monthly
+  document.getElementById("yearlyNettoDisplay").textContent =
+    yearlyNetto.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";
+  document.getElementById("monthlyNettoDisplay").textContent =
+    monthlyNetto
+      .toFixed(2)
+      .replace(".", ",")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";
+
   // Redraw charts with bracket indicators
   drawLineChart("avgRateChart", avgRatePoints, 50, zvE, avgR);
   drawLineChart("margRateChart", margRatePoints, 50, zvE, margR);
@@ -590,5 +651,41 @@ window.addEventListener("DOMContentLoaded", () => {
         ) || 0
       );
     }, 0);
+  }
+
+  // Add event listeners for X-axis max buttons
+  const btnMax100 = document.getElementById("btnMax100");
+  const btnMax200 = document.getElementById("btnMax200");
+  const btnMax300 = document.getElementById("btnMax300");
+
+  if (btnMax100 && btnMax200 && btnMax300) {
+    // Helper function to update button states
+    function updateButtonState(activeBtn) {
+      // Remove active class from all buttons
+      btnMax100.classList.remove("active");
+      btnMax200.classList.remove("active");
+      btnMax300.classList.remove("active");
+
+      // Add active class to the clicked button
+      activeBtn.classList.add("active");
+    }
+
+    btnMax100.addEventListener("click", () => {
+      maxIncome = 100000;
+      updateButtonState(btnMax100);
+      updateChartData();
+    });
+
+    btnMax200.addEventListener("click", () => {
+      maxIncome = 200000;
+      updateButtonState(btnMax200);
+      updateChartData();
+    });
+
+    btnMax300.addEventListener("click", () => {
+      maxIncome = 300000;
+      updateButtonState(btnMax300);
+      updateChartData();
+    });
   }
 });

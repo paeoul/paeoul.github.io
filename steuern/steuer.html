@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
+      content="width=device-width, initial-scale=0.8, viewport-fit=cover"
     />
     <meta name="color-scheme" content="dark light" />
     <title>Einkommensteuer-Berechnung</title>
@@ -24,6 +24,7 @@
       <div class="left-column">
         <!-- Empty but keeping its width -->
         <div class="calc-container">
+          <h2 class="calc-header">Brutto-zvE-Rechner</h2>
           <!-- Eingabebereich -->
           <div class="input-section">
             <label for="grossSalary" class="form-label">
@@ -187,31 +188,59 @@
           <h2>Grenzsteuersatz (%)</h2>
           <canvas id="margRateChart"></canvas>
         </div>
+
+        <!-- X-axis max control container -->
+        <div class="x-axis-control">
+          <span class="x-axis-label">Maximale Anzeige:</span>
+          <div class="x-axis-buttons">
+            <button id="btnMax100" class="x-axis-button">100.000 €</button>
+            <button id="btnMax200" class="x-axis-button active">
+              200.000 €
+            </button>
+            <button id="btnMax300" class="x-axis-button">300.000 €</button>
+          </div>
+        </div>
       </div>
 
       <!-- Right column -->
       <div class="right-column">
-        <div class="tax-info">
-          <div id="bracketIndicator"></div>
-          <div class="tax-display">
+        <div id="bracketIndicator"></div>
+
+        <div class="netto-display">
+          <h3 class="section-header">Effektives Netto</h3>
+          <div class="section-subcontainer">
             <div class="tax-item">
-              <span class="tax-label">Durchschnittssteuersatz:</span>
+              <span class="tax-label">Effektives Jahresnetto</span>
+              <span class="tax-value" id="yearlyNettoDisplay">0,00 €</span>
+            </div>
+            <div class="tax-item">
+              <span class="tax-label">Effektives Monatsnetto</span>
+              <span class="tax-value" id="monthlyNettoDisplay">0,00 €</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tax-display">
+          <h3 class="section-header">Steuersätze</h3>
+          <div class="section-subcontainer">
+            <div class="tax-item">
+              <span class="tax-label">Durchschnittssteuersatz</span>
               <span class="tax-value" id="avgRateDisplay">0,00 %</span>
             </div>
             <div class="tax-item">
-              <span class="tax-label">Grenzsteuersatz:</span>
+              <span class="tax-label">Grenzsteuersatz</span>
               <span class="tax-value" id="margRateDisplay">0,00 %</span>
             </div>
             <div class="tax-item">
-              <span class="tax-label">Steuerbetrag:</span>
+              <span class="tax-label">Steuerbetrag</span>
               <span class="tax-value" id="taxAmountDisplay">0,00 €</span>
             </div>
           </div>
         </div>
 
         <div class="steuerzonen-info">
-          <h3>Steuerzonen</h3>
-          <div class="bracket-list">
+          <h3 class="section-header">Steuerzonen</h3>
+          <div class="section-subcontainer">
             <div class="bracket-item" data-amount="12096" data-start-amount="0">
               <span class="bracket-label">Grundfreibetrag</span>
               <span class="bracket-amount">0 € - 12.096 €</span>
@@ -255,6 +284,10 @@
 
     <p class="explanation">
       Die Berechnungen basieren auf dem deutschen Einkommensteuertarif 2025.
+    </p>
+
+    <p class="footer-link">
+      <a href="impressum.html">Impressum</a>
     </p>
 
     <script src="script.js"></script>
