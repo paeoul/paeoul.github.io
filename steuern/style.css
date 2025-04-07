@@ -268,8 +268,122 @@ h1 {
 
 /* Right column - balanced width */
 .right-column {
-  width: 300px;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* More vertical gap than before */
+  margin-bottom: 1rem; /* Slight bottom margin if needed */
+  width: 300px; /* Or adjust for your layout; remove if fluid */
+  flex-shrink: 0; /* So it won't shrink on narrower screens */
+}
+
+.right-column-card {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px var(--color-black-40);
+  padding: 1rem; /* Slightly larger padding for readability */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Unified header for each right-column card */
+.right-column-card .section-header {
+  color: var(--color-accent-teal);
+  font-size: 0.95rem; /* Slightly bigger than ultra-compact */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.75rem 0; /* More bottom margin for breathing room */
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--color-white-10);
+  text-align: center;
+}
+
+/* Subcontainer for items within each card */
+.right-column-card .section-subcontainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* A bit more space between items */
+}
+
+.tax-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.75rem; /* More vertical space inside each item */
+  background: var(--color-accent-pink-05);
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.tax-item:hover {
+  background: var(--color-accent-pink-10);
+  transform: translateX(2px);
+}
+
+.tax-label {
+  font-size: 0.8rem; /* Slightly bigger than 0.75 */
+  color: var(--color-accent-pink);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tax-value {
+  font-size: 0.95rem; /* Larger for readability */
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3; /* Extra line-height for clarity */
+}
+
+/* For "Effektives Jahresnetto" vs. "Monatsnetto," etc. */
+.netto-display {
+  /* Add .right-column-card in your HTML: class="netto-display right-column-card" */
+}
+
+/* Card container for the bracket info */
+.steuerzonen-info {
+  /* Add .right-column-card in your HTML: class="steuerzonen-info right-column-card" */
+}
+
+/* Each bracket row */
+.bracket-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem; /* Matching .tax-item for visual consistency */
+  background: var(--color-accent-pink-05);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.bracket-item:hover {
+  background: var(--color-accent-pink-10);
+  transform: translateX(2px);
+}
+
+.bracket-item.active {
+  background: var(--color-accent-pink-20);
+  box-shadow: 0 0 5px var(--color-accent-pink-30);
+}
+
+.bracket-label {
+  color: var(--color-accent-pink);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bracket-amount {
+  color: var(--color-text);
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+#bracketIndicator {
+  display: none; /* Keep it hidden permanently, or toggle via JS if needed */
+  /* The rest of the style can remain or be removed. If you might 
+     show it in the future, you can keep the styling. */
 }
 
 /*********************************************
@@ -282,53 +396,63 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-/* Chart wrapper with a bold card style */
+/*********************************************
+  Chart Wrapper & Title
+*********************************************/
 .chart-wrapper {
   width: 100%;
   background: var(--color-bg-card);
-  border-radius: 16px;
-  box-shadow: 0 6px 12px var(--color-black-40);
-  text-align: center;
-  padding: 0.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-  flex: 1;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px var(--color-black-40);
+  padding: 0.75rem;
+  margin: 0.3rem 0;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .chart-wrapper h2 {
-  margin-top: 0.5rem;
+  margin: 0 0 0.5rem;
   color: var(--color-accent-pink);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   line-height: 1.2;
+  text-align: center;
+  border-bottom: 1px solid var(--color-white-10);
+  padding-bottom: 0.3rem;
+  width: 100%;
 }
 
+/* Slightly smaller default height to reduce vertical space. */
 .chart-wrapper canvas {
-  flex: 1;
   width: 100%;
-  height: clamp(200px, 40vh, 400px);
+  height: clamp(180px, 35vh, 350px);
   object-fit: contain;
+  border-radius: 4px;
+  background-color: var(--chart-bg);
+  transition: background-color 0.3s ease;
 }
 
 /*********************************************
-  Controls container
+  Controls (Slider & Buttons)
 *********************************************/
 .controls {
   width: 100%;
-  max-width: 800px;
   background: var(--color-bg-card);
-  border-radius: 16px;
-  box-shadow: 0 6px 12px var(--color-black-40);
-  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px var(--color-black-40);
+  padding: 0.75rem;
+  margin: 0.3rem 0;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  transition: background-color 0.3s ease;
 }
 
 .input-group {
@@ -336,85 +460,164 @@ h1 {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .input-group label {
   font-weight: 600;
   color: var(--color-accent-pink);
-  flex-shrink: 0;
   text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
-/* Range slider styling */
+.input-with-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+/* Slender Range Slider */
 #zveSlider {
   width: 100%;
   appearance: none;
-  height: 8px;
+  height: 6px;
   background: var(--color-slider-bg);
   border-radius: 4px;
   outline: none;
   cursor: pointer;
   transition: background 0.15s;
 }
+
 #zveSlider:hover {
   background: var(--color-slider-hover);
 }
+
 #zveSlider::-webkit-slider-thumb {
   appearance: none;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   background: var(--color-accent-teal);
   border: 2px solid var(--color-bg-card);
   border-radius: 50%;
   box-shadow: 0 0 6px var(--color-accent-teal-30);
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
+
+#zveSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
 #zveSlider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   background: var(--color-accent-teal);
   border: 2px solid var(--color-bg-card);
   border-radius: 50%;
   box-shadow: 0 0 6px var(--color-accent-teal-30);
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-/* Enhanced slider thumb for light theme */
-:root.light-theme #zveSlider::-webkit-slider-thumb {
-  background: linear-gradient(
-    135deg,
-    var(--color-accent-teal),
-    var(--color-accent-teal-20)
-  );
-  box-shadow: 0 0 8px var(--color-accent-teal-40);
+#zveSlider::-moz-range-thumb:hover {
+  transform: scale(1.1);
 }
 
-:root.light-theme #zveSlider::-moz-range-thumb {
+/* Hero input styling for important fields */
+.hero-input {
+  /* Larger size to stand out */
+  font-size: 1.2rem; /* bigger than the default 0.9rem */
+  font-weight: 700;
+  height: 48px; /* more vertical space */
+  border-width: 3px; /* thicker border */
+  text-align: right;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px var(--color-accent-teal-15),
+    0 0 2px var(--color-accent-teal-30) inset;
+
   background: linear-gradient(
     135deg,
-    var(--color-accent-teal),
+    var(--color-accent-teal-05),
     var(--color-accent-teal-20)
   );
-  box-shadow: 0 0 8px var(--color-accent-teal-40);
+  border-color: var(--color-accent-teal);
+}
+
+/* Add a subtle "pulsing" or "highlight" effect on hover/focus */
+.hero-input:hover {
+  box-shadow: 0 0 12px var(--color-accent-teal-20),
+    0 0 2px var(--color-accent-teal-30) inset;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-teal-10),
+    var(--color-accent-teal-30)
+  );
+}
+
+.hero-input:focus {
+  outline: none;
+  box-shadow: 0 0 15px var(--color-accent-teal-30),
+    inset 0 0 4px var(--color-accent-teal);
+  border-color: var(--color-accent-teal);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-teal-15),
+    var(--color-accent-teal-30)
+  );
 }
 
 /*********************************************
-  Numeric input & buttons
+  Increment/Decrement Buttons
 *********************************************/
-.input-with-buttons {
+.input-buttons {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 2px;
 }
 
-/* Hero styling for zvE input field in the middle column */
+.input-button {
+  width: 28px;
+  height: 20px;
+  border: 2px solid var(--color-border-gray);
+  background-color: var(--color-bg-card);
+  color: var(--color-accent-teal);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  line-height: 1;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.input-button:hover {
+  background-color: var(--color-bg-dark-highlight);
+  border-color: var(--color-accent-teal);
+}
+
+.input-button:active {
+  background-color: var(--color-accent-teal-15);
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px var(--color-black-50);
+}
+
+/*********************************************
+  Numeric Input (zveInput)
+*********************************************/
 #zveInput {
-  width: 120px;
-  height: 48px;
-  font-size: 1.2rem;
-  padding: 0 1rem 0 0.5rem;
-  border: 2px solid var(--color-accent-teal);
+  width: 100px;
+  height: 48px; /* Match hero-input height */
+  font-size: 1.2rem; /* Match hero-input font size */
+  padding: 0 0.75rem;
+  border: 3px solid var(--color-accent-teal); /* Match hero-input border width */
   border-radius: 8px;
   background: linear-gradient(
     to right,
@@ -423,183 +626,105 @@ h1 {
   );
   color: var(--color-text);
   text-align: right;
-  font-weight: 600;
-  box-shadow: 0 0 10px var(--color-accent-teal-15);
+  font-weight: 700; /* Match hero-input font weight */
+  box-shadow: 0 0 6px var(--color-accent-teal-15);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
 }
 
-#zveInput:focus {
-  border-color: var(--color-accent-teal);
-  box-shadow: 0 0 15px var(--color-accent-teal-30);
+/* Hero input styling for important fields */
+.hero-input {
+  /* Larger size to stand out */
+  font-size: 1.2rem; /* bigger than the default 0.9rem */
+  font-weight: 700;
+  height: 48px; /* more vertical space */
+  border-width: 3px; /* thicker border */
+  text-align: right;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px var(--color-accent-teal-15),
+    0 0 2px var(--color-accent-teal-30) inset;
+
   background: linear-gradient(
-    to right,
-    var(--color-accent-teal-10),
+    135deg,
+    var(--color-accent-teal-05),
     var(--color-accent-teal-20)
   );
-  outline: none;
+  border-color: var(--color-accent-teal);
 }
 
-/* Add subtle highlight effect */
-.input-with-buttons::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 120px;
-  height: 48px;
-  background: radial-gradient(
-    circle at right center,
-    var(--color-accent-teal-20),
-    transparent 60%
+/* Add a subtle "pulsing" or "highlight" effect on hover/focus */
+.hero-input:hover {
+  box-shadow: 0 0 12px var(--color-accent-teal-20),
+    0 0 2px var(--color-accent-teal-30) inset;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-teal-10),
+    var(--color-accent-teal-30)
   );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 0;
-  border-radius: 6px;
-  pointer-events: none;
 }
 
-.input-buttons {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 48px;
+.hero-input:focus {
+  outline: none;
+  box-shadow: 0 0 15px var(--color-accent-teal-30),
+    inset 0 0 4px var(--color-accent-teal);
+  border-color: var(--color-accent-teal);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-teal-15),
+    var(--color-accent-teal-30)
+  );
 }
 
-.input-button {
-  width: 32px;
-  height: 22px;
-  border: 2px solid var(--color-border-gray);
-  background-color: var(--color-bg-card);
-  color: var(--color-accent-teal);
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 6px;
-  line-height: 1;
-  transition: all 0.2s;
+/*********************************************
+  X-Axis Control (Buttons for 100k, 200k, 300k)
+*********************************************/
+.x-axis-control {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 1px 0;
-}
-.input-button:hover {
-  background-color: var(--color-bg-dark-highlight);
-  border-color: var(--color-border-light-gray);
-}
-.input-button:active {
-  background-color: var(--color-input-active);
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 4px var(--color-shadow-dark);
+  justify-content: flex-end;
+  width: 100%;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
 }
 
-/*********************************************
-  Right column content
-*********************************************/
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-self: flex-start;
-  margin-bottom: 1.5rem;
-}
-
-.section-subcontainer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-/*********************************************
-  Bracket indicator
-*********************************************/
-#bracketIndicator {
-  display: none; /*  hidden; */
-  /*display: flex;*/
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-align: center;
-  padding: 1rem;
-  background-color: var(--color-bg-card);
-  color: var(--color-accent-pink);
-  border-radius: 16px;
-  box-shadow: 0 6px 12px var(--color-black-40);
+.x-axis-label {
+  font-weight: 600;
+  color: var(--color-text);
+  flex-shrink: 0;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  min-height: 65px; /* Fixed minimum height */
-  align-items: center;
-  justify-content: center; /* Center content vertically and horizontally */
 }
 
-#bracketIndicator.highlight {
-  box-shadow: 0 6px 12px var(--color-accent-pink-40),
-    0 0 0 2px var(--color-accent-pink);
-}
-
-/* Add styles for bracket boundary indicators on charts */
-.bracket-boundary {
-  position: absolute;
-  width: 2px;
-  background: var(--color-accent-pink-30);
-  pointer-events: none;
-}
-
-.bracket-boundary::after {
-  content: attr(data-bracket);
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-accent-pink-10);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: var(--color-accent-pink);
-  white-space: nowrap;
-}
-
-/*********************************************
-  Tax display card
-*********************************************/
-.tax-display {
+.x-axis-buttons {
   display: flex;
-  flex-direction: column;
-  background: var(--color-bg-card);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 6px 12px var(--color-black-40);
-  margin-top: 0;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
-.tax-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.8rem;
-  background: var(--color-accent-pink-05);
+.x-axis-button {
+  padding: 0.4rem 0.8rem;
+  background-color: var(--color-bg-card);
+  color: var(--color-accent-teal);
+  border: 2px solid var(--color-border-gray);
   border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.tax-item:hover {
-  background: var(--color-accent-pink-10);
-  transform: translateX(4px);
+.x-axis-button:hover {
+  background-color: var(--color-bg-dark-highlight);
+  border-color: var(--color-accent-teal);
 }
 
-.tax-label {
-  font-size: 0.9rem;
-  color: var(--color-accent-pink);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.tax-value {
-  font-size: 1.1rem;
-  font-weight: bold;
+.x-axis-button.active {
+  background-color: var(--color-accent-teal-15);
+  border-color: var(--color-accent-teal);
   color: var(--color-text);
-  opacity: 0.9;
 }
 
 /*********************************************
@@ -642,310 +767,56 @@ h1 {
 }
 
 /*********************************************
-  Netto display card
+  Responsive Adjustments
 *********************************************/
-.netto-display {
-  display: flex;
-  flex-direction: column;
-  background: var(--color-bg-card);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 6px 12px var(--color-black-40);
-  margin-top: 0;
-}
-
-.section-header {
-  color: var(--color-accent-teal);
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  text-align: center;
-  transition: color 0.3s ease;
-}
-
-/*********************************************
-  Steuerzonen info styling
-*********************************************/
-.steuerzonen-info {
-  background: var(--color-bg-card);
-  border-radius: 16px;
-  box-shadow: 0 6px 12px var(--color-black-40);
-  padding: 1.5rem;
-  margin-top: 0;
-}
-
-.bracket-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.8rem;
-  background: var(--color-accent-pink-05);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.bracket-item:hover {
-  background: var(--color-accent-pink-10);
-  transform: translateX(4px);
-}
-
-.bracket-item.active {
-  background: var(--color-accent-pink-20);
-}
-
-/* Special styling for active bracket in light theme */
-:root.light-theme .bracket-item.active {
-  background: var(--color-accent-pink-30);
-  box-shadow: 0 0 10px var(--color-accent-pop);
-  border-left: 3px solid var(--color-accent-pop);
-  transform: translateX(4px);
-}
-
-.bracket-label {
-  color: var(--color-accent-pink);
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-}
-
-.bracket-amount {
-  color: var(--color-text);
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-/*********************************************
-  X-axis max buttons
-*********************************************/
-.x-axis-control {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  gap: 1rem;
-}
-
-.x-axis-label {
-  font-weight: 600;
-  color: var(--color-text);
-  flex-shrink: 0;
-}
-
-.x-axis-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.x-axis-button {
-  padding: 0.5rem 1rem;
-  background-color: var(--color-bg-card);
-  color: var(--color-accent-teal);
-  border: 2px solid var(--color-border-gray);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.x-axis-button:hover {
-  background-color: var(--color-bg-dark-highlight);
-  border-color: var(--color-accent-teal);
-}
-
-.x-axis-button.active {
-  background-color: var(--color-accent-teal-15);
-  border-color: var(--color-accent-teal);
-  color: var(--color-text);
-}
-
-/*********************************************
-  Responsive adjustments
-*********************************************/
-
 @media (max-width: 600px) {
-  /* Adjust header for mobile */
-  header {
-    margin-top: 0.1rem;
-    margin-bottom: 0.1rem;
-  }
-
-  h1 {
-    font-size: 1.2rem;
-    margin: 0;
-    position: relative;
-    line-height: 1;
-  }
-
-  /* Replace header text on mobile */
-  h1::before {
-    content: "Einkommensteuerberechnung";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: var(--color-bg-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.1rem;
-    margin-bottom: 0.1rem;
-  }
-
-  h1 span {
-    visibility: hidden;
-  }
-
-  /* Adjust container for mobile */
-  .tax-calculator-layout {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    height: auto;
-    margin-top: 0.25rem;
-  }
-
-  /* Make charts container full width */
-  .center-column {
-    width: 100%;
-    max-width: 100%;
-    gap: 0.25rem;
-    height: auto;
-  }
-
-  /* Make left and right columns full width on mobile */
-  .left-column,
-  .right-column {
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 0.25rem;
-  }
-
-  /* Adjust chart wrappers */
   .chart-wrapper {
-    width: 100%;
-    height: 160px;
-    padding: 0.25rem;
-    margin-bottom: 0.25rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
   }
 
   .chart-wrapper h2 {
     font-size: 0.9rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
   }
 
-  /* Center controls between charts */
+  .chart-wrapper canvas {
+    height: 220px; /* Slightly smaller for mobile */
+    border-radius: 4px;
+  }
+
   .controls {
-    width: 100%;
-    max-width: 400px;
-    margin: 0.25rem auto;
-    padding: 0.5rem;
-  }
-
-  /* Adjust input group for better mobile layout */
-  .input-group {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
   }
 
   .input-group label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
-  /* Hide input buttons on mobile */
-  .input-buttons {
-    display: none;
-  }
-
-  /* Make slider more touch-friendly */
-  #zveSlider {
-    width: 100%;
-    height: 10px;
-  }
-
-  #zveSlider::-webkit-slider-thumb {
-    width: 24px;
-    height: 24px;
-  }
-
-  /* Adjust numeric input */
   #zveInput {
     width: 100px;
-    height: 32px;
-    font-size: 1rem;
-  }
-
-  /* Right column adjustments for mobile */
-  .right-column {
-    display: flex;
-    width: 100%;
-    max-width: 100%;
-    margin: 0.5rem auto;
-    position: static;
-    height: auto;
-    gap: 1rem;
-  }
-
-  /* Adjust bracket indicator for mobile */
-  #bracketIndicator {
+    height: 36px;
     font-size: 0.9rem;
-    padding: 0.5rem;
-    margin-bottom: 0.25rem;
-    min-height: 50px; /* Slightly smaller fixed height for mobile */
-  }
-
-  /* Adjust tax display for mobile */
-  .tax-display {
-    padding: 0.5rem;
-    gap: 0.4rem;
-  }
-
-  .tax-item {
-    padding: 0.4rem;
-  }
-
-  .tax-label {
-    font-size: 0.8rem;
-  }
-
-  .tax-value {
-    font-size: 0.9rem;
-  }
-
-  /* Adjust explanation text for mobile */
-  .explanation {
-    font-size: 0.75rem;
-    margin: 0.25rem auto;
-    padding: 0 0.5rem;
-  }
-
-  .x-axis-buttons {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .x-axis-button {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.7rem;
-  }
-
-  .x-axis-control {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    padding: 0 0.75rem;
   }
 
   .x-axis-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .x-axis-button {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.7rem;
+  }
+
+  .input-button {
+    width: 28px;
+    height: 20px;
+    font-size: 0.75rem;
   }
 }
 
@@ -962,4 +833,58 @@ h1 {
   100% {
     transform: scale(1);
   }
+}
+
+/*********************************************
+  Info Icon + Tooltip using inline SVG
+*********************************************/
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Adjust the SVG's size, color, or stroke if needed */
+.info-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--color-accent-pink); /* or var(--color-accent-teal) */
+  transition: stroke 0.2s ease;
+}
+
+/* The tooltip text will come from data-tooltip */
+.info-icon::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 130%; /* place above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-bg-card);
+  color: var(--color-accent-teal);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px var(--color-black-50);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9999;
+}
+
+/* Show on hover & focus */
+.info-icon:hover::before,
+.info-icon:focus::before {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -4px); /* shift upward slightly */
+}
+
+/* Optional: highlight the icon on hover/focus */
+.info-icon:hover svg,
+.info-icon:focus svg {
+  stroke: var(--color-accent-teal);
 }

@@ -11,6 +11,32 @@ const PV_RATE_NO_CHILD = 0.024; // 2,4%
 
 const STANDARD_WERBUNGSKOSTEN = 1230; // €
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Grab references
+  const toggleBtn = document.getElementById("toggleBreakdown");
+  const breakdownDiv = document.getElementById("breakdownDisplay");
+  const toggleTextSpan = toggleBtn?.querySelector(".toggle-text");
+
+  // If either element is missing, quietly bail out (optional safeguard)
+  if (!toggleBtn || !breakdownDiv || !toggleTextSpan) {
+    console.warn("Toggle breakdown elements not found. Check HTML structure.");
+  } else {
+    toggleBtn.addEventListener("click", () => {
+      // Toggle the 'collapsed' class on the breakdown container
+      breakdownDiv.classList.toggle("collapsed");
+      // Toggle an 'open' class on the button so we can rotate the caret
+      toggleBtn.classList.toggle("open");
+
+      // Change the text inside the .toggle-text span
+      if (breakdownDiv.classList.contains("collapsed")) {
+        toggleTextSpan.textContent = "Details anzeigen";
+      } else {
+        toggleTextSpan.textContent = "Details verbergen";
+      }
+    });
+  }
+});
+
 // Flag to prevent circular updates
 let isUpdatingFromZVE = false;
 // Track if the user is actively editing the gross input
@@ -310,10 +336,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCustomAdCostsInput() {
     if (adCostsIndividuell.checked) {
       customAdCostsInput.disabled = false;
+
+      // Immediately place cursor in the custom input field
+      customAdCostsInput.focus();
+
+      // Optional: if you want the entire text selected:
+      // customAdCostsInput.select();
     } else {
       customAdCostsInput.disabled = true;
       customAdCostsInput.value = "";
     }
+
     updateCalculations();
   }
 

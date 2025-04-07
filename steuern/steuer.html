@@ -22,27 +22,32 @@
     <div class="tax-calculator-layout">
       <!-- Left column -->
       <div class="left-column">
-        <!-- Empty but keeping its width -->
         <div class="calc-container">
           <h2 class="calc-header">Brutto-zvE-Rechner</h2>
           <!-- Eingabebereich -->
           <div class="input-section">
-            <label for="grossSalary" class="form-label">
-              Bruttogehalt/Jahr (€)
-            </label>
-            <input
-              type="number"
-              id="grossSalary"
-              class="form-input"
-              placeholder="z.B. 50000"
-              min="0"
-            />
+            <h3 class="calc-input-title">Eingabedaten</h3>
 
-            <div class="children-input-container">
-              <label for="childrenCount" class="form-label"
+            <!-- Bruttogehalt -->
+            <div class="calc-field">
+              <label for="grossSalary" class="calc-label">
+                Jährliches Bruttogehalt (€)
+              </label>
+              <input
+                type="number"
+                id="grossSalary"
+                class="calc-input hero-input"
+                placeholder="z.B. 50000"
+                min="0"
+              />
+            </div>
+
+            <!-- Kinder -->
+            <div class="calc-field">
+              <label for="childrenCount" class="calc-label"
                 >Anzahl Kinder</label
               >
-              <select id="childrenCount" class="form-select children-select">
+              <select id="childrenCount" class="calc-select">
                 <option value="0" selected>0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -51,46 +56,73 @@
               </select>
             </div>
 
-            <div class="werbungskosten-section">
-              <h3 class="section-header">Werbungskosten</h3>
-              <div class="werbungskosten-options">
-                <div class="werbungskosten-option">
+            <!-- Werbungskosten (Radio + Optional Custom Input) -->
+            <fieldset class="calc-fieldset">
+              <legend class="calc-legend">Werbungskosten</legend>
+              <div class="calc-radio-group">
+                <label class="calc-radio-option">
                   <input
                     type="radio"
                     id="advertisingCostsPauschale"
                     name="advertisingCosts"
-                    class="form-radio"
+                    class="calc-radio"
                     checked
                   />
-                  <label for="advertisingCostsPauschale" class="radio-label">
-                    Pauschale (1.230 €)
-                  </label>
-                </div>
-                <div class="werbungskosten-option">
+                  <span class="calc-radio-label">Pauschale (1.230 €)</span>
+                </label>
+
+                <label class="calc-radio-option">
                   <input
                     type="radio"
                     id="advertisingCostsIndividuell"
                     name="advertisingCosts"
-                    class="form-radio"
+                    class="calc-radio"
                   />
-                  <label for="advertisingCostsIndividuell" class="radio-label">
-                    Individuell (>1.230 €)
-                  </label>
+                  <span class="calc-radio-label">Individuell</span>
                   <input
                     type="number"
                     id="customAdvertisingCosts"
-                    class="form-input custom-adcost-input"
-                    placeholder="z.B. 3000"
+                    class="calc-input calc-custom-ad"
+                    placeholder="0"
                     min="1231"
                     disabled
                   />
-                </div>
+                </label>
               </div>
-            </div>
+            </fieldset>
           </div>
 
-          <!-- Breakdown section -->
-          <div class="breakdown-section" id="breakdownDisplay">
+          <!-- Ergebnisbereich -->
+          <div class="result-section" id="resultDisplay">
+            <p>
+              Ungefähres zu versteuerndes Einkommen:
+              <span class="result-value-container">
+                <span id="zveResult">-</span>
+              </span>
+            </p>
+          </div>
+
+          <!-- Toggle button for breakdown -->
+          <button id="toggleBreakdown">
+            <span class="caret-icon" aria-hidden="true">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+            <span class="toggle-text">Details anzeigen</span>
+          </button>
+
+          <!-- Breakdown section (collapsed by default) -->
+          <div class="breakdown-section collapsed" id="breakdownDisplay">
             <h3 class="section-header">Aufschlüsselung</h3>
             <div class="breakdown-content">
               <div class="breakdown-item">
@@ -128,16 +160,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Ergebnisbereich -->
-          <div class="result-section" id="resultDisplay">
-            <p>
-              Ungefähres zu versteuerndes Einkommen:
-              <span class="result-value-container">
-                <span id="zveResult">-</span> €
-              </span>
-            </p>
-          </div>
         </div>
       </div>
 
@@ -145,7 +167,34 @@
       <div class="center-column">
         <!-- Canvas for Durchschnittssteuersatz -->
         <div class="chart-wrapper">
-          <h2>Durchschnittssteuersatz (%)</h2>
+          <h2>
+            Durchschnittssteuersatz (%)
+            <span
+              class="info-icon"
+              role="button"
+              aria-label="Was bedeutet Durchschnittssteuersatz?"
+              data-tooltip="Durchschnittssteuersatz bezeichnet den prozentualen Anteil Ihres Gesamteinkommens, den Sie tatsächlich an Steuern zahlen."
+              tabindex="0"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <!-- Outer circle -->
+                <circle cx="12" cy="12" r="10" />
+                <!-- 'i' shape -->
+                <line x1="12" y1="8" x2="12" y2="8" />
+                <line x1="12" y1="12" x2="12" y2="16" />
+              </svg>
+            </span>
+          </h2>
           <canvas id="avgRateChart"></canvas>
         </div>
 
@@ -159,6 +208,7 @@
               <input
                 type="text"
                 id="zveInput"
+                class="hero-input"
                 min="0"
                 max="200000"
                 step="1"
@@ -185,7 +235,36 @@
 
         <!-- Canvas for Grenzsteuersatz -->
         <div class="chart-wrapper">
-          <h2>Grenzsteuersatz (%)</h2>
+          <h2>
+            Grenzsteuersatz (%)
+            <!-- Info icon with inline SVG + tooltip text stored in data-tooltip -->
+            <span
+              class="info-icon"
+              role="button"
+              aria-label="Was bedeutet Grenzsteuersatz?"
+              data-tooltip="Grenzsteuersatz bezeichnet den Steuersatz auf jeden zusätzlich verdienten Euro."
+              tabindex="0"
+            >
+              <!-- Inline SVG: a circle with an 'i' inside for a standard info icon -->
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <!-- Outer circle -->
+                <circle cx="12" cy="12" r="10" />
+                <!-- The 'i' shape: a small line for the dot, and a line for the stem -->
+                <line x1="12" y1="8" x2="12" y2="8" />
+                <line x1="12" y1="12" x2="12" y2="16" />
+              </svg>
+            </span>
+          </h2>
           <canvas id="margRateChart"></canvas>
         </div>
 
@@ -206,7 +285,7 @@
       <div class="right-column">
         <div id="bracketIndicator"></div>
 
-        <div class="netto-display">
+        <div class="netto-display right-column-card">
           <h3 class="section-header">Effektives Netto</h3>
           <div class="section-subcontainer">
             <div class="tax-item">
@@ -220,7 +299,7 @@
           </div>
         </div>
 
-        <div class="tax-display">
+        <div class="tax-display right-column-card">
           <h3 class="section-header">Steuersätze</h3>
           <div class="section-subcontainer">
             <div class="tax-item">
@@ -238,7 +317,7 @@
           </div>
         </div>
 
-        <div class="steuerzonen-info">
+        <div class="steuerzonen-info right-column-card">
           <h3 class="section-header">Steuerzonen</h3>
           <div class="section-subcontainer">
             <div class="bracket-item" data-amount="12096" data-start-amount="0">

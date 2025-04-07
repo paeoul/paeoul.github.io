@@ -460,8 +460,11 @@ window.addEventListener("DOMContentLoaded", () => {
   // Add click handlers for bracket items
   document.querySelectorAll(".bracket-item").forEach((item) => {
     item.addEventListener("click", () => {
-      const amount = parseInt(item.dataset.startAmount);
-      updateUI(amount);
+      const bracketZVE = parseInt(item.dataset.startAmount, 10);
+      window.updateCalcFromZVE(bracketZVE); // immediate recalc
+      // Then call updateUI so the chart lines/marker also move
+      updateUI(bracketZVE, true);
+      // 'skipCalcUpdate = true' so it won't loop back to updateCalcFromZVE again
     });
   });
 
