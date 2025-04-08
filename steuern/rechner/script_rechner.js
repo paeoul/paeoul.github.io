@@ -6,6 +6,15 @@ const KV_PV_BEMESSUNGSGRENZE = 66150; // KV + PV
 const RV_RATE = 0.093; // 9,3%
 const ALV_RATE = 0.013; // 1,3%
 const KV_RATE = 0.0855; // 7,3% + 1,25% Zusatzbeitrag = 8,55%
+
+// Pflegeversicherung - Basiswerte und Zuschläge/Abschläge
+const PV_BASIS_RATE = 0.018; // 1,8% Basisrate
+const PV_KINDERLOS_ZUSCHLAG = 0.006; // 0,6% Zuschlag für Kinderlose >=23 Jahre
+const PV_KINDER_ABSCHLAG_PRO_KIND = 0.0025; // 0,25% Abschlag pro Kind (ab 2. Kind)
+const PV_MAX_KINDER_ABSCHLAG = 5; // Maximal 5 Kinder für den Abschlag berücksichtigen
+const PV_MIN_RATE = 0.008; // Minimaler Satz: 0,8%
+
+// Legacy constants kept for compatibility
 const PV_RATE_WITH_CHILD = 0.018; // 1,8%
 const PV_RATE_NO_CHILD = 0.024; // 2,4%
 
@@ -75,7 +84,21 @@ function calculateTaxableIncome(annualGross, advCosts, childCount) {
   const kvPvBase = Math.min(annualGross, KV_PV_BEMESSUNGSGRENZE);
   const kvContribution = kvPvBase * KV_RATE;
 
-  const pvRate = childCount > 0 ? PV_RATE_WITH_CHILD : PV_RATE_NO_CHILD;
+  // Neue Berechnung des PV-Beitragssatzes
+  // 1. Berechnung des Kinderabschlags (ab dem 2. Kind)
+  const kinderAbschlag =
+    PV_KINDER_ABSCHLAG_PRO_KIND *
+    Math.min(Math.max(childCount - 1, 0), PV_MAX_KINDER_ABSCHLAG);
+
+  // 2. Zuschlag für Kinderlose (wir nehmen an, alle Nutzer sind über 23 Jahre alt)
+  const zuschlag = childCount > 0 ? 0 : PV_KINDERLOS_ZUSCHLAG;
+
+  // 3. Gesamter PV-Beitragssatz (mit Minimum von 0,8%)
+  const pvRate = Math.max(
+    PV_BASIS_RATE + zuschlag - kinderAbschlag,
+    PV_MIN_RATE
+  );
+
   const pvContribution = kvPvBase * pvRate;
 
   const totalSocialContributions =
@@ -94,6 +117,7 @@ function calculateTaxableIncome(annualGross, advCosts, childCount) {
       arbeitslosenversicherung: Math.round(alvContribution),
       krankenversicherung: Math.round(kvContribution),
       pflegeversicherung: Math.round(pvContribution),
+      pvRate: pvRate, // Store the calculated rate for display
       total: Math.round(advCosts + totalSocialContributions),
     },
   };
@@ -256,6 +280,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("breakdownPV").textContent = "0 €";
       document.getElementById("breakdownTotal").textContent = "0 €";
 
+      // Update PV rate display with the default rate (based on number of children)
+      const childrenCount = parseInt(childrenCountSelect.value, 10) || 0;
+      updatePVRateDisplay(childrenCount);
+
       // Reset calculator result to avoid stale data affecting netto calculations
       window.calculatorResult = {
         zvE: 0,
@@ -266,6 +294,18 @@ document.addEventListener("DOMContentLoaded", () => {
           arbeitslosenversicherung: 0,
           krankenversicherung: 0,
           pflegeversicherung: 0,
+          pvRate:
+            childrenCount > 0
+              ? Math.max(
+                  PV_BASIS_RATE -
+                    PV_KINDER_ABSCHLAG_PRO_KIND *
+                      Math.min(
+                        Math.max(childrenCount - 1, 0),
+                        PV_MAX_KINDER_ABSCHLAG
+                      ),
+                  PV_MIN_RATE
+                )
+              : PV_BASIS_RATE + PV_KINDERLOS_ZUSCHLAG,
           total: 0,
         },
       };
@@ -326,6 +366,15 @@ document.addEventListener("DOMContentLoaded", () => {
         result.breakdown.pflegeversicherung.toLocaleString("de-DE") + " €";
       document.getElementById("breakdownTotal").textContent =
         result.breakdown.total.toLocaleString("de-DE") + " €";
+
+      // Update the PV rate display
+      if (result.breakdown.pvRate) {
+        pvRateDisplay.textContent =
+          (result.breakdown.pvRate * 100).toFixed(2).replace(".", ",") + "%";
+      } else {
+        // Fallback to updatePVRateDisplay if pvRate is not available in the result
+        updatePVRateDisplay(childrenCount);
+      }
     } finally {
       // Always reset flag
       isUpdatingFromZVE = false;
@@ -352,8 +401,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Update Pflegeversicherung rate display based on children count
   function updatePVRateDisplay(childrenCount) {
-    const rate = childrenCount > 0 ? PV_RATE_WITH_CHILD : PV_RATE_NO_CHILD;
-    pvRateDisplay.textContent = (rate * 100).toFixed(1).replace(".", ",") + "%";
+    // Neue Berechnung des PV-Beitragssatzes für die Anzeige
+    const kinderAbschlag =
+      PV_KINDER_ABSCHLAG_PRO_KIND *
+      Math.min(Math.max(childrenCount - 1, 0), PV_MAX_KINDER_ABSCHLAG);
+    const zuschlag = childrenCount > 0 ? 0 : PV_KINDERLOS_ZUSCHLAG;
+    const rate = Math.max(
+      PV_BASIS_RATE + zuschlag - kinderAbschlag,
+      PV_MIN_RATE
+    );
+
+    // Formatieren des Beitragssatzes als Prozent mit zwei Dezimalstellen
+    pvRateDisplay.textContent = (rate * 100).toFixed(2).replace(".", ",") + "%";
   }
 
   // Add event listeners for real-time updates

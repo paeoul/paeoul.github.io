@@ -29,6 +29,30 @@ function calculateTax(zvE) {
   return Math.floor(tax);
 }
 
+/**
+ * Calculates the annual Solidaritätszuschlag (Soli) for 2025
+ * @param {number} annualTax - The yearly income tax (JBMG) from calculateTax(zvE)
+ * @returns {number} The Solidaritätszuschlag in Euro
+ */
+function calculateSoli(annualTax) {
+  // Freigrenze for single taxpayers in 2025
+  const SOLZFREI = 19950; // 19.950 €
+
+  // 1. If annual tax is below or equal to the Freigrenze → no Soli
+  if (annualTax <= SOLZFREI) {
+    return 0;
+  }
+
+  // 2. Calculate "normal" Soli = 5.5% of annual tax
+  const soliNormal = annualTax * 0.055;
+
+  // 3. Calculate "Milderungszonen"-Limit = 11.9% on (annualTax - Freigrenze)
+  const soliMin = (annualTax - SOLZFREI) * 0.119;
+
+  // 4. Actual Soli is the smaller of (soliNormal, soliMin)
+  return Math.min(soliNormal, soliMin);
+}
+
 function calculateMarginalRate(zvE) {
   if (zvE <= 0) return 0.0;
 
@@ -381,12 +405,22 @@ function updateUI(zvE, skipCalcUpdate = false, bypassThrottle = false) {
   const margR = calculateMarginalRate(zvE);
   const taxAmount = calculateTax(zvE);
 
+  // Calculate Solidaritätszuschlag based on the income tax
+  const soliAmount = calculateSoli(taxAmount);
+
   document.getElementById("avgRateDisplay").textContent =
     avgR.toFixed(2).replace(".", ",") + " %";
   document.getElementById("margRateDisplay").textContent =
     margR.toFixed(2).replace(".", ",") + " %";
   document.getElementById("taxAmountDisplay").textContent =
     taxAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";
+
+  // Display the Soli amount
+  document.getElementById("soliAmountDisplay").textContent =
+    soliAmount
+      .toFixed(2)
+      .replace(".", ",")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";
 
   // Calculate and update netto values
   // Get the current calculator result if available
@@ -401,8 +435,8 @@ function updateUI(zvE, skipCalcUpdate = false, bypassThrottle = false) {
     const kv = result.breakdown?.krankenversicherung || 0;
     const pv = result.breakdown?.pflegeversicherung || 0;
 
-    // Calculate netto as: Brutto - RV - ALV - KV - PV - Steuerbetrag
-    yearlyNetto = brutto - rv - alv - kv - pv - taxAmount;
+    // Calculate netto as: Brutto - RV - ALV - KV - PV - Steuerbetrag - Soli
+    yearlyNetto = brutto - rv - alv - kv - pv - taxAmount - soliAmount;
     monthlyNetto = yearlyNetto / 12;
   }
 
