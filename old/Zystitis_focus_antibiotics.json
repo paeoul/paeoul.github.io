@@ -1,0 +1,26 @@
+{
+  "focus_antibiotics": [
+    "Penicillin G",
+    "Pivmecillinam",
+    "Amoxicillin",
+    "Ampicillin",
+    "Ampicillin Sulbactam",
+    "Piperacillin Tazobactam",
+    "Cefazolin",
+    "Cefuroxim",
+    "Cefpodoxim",
+    "Ceftriaxon",
+    "Cefotaxim",
+    "Ceftazidim",
+    "Cefepim",
+    "Imipenem",
+    "Meropenem",
+    "Ciprofloxacin",
+    "Levofloxacin",
+    "Moxifloxacin",
+    "Fosfomycin",
+    "Nitrofurantoin",
+    "Trimethoprim",
+    "Cotrimoxazol (HWI)"
+  ]
+}

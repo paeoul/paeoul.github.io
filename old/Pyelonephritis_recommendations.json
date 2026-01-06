@@ -1,38 +1,20 @@
 {
-  "Akute unkomplizierte Zystitis bei Frauen ohne relevante Begleiterkrankungen": {
+  "Frauen ohne relevante Begleiterkrankungen mit akuter unkomplizierter Pyelonephritis": {
     "no_penicillin_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Pivmecillinam", "Nitrofurantoin", "Trimethoprim"],
+      "primary_recommendation": ["Cefpodoxim", "Ciprofloxacin", "Levofloxacin"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     },
+
 
     "penicillin_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Nitrofurantoin", "Trimethoprim"],
+      "primary_recommendation": ["Cefpodoxim", "Ciprofloxacin", "Levofloxacin"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     },
+
     "b_lactam_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Nitrofurantoin", "Trimethoprim"],
-      "secondary_recommendation": [""],
-      "tertiary_recommendation": [""]
-    }
-  },
-
-
-  "Akute unkomplizierte Zystitis bei Schwangeren": {
-    "no_penicillin_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Pivmecillinam", "Cefuroxim", "Cefpodoxim"],
-      "secondary_recommendation": [""],
-      "tertiary_recommendation": [""]
-    },
-
-    "penicillin_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Cefuroxim", "Cefpodoxim"],
-      "secondary_recommendation": [""],
-      "tertiary_recommendation": [""]
-    },
-    "b_lactam_allergy": {
-      "primary_recommendation": ["Fosfomycin"],
+      "primary_recommendation": ["Ciprofloxacin", "Levofloxacin"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     }
@@ -41,21 +23,43 @@
 
 
 
-  "Akute unkomplizierte Zystitis bei jüngeren Männern": {
+  "Akute unkomplizierte Pyelonephritis bei Schwangeren": {
     "no_penicillin_allergy": {
-      "primary_recommendation": ["Pivmecillinam", "Nitrofurantoin"],
+      "primary_recommendation": ["Ceftriaxon", "Cefotaxim"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     },
 
 
     "penicillin_allergy": {
-      "primary_recommendation": ["Nitrofurantoin"],
+      "primary_recommendation": [""],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    },
+
+    "b_lactam_allergy": {
+      "primary_recommendation": [""],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    }
+  },
+
+
+
+
+  "Akute unkomplizierte Pyelonephritis bei jüngeren Männern": {
+    "no_penicillin_allergy": {
+      "primary_recommendation": ["Ciprofloxacin", "Levofloxacin"],
+      "secondary_recommendation": [""],
+      "tertiary_recommendation": [""]
+    },
+    "penicillin_allergy": {
+      "primary_recommendation": ["Ciprofloxacin", "Levofloxacin"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     },
     "b_lactam_allergy": {
-      "primary_recommendation": ["Nitrofurantoin"],
+      "primary_recommendation": ["Ciprofloxacin", "Levofloxacin"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     }

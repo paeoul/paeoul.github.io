@@ -1,0 +1,1197 @@
+:root {
+  /* --- NEW PALETTE (For Sidebars & Layout) --- */
+  /* PALETTE: INTELLIGENT OCEAN & SLATE */
+  --bg-app: #f0f2f5; /* Cool Mist (Grey) */
+  --bg-card: #ffffff; /* White */
+  --primary-color: #0284c7; /* Ocean Blue */
+  --primary-hover: #0369a1; /* Ocean Blue Darker (for interactions) */
+  --border-subtle: #e2e8f0; /* Slate 200 (For lines and borders) */
+
+  /* TEXT */
+  --body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --text-main: #334155; /* Slate 700 (Main Text) */
+  --text-muted: #64748b; /* Slate 500 (Labels/Secondary) */
+
+  /* --- colors--- */
+  --secondary-color: #0f4067;
+  --accent-color: #cde4f6;
+  --extra-accent-color: #059669;
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --toggle-color: #059669; /* Emerald Green - Distinct from Ocean Blue */
+  --toggle-bg-hover: rgba(5, 150, 105, 0.08); /* 8% Opacity Green */
+
+  /* --- TABLE colors--- */
+  --primary-recommendation-color: #00ee6b;
+  --secondary-recommendation-color: #fbe550;
+  --tertiary-recommendation-color: #eb740d;
+  --sensitivity-high-color: #a7dca7;
+  --sensitivity-medium-color: #ffe594;
+  --sensitivity-low-color: #ffb4b4;
+}
+
+body {
+  font-family: var(--body-font-family);
+  /* CHANGE: Grey background so cards stand out */
+  background-color: var(--bg-app);
+  /* CRITICAL: Keep original text settings so Table is unaffected */
+  color: var(--text-color); /* #333333 */
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  /* Slightly bolder headings */
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: left; /* Align with your new sidebar headers */
+  color: var(--text-main); /* Use your Slate variable, not #343a40 */
+  margin: 20px 0;
+}
+
+/* Dashboard Layout */
+#dashboard {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  padding: 8px; /* Space around the screen */
+  gap: 8px; /* Space between cards */
+  box-sizing: border-box;
+}
+
+#header_table_container {
+  flex-grow: 1;
+  padding: 15px;
+  padding-top: 0px;
+  height: 100%; /* Force full height relative to parent */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Sidebar Styles */
+#left-sidebar {
+  width: 220px;
+  flex: 0 0 220px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  background: var(--bg-card); /* White */
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--text-main);
+  padding: 16px;
+  user-select: none;
+}
+
+/*//////////////////// Disease Selector Styles /////////////////////*/
+/* 1. ANCHOR THE LABEL */
+#disease-selection-container .sidebar-section-header {
+  margin-top: 0 !important; /* Snap to top */
+  margin-bottom: 8px; /* Tight spacing to the button */
+  /* THE HIERARCHY FIX: */
+  color: var(--primary-color); /* Make it Ocean Blue instead of Grey */
+  opacity: 1; /* Ensure it stands out fully */
+}
+
+/* 2. THE COMMAND BUTTON (Replaces standard Select) */
+#disease-selector {
+  width: 100%;
+  padding: 12px 16px; /* Larger, more clickable area */
+  padding-right: 40px; /* Room for the chevron arrow */
+
+  /* TYPOGRAPHY: Strong and Authoritative */
+  font-family: var(--body-font-family);
+  font-size: 15px; /* Slightly larger */
+  font-weight: 700; /* Bold text */
+  color: #0f172a; /* Darkest Slate (High Contrast) */
+
+  /* VISUALS: Solid Block Style */
+  background-color: #f1f5f9; /* Slate 100 - Distinct form background */
+  border: 1px solid transparent; /* No visible border by default */
+  border-radius: 8px;
+
+  /* BROWSER RESET */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+
+  /* ANIMATION */
+  transition: all 0.2s ease;
+
+  /* CUSTOM ARROW: Darker to match the bold text */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23334155%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 10px auto;
+}
+
+/* HOVER STATE: Darkens slightly */
+#disease-selector:hover {
+  background-color: #e2e8f0; /* Slate 200 */
+  color: #000000;
+}
+
+/* DEFAULT OPTION (Placeholder) */
+#disease-selector option[value=""] {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+/* Pulsating Border Animation */
+@keyframes pulsate {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 141, 202, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 141, 202, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 141, 202, 0);
+  }
+}
+
+#disease-selection-container.animated #disease-selector {
+  animation: pulsate 2s infinite;
+}
+
+/* THE HEADER DIVIDER (Specific settings for the top line) */
+.header-divider {
+  /* 1. VISUALS (Same as your other divider) */
+  border: none;
+  height: 1px;
+  background-color: var(--border-subtle);
+  width: 100%;
+
+  /* 2. LAYOUT (Specific to the Top Header position) */
+  margin-top: 20px; /* Space below the Diagnosis button */
+  margin-bottom: 4px; /* Tiny space above the 'Einteilung' header */
+}
+
+/*//////////////////// Unified Sidebar Headers /////////////////////*/
+
+.sidebar-section-header {
+  font-family: var(--body-font-family);
+  font-size: 13px; /* Small but distinct */
+  font-weight: 700; /* Bold */
+  text-transform: uppercase; /* "Label" style */
+  letter-spacing: 0.05em; /* Improves readability of caps */
+  color: var(--text-muted); /* Slate 500 - distinct from content text */
+  margin-top: 0px; /* Distinct separation from previous section */
+  margin-bottom: 12px; /* Tight spacing to the controls below */
+  text-align: left; /* Aligns with your buttons */
+  line-height: 1;
+}
+
+/*THE DIVIDER (The New Spring) */
+.sidebar-divider {
+  border: none;
+  height: 1px;
+  background-color: var(--border-subtle);
+  width: 100%;
+  /* CRITICAL: This pushes everything below it to the bottom */
+  margin-top: auto;
+  /* Creates space between the line and the Allergy/Settings section */
+  margin-bottom: 28px;
+}
+
+/*//////////////////// Einteilung-BUTTON /////////////////////*/
+/* --- ADD THIS --- */
+
+/* 1. Header Row Container */
+.severity-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  /* THE FIX: Pull it up closer to the divider */
+  margin-top: 12px; /* Was 20px or 24px */
+  margin-bottom: 8px;
+}
+
+/* 2. The Link Text */
+.einteilung-link {
+  font-family: var(--body-font-family);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--extra-accent-color);
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  transition: opacity 0.2s;
+}
+
+.einteilung-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* 3. The Small "i" Circle */
+.info-icon-small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+
+  background-color: var(--extra-accent-color);
+  color: white;
+
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: bold;
+  font-family: serif;
+  font-style: italic;
+  line-height: 1;
+}
+
+/*//////////////////// SEVERITY-BUTTONS /////////////////////*/
+
+/* //////////////////// SEVERITY BUTTONS (FIXED) //////////////////// */
+
+/* 1. CONTAINER: Forces vertical stack */
+#severity-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column !important; /* CRITICAL: Forces buttons to stack */
+  align-items: stretch; /* Ensures buttons stretch to full width */
+  gap: 8px; /* Consistent space between buttons */
+  margin-top: 16px;
+}
+
+/* 2. THE BUTTONS: Optimized for Long Medical Text */
+.severity-button {
+  width: 100%;
+  position: relative;
+  box-sizing: border-box; /* Ensures padding stays inside width */
+
+  /* Layout: Grow with text */
+  min-height: 48px; /* Substantial touch target */
+  padding: 12px 16px;
+
+  /* Flexbox: Aligns content to the LEFT for readability */
+  display: flex;
+  align-items: center; /* Vertically center the text */
+  justify-content: flex-start; /* Horizontally align LEFT */
+  text-align: left; /* Crucial for multi-line text */
+
+  /* VISUALS */
+  background-color: #ffffff;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+
+  /* TYPOGRAPHY */
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4; /* loose leading for readability */
+
+  /* TEXT SAFETY (German Hyphenation) 
+  white-space: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;*/
+
+  /* INTERACTION */
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* HOVER STATE */
+.severity-button:hover {
+  background-color: #f0f9ff;
+  transform: translateY(-2px); /* Lift effect */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+/* CLICK STATE */
+.severity-button:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+/* SELECTED STATE */
+.severity-button.pressed {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+
+  /* "Pressed In" Look */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+
+  font-weight: 700;
+  transform: none;
+}
+/*//////////////////// ALLERGY_TOGGLES /////////////////////*/
+
+/* 1. INITIAL STATE (Closed/Hidden) */
+.allergy-toggle-container {
+  /* Instead of display: none, we use physical constraints */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden; /* Hides content when height is 0 */
+
+  /* Reset margins so it collapses fully */
+  margin-top: 0;
+  margin-bottom: 0;
+
+  /* THE SMOOTH TRANSITION */
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease,
+    margin 0.3s ease;
+}
+
+/* 2. VISIBLE STATE (Triggered by JS Class) */
+.allergy-toggle-container.visible {
+  /* Set a max-height larger than the content will ever be */
+  max-height: 300px;
+  opacity: 1;
+  margin-bottom: 18px;
+  border-radius: 6px;
+}
+
+/* Header: Aligned Left to match the new buttons */
+.allergy-toggle-container-header h3 {
+}
+
+/* Style for the toggle label */
+.allergy-toggle-label {
+  margin-left: 20px;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  color: var(--text-main); /* Slate 700 - Sharp and readable */
+  text-align: left;
+  flex-grow: 1;
+  font-weight: 500;
+  /* Allows the label to take up remaining space */
+  white-space: normal;
+  /* Prevents the label from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Adds ellipsis if text is too long */
+}
+
+/*//SLIDER//*/
+/* Toggle Switch Styles */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Align items to the start */
+  width: 100%;
+  margin-bottom: 16px;
+  transition: opacity 0.2s;
+}
+
+.toggle-container:hover {
+  opacity: 0.9; /* Slight interaction feedback */
+}
+
+.bottom-toggle {
+  margin-top: auto;
+  /* Pushes the element to the bottom */
+}
+
+.toggle-switch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 34px;
+  flex-shrink: 0;
+  /* Prevent shrinking */
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s ease;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--toggle-color);
+}
+
+.toggle-switch input:focus + .toggle-slider {
+  box-shadow: 0 0 1px var(--toggle-color);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(25px);
+}
+
+/*//////////////////// THREE_WAY_TOGGLE / SEGMENTED SELECTOR /////////////////////
+*/
+
+/* Push the filter toggle to the bottom */
+#three-way-toggle-container {
+  margin-top: 0;
+  /* This pushes the container to the bottom */
+  width: 100%;
+  /* Ensure it spans the full width of the sidebar */
+  padding-bottom: 20px;
+  /* Optional: Add some padding at the bottom */
+}
+
+/* Header for the toggle group */
+.three-way-toggle-header h3 {
+}
+
+.three-way-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+
+  /* MODERNIZATION: 1px border is cleaner than 2px */
+  border: 1px solid var(--toggle-color);
+  border-radius: 8px;
+
+  background: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  /* Lifted Shadow */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin: 0 auto;
+}
+
+.three-way-toggle input[type="radio"] {
+  display: none;
+  /* Hide the actual radio */
+}
+
+/* LABELS: The Buttons */
+.three-way-toggle label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0; /* Generous touch target */
+
+  cursor: pointer;
+  background-color: #ffffff;
+
+  /* Text is colored Emerald to match the border */
+  color: var(--toggle-color);
+  font-size: 15px;
+  font-weight: 600;
+
+  /* Smooth "SaaS" transitions */
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s,
+    transform 0.1s ease;
+  user-select: none;
+  outline: none;
+}
+
+/* SEPARATORS: The lines between buttons */
+.three-way-toggle label:not(:first-of-type) {
+  border-top: 1px solid var(--toggle-color);
+}
+
+/* SELECTED STATE: Solid Emerald Fill */
+.three-way-toggle input[type="radio"]:checked + label {
+  background-color: var(--toggle-color);
+  color: #ffffff;
+  font-weight: 600;
+  /* PRESERVED: Your sophisticated "Pressed In" shadow */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* HOVER STATE: Subtle Green Tint */
+.three-way-toggle label:hover {
+  background-color: var(--toggle-bg-hover);
+}
+
+.three-way-toggle label:active {
+  transform: scale(0.98);
+  /* The physical "Push" effect */
+}
+
+/*//////////////////// RIGHT SIDEBAR STYLES /////////////////////*/
+
+#right-sidebar {
+  width: 230px;
+  flex: 0 0 230px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  background: var(--bg-card); /* White */
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--text-main);
+  padding: 20px;
+}
+
+/*//////////////////// Right sidebar content /////////////////////*/
+
+.sidebar-tag {
+  /* LAYOUT: The Centering Fix */
+  display: block; /* Must be block to accept auto margins */
+  width: fit-content; /* Shrinks the box to fit the text */
+  margin-left: auto; /* Push from left */
+  margin-right: auto; /* Push from right */
+  margin-bottom: 16px; /* Space below */
+
+  /* SHAPE & PADDING */
+  padding: 4px 8px;
+  border-radius: 4px; /* Boxy preference */
+  border: 1px solid rgba(2, 132, 199, 0.1);
+
+  /* COLORS */
+  background: #e0f2fe;
+  color: var(--primary-color);
+
+  /* TYPOGRAPHY */
+  font-family: var(--body-font-family);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+/* THE TITLE */
+.right-sidebar-title {
+  font-family: var(--body-font-family);
+  font-size: 16px; /* 18px is often too loud for a sidebar */
+  line-height: 1.4;
+  color: var(--text-main); /* Slate 700 */
+  text-align: left;
+  font-weight: 700;
+  /* Reset margins */
+  margin-top: 10px;
+  margin-bottom: 12px;
+  /* Optional: A subtle divider under the title */
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+/* THE CONTENT */
+.right-sidebar-content {
+  font-family: var(--body-font-family);
+  font-size: 13px; /* Slightly smaller for information density */
+  line-height: 1.6; /* Good line height makes small text readable */
+  color: var(--text-muted); /* Slate 500 - Easier on the eyes than black */
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.right-sidebar-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px; /* Rounded corners */
+  border: 1px solid #e2e8f0; /* Subtle border */
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Sidebar Table Styles */
+.right-sidebar-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.right-sidebar-table th {
+  background: #f1f5f9;
+  text-align: left;
+  padding: 8px;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  font-weight: 600;
+}
+
+.right-sidebar-table td {
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+/*//////////////////// Logo /////////////////////*/
+
+.img-container {
+  display: block;
+  margin-bottom: 24px;
+  text-align: center;
+  width: 100%;
+}
+/* Responsive Image of logo */
+#logo-img {
+  width: 160px;
+  height: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+#logo-img:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/*//////////////////// Impressum /////////////////////*/
+
+/* New Impressum Styles */
+.impressum-container {
+  margin-top: auto; /* Pushes to bottom */
+  text-align: center;
+  font-size: 11px;
+  width: 100%;
+  padding-bottom: 4px;
+}
+
+.impressum-container a {
+  color: #64748b; /* Slate 500 (Matches the 'muted' look) */
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.impressum-container a:hover {
+  color: var(--primary-color);
+}
+
+/*////////////////////////TABLE STYLES////////////////////////////*/
+/* Table Container */
+
+#table-container {
+  /* --- 1. CRITICAL LAYOUT (Kept from your original) --- */
+  width: 100%; /* Forces container to respect screen width */
+  height: auto; /* Stop forcing 100% */
+  flex-grow: 1; /* Fill only the remaining space */
+  overflow-x: auto; /* Your preferred scrolling method */
+  overflow-y: hidden; /* Prevent vertical scrollbar from messing up width calc */
+  display: flex;
+  justify-content: center; /* Centers the table horizontally */
+  align-items: flex-start; /* Ensure table starts at the top */
+  /* --- 2. CARD VISUALS (The New Look) --- */
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  /* Shared Border/Shadow (Matches sidebars) */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* --- 3. SAFETY --- */
+  padding: 16px; /* Keep 0 padding so math is exact */
+  box-sizing: border-box;
+}
+
+/* Table Styles */
+table {
+  border-collapse: collapse;
+  width: auto;
+  table-layout: fixed;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--bg-card);
+  user-select: none;
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+}
+
+th,
+td {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--bg-card);
+  padding: 4px;
+  padding-left: 5px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 8px;
+}
+
+th {
+  background-color: none;
+  font-weight: normal;
+  font-size: 12.5px;
+}
+
+/* Style for the group names */
+td.group-name {
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 12px;
+  color: #000;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Style for the antibiotic names */
+td.antibiotic-name {
+  font-size: 12px;
+  color: #000;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+
+  /* for right alignment:
+ display: flex;  Enable Flexbox
+align-items: center; /* Vertically center the items
+justify-content: space-between; /* Space between text and pill marker
+padding-left: 12px; /* Optional: Adjust padding as needed */
+}
+
+/* Style for the bacteria group headers */
+th.bacteria-group {
+  background-color: var(--bg-card);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Style for the table headers (bacterium names) */
+th.bacterium {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: normal;
+  padding: 4.5px;
+  vertical-align: middle;
+  height: 150px;
+  overflow: visible;
+  text-align: left;
+  /*    cursor: pointer;*/
+}
+
+/* Data cell styles */
+td.sensitivity-high {
+  background-color: var(--sensitivity-high-color);
+  color: #fff;
+}
+
+td.sensitivity-medium {
+  background-color: var(--sensitivity-medium-color);
+  color: #000;
+}
+
+td.sensitivity-low {
+  background-color: var(--sensitivity-low-color);
+  color: #fff;
+}
+
+td.sensitivity-unknown {
+  background-color: #cccccc;
+  /* Light grey background */
+  color: #666666;
+  /* Optional: Adjust text color for better readability */
+}
+
+/* Thicker border-top for the first row of each antibiotic group */
+tr.antibiotic-group-start td {
+  border-top-width: 4px;
+  border-top-color: var(--bg-card);
+}
+
+/* Thicker border-left for the first column of each bacterial group */
+th.bacterial-group-start,
+td.bacterial-group-start {
+  border-left-width: 4px;
+  border-left-color: var(--bg-card);
+}
+
+/* Hover effects and highlights */
+.bacterium-name-hover {
+  transition: filter 0.2s ease;
+  filter: brightness(120%);
+  box-shadow: inset 2px 0 0 0 #000, inset 0 2px 0 0 #000, inset -2px 0 0 0 #000;
+}
+
+.highlighted-column.sensitivity-high {
+  filter: brightness(85%) saturate(120%);
+}
+
+.highlighted-column.sensitivity-medium {
+  filter: brightness(95%) saturate(150%);
+}
+
+.highlighted-column.sensitivity-low {
+  filter: brightness(95%) saturate(200%);
+}
+
+.highlighted-row td.sensitivity-high {
+  filter: brightness(85%) saturate(120%);
+}
+
+.highlighted-row td.sensitivity-medium {
+  filter: brightness(95%) saturate(150%);
+}
+
+.highlighted-row td.sensitivity-low {
+  filter: brightness(95%) saturate(200%);
+}
+
+.bacterium-low-sensitivity {
+  background-color: var(--sensitivity-low-color) !important;
+}
+
+.bacterium-intermedium-sensitivity {
+  background-color: var(--sensitivity-medium-color) !important;
+}
+
+.bacterium-high-sensitivity {
+  background-color: var(--sensitivity-high-color) !important;
+}
+
+.antibiotic-low-sensitivity {
+  background-color: var(--sensitivity-low-color) !important;
+}
+
+.antibiotic-intermedium-sensitivity {
+  background-color: var(--sensitivity-medium-color) !important;
+}
+
+.antibiotic-high-sensitivity {
+  background-color: var(--sensitivity-high-color) !important;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Data cell hover effect */
+.data-cell-hover {
+  box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+/* Modal Content (Image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 4px;
+}
+
+/* Caption (optional) */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+}
+
+/* Close Button */
+.close {
+  position: absolute;
+  top: 30px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Recommendations Styles */
+.primary-recommendation {
+  font-weight: bold;
+  box-shadow: inset 0 0 0 6px var(--primary-recommendation-color);
+}
+
+.secondary-recommendation {
+  font-weight: bold;
+  box-shadow: inset 0 0 0 6px var(--secondary-recommendation-color);
+}
+
+.tertiary-recommendation {
+  font-weight: bold;
+  box-shadow: inset 0 0 0 6px var(--tertiary-recommendation-color);
+}
+
+/* Antibiotic name cell hover style */
+.antibiotic-name-hover {
+  transition: filter 0.2s ease;
+  filter: brightness(120%);
+}
+
+/*//////////////////// DYNAMIC HEADER /////////////////////*/
+
+/* 1. Header Layout (Left aligned, clean spacing) */
+#header-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0 8px; /* Slight padding to align with table edges */
+  flex-shrink: 0;
+}
+
+/* 2. Header Title (Smaller, Slate Color) */
+#dynamic-header {
+  font-size: 24px;
+  color: var(--text-main); /* Slate 700 */
+  text-align: left;
+  margin: 0;
+  font-weight: 600;
+  user-select: none;
+}
+
+/*//////////////////// Zoom Button /////////////////////*/
+/*//////////////////// Horizontal Zoom Group /////////////////////*/
+
+.zoom-buttons {
+  /* Layout: Horizontal Row */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  /* Container Appearance (The "Card" look) */
+  background: white;
+  border: 1px solid var(--border-subtle); /* Slate 200 */
+  border-radius: 6px; /* Smooth rounded corners */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  overflow: hidden; /* Ensures child buttons don't poke out of corners */
+  cursor: pointer;
+}
+
+.zoom-buttons div {
+  /* Typography & Sizing */
+  font: bold 20px/32px sans-serif; /* Slightly smaller text, centered vertically */
+  color: var(--text-main); /* Slate 700 */
+  width: 30px; /* Wider touch target */
+  height: 30px;
+
+  /* Flexbox Centering for the +/- text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Reset Styles */
+  background: white;
+  padding: 0;
+  border: 0;
+  user-select: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* The Vertical Separator Line */
+.zoom-buttons div:first-child {
+  border-right: 1px solid var(--border-subtle);
+}
+
+/* Hover State */
+.zoom-buttons div:hover {
+  background: #f8fafc; /* Very light grey */
+  color: var(--primary-color); /* Ocean Blue */
+}
+
+/* Active/Click State */
+.zoom-buttons div:active {
+  background: #e2e8f0; /* Slate 200 */
+}
+
+/* TOOLTIP DESIGN */
+#antibiotic-tooltip {
+  /* Positioning (Keep existing logic) */
+  position: absolute;
+  top: -11px;
+  z-index: 9999;
+  max-width: 400px;
+
+  /* THE SAAS LOOK: "Elevated Paper" */
+  background: #ffffff;
+  color: #334155; /* Slate 700 - High contrast text */
+
+  /* --- TEXT SAFETY (Kept from your original) --- */
+  white-space: normal; /* Allows text to wrap to new lines */
+  word-break: break-word; /* Prevents long words from breaking layout */
+
+  /* Subtle border, deep shadow */
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 10px 15px -3px rgba(0, 0, 0, 0.1); /* The "Float" effect */
+
+  border-radius: 8px;
+  padding: 12px 16px;
+
+  /* Typography */
+  font-family: var(--body-font-family);
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Update the Arrow to match the White Background + Shadow */
+#antibiotic-tooltip::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: -10px;
+  left: var(--arrow-left, 50%);
+  transform: translateX(-50%);
+  z-index: 1;
+
+  /* Create the arrow using borders */
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #334155; /* Matches tooltip background */
+
+  /* Optional: Filter to add shadow to the arrow (advanced) */
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.05));
+}
+
+.antibiotic-dosing-name {
+  color: var(--primary-color);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  /* Layout */
+  display: block;
+  width: 100%;
+
+  /* The Underline */
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding-bottom: 4px;
+
+  /* The Spacing to the text below */
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+/* SURGICAL FIX: Hide the <br> tag that comes immediately after the title */
+.antibiotic-dosing-name + br {
+  display: none;
+}
+
+/*////////////////////////////////////////////////////////*/
+
+/* Minimal styling for an inline pill marker */
+.pill-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 3.5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  margin-left: 5px; /* space between antibiotic text and marker */
+  border: 1px solid #555; /* or a darker shade for contrast */
+  border-radius: 24px; /* pill shape */
+  overflow: hidden;
+  font-size: 6px;
+  font-weight: 800;
+  line-height: 7px;
+  color: #333; /* might adjust to #fff if your background is green */
+  cursor: default; /* if it's not clickable, otherwise pointer */
+  cursor: pointer;
+  /* Rotate the pill 45 degrees counterclockwise */
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+
+/* Half color, half transparent or white */
+
+/* Half color, half transparent or white */
+.pill-marker::before,
+.pill-marker::after {
+  height: 100%;
+
+  /* Center content within pseudo-elements */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Remove any default margins or padding */
+  margin: 0;
+  padding: 0;
+}
+
+.pill-marker::before {
+  width: 45%;
+  content: "";
+  background-color: #fff; /* your extra accent color */
+  color: #fff;
+}
+
+.pill-marker::after {
+  width: 55%;
+  content: "";
+  background-color: #555;
+  color: #555;
+}

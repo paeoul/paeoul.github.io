@@ -21,13 +21,13 @@
 
   "Akute unkomplizierte Zystitis bei Schwangeren": {
     "no_penicillin_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Pivmecillinam", "Cefuroxim", "Cefpodoxim"],
+      "primary_recommendation": ["Fosfomycin", "Pivmecillinam", "Cefuroxim", "Cefpodoxim "],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     },
 
     "penicillin_allergy": {
-      "primary_recommendation": ["Fosfomycin", "Cefuroxim", "Cefpodoxim"],
+      "primary_recommendation": ["Fosfomycin"],
       "secondary_recommendation": [""],
       "tertiary_recommendation": [""]
     },
