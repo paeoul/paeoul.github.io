@@ -9,6 +9,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>DokuSwift: Resistenztabelle</title>
     <link rel="icon" href="DS_resize.png" type="image/png" />
     <link rel="stylesheet" href="styles.css" />
@@ -27,6 +28,33 @@
   </head>
 
   <body>
+    <div id="disclaimer-modal">
+      <div class="disclaimer-content">
+        <h2 class="disclaimer-title">⚠️ ACHTUNG: PROTOTYP</h2>
+        <div class="disclaimer-text">
+          <p>
+            Dieses Tool ist ein <strong>technischer Demonstrator</strong> zu
+            Bildungszwecken.
+          </p>
+          <p><strong>Es ist KEIN Medizinprodukt.</strong></p>
+          <p>
+            Die angezeigten Daten dienen ausschließlich der Visualisierung von
+            Leitlinien-Strukturen und dürfen
+            <strong>nicht für klinische Entscheidungen</strong> am Patienten
+            verwendet werden.
+          </p>
+          <p>
+            Mit Klick auf "Verstanden" bestätigen Sie, dass Sie approbierte:r
+            Ärzt:in sind und die dargestellten Informationen eigenverantwortlich
+            anhand der offiziellen Leitlinien verifizieren.
+          </p>
+        </div>
+        <button class="disclaimer-btn" id="accept-disclaimer">
+          Verstanden & Akzeptieren
+        </button>
+      </div>
+    </div>
+
     <div id="dashboard">
       <div id="left-sidebar">
         <div id="disease-selection-container">
@@ -90,7 +118,7 @@
 
       <div id="header_table_container">
         <div id="header-container">
-          <h1 id="dynamic-header">Antibiotikaresistenztabelle</h1>
+          <h1 id="dynamic-header">Dynamische Antibiotikaresistenztabelle</h1>
           <div class="zoom-buttons">
             <div id="zoom-in" title="Vergrößern">+</div>
             <div id="zoom-out" title="Verkleinern">–</div>
@@ -107,10 +135,31 @@
 
         <div id="sidebar-content"></div>
 
-        <div class="impressum-container">
-          <p class="impressum-text">
-            <a href="impressum.html">Impressum</a>
-          </p>
+        <div id="right-sidebar-footer">
+          <div id="recommendation-legend" class="legend-container">
+            <h4 class="legend-header">LEGENDE</h4>
+
+            <div class="legend-item">
+              <div class="legend-swatch primary-swatch"></div>
+              <span>Leitlinienempfehlung</span>
+            </div>
+
+            <div class="legend-item">
+              <div class="legend-swatch secondary-swatch"></div>
+              <span>1. Alternative</span>
+            </div>
+
+            <div class="legend-item">
+              <div class="legend-swatch tertiary-swatch"></div>
+              <span>2. Alternative</span>
+            </div>
+          </div>
+
+          <div class="impressum-container">
+            <p class="impressum-text">
+              <a href="impressum.html">Impressum</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -125,6 +174,32 @@
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
+      // --- DISCLAIMER LOGIC ---
+      document.addEventListener("DOMContentLoaded", function () {
+        const disclaimerModal = document.getElementById("disclaimer-modal");
+        const acceptBtn = document.getElementById("accept-disclaimer");
+
+        // Optional: Check localStorage if user already accepted
+        // For now, we force it every time for safety
+
+        acceptBtn.addEventListener("click", function () {
+          disclaimerModal.style.opacity = "0";
+          disclaimerModal.style.transition = "opacity 0.5s ease";
+          setTimeout(() => {
+            disclaimerModal.style.display = "none";
+          }, 500);
+
+          // Trigger animations after accept
+          const diseaseContainer = document.getElementById(
+            "disease-selection-container"
+          );
+          if (diseaseContainer) diseaseContainer.classList.add("animated");
+          setTimeout(() => {
+            if (diseaseContainer) diseaseContainer.classList.remove("animated");
+          }, 4000);
+        });
+      });
+
       // Desired order of antibiotics
       const desiredOrderAntibiotics = [
         "Penicillin G",
@@ -1284,7 +1359,7 @@
       function updateRecommendationsHighlighting() {
         // 1. Define the D3 reference at the top
         const allergyContainer = d3.select("#allergy-toggle-container");
-
+        const legendContainer = d3.select("#recommendation-legend"); // Select the container
         if (!selectedSeverityLevel) {
           // --- RESET STATE (No Selection) ---
           d3.selectAll(".antibiotic-name")
@@ -1292,14 +1367,14 @@
             .classed("secondary-recommendation", false)
             .classed("tertiary-recommendation", false);
 
-          // FIX: Use class to slide up (hide)
+          // ANIMATE OUT (Slide Up)
           allergyContainer.classed("visible", false);
-
-          // CRITICAL: Return early so the rest of the code doesn't crash
+          legendContainer.classed("visible", false);
           return;
         } else {
-          // FIX: Use class to slide down (show)
+          // ANIMATE IN (Slide Down)
           allergyContainer.classed("visible", true);
+          legendContainer.classed("visible", true);
         }
 
         // --- HIGHLIGHT LOGIC (Selection Exists) ---

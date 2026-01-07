@@ -23,9 +23,9 @@
   --toggle-bg-hover: rgba(5, 150, 105, 0.08); /* 8% Opacity Green */
 
   /* --- TABLE colors--- */
-  --primary-recommendation-color: #00ee6b;
-  --secondary-recommendation-color: #fbe550;
-  --tertiary-recommendation-color: #eb740d;
+  --primary-recommendation-color: #00d26a; /* Malachite */
+  --secondary-recommendation-color: #f59e0b; /* Amber */
+  --tertiary-recommendation-color: #ea580c; /* Rust */
   --sensitivity-high-color: #a7dca7;
   --sensitivity-medium-color: #ffe594;
   --sensitivity-low-color: #ffb4b4;
@@ -42,6 +42,73 @@ body {
   padding: 0;
   height: 100vh;
   overflow: hidden;
+}
+
+#disclaimer-modal {
+  display: flex; /* <--- HIDDEN WHILE CODING */ /* Flex to center */
+  position: fixed;
+  z-index: 10000; /* Highest priority */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.5); /* Dark Slate Opaque */
+  backdrop-filter: blur(5px);
+  align-items: center;
+  justify-content: center;
+}
+
+.disclaimer-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  text-align: left;
+  border-top: 6px solid #ef4444; /* Red Warning Line */
+}
+
+.disclaimer-title {
+  font-family: var(--body-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  color: #ef4444; /* Danger Red */
+  margin-top: 0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.disclaimer-text {
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+  margin-bottom: 24px;
+}
+
+.disclaimer-text strong {
+  color: #000;
+}
+
+.disclaimer-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #334155; /* Slate 700 */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.disclaimer-btn:hover {
+  background-color: #1e293b; /* Darker Slate */
 }
 
 h1,
@@ -309,7 +376,7 @@ h1 {
   font-weight: 600;
   line-height: 1.4; /* loose leading for readability */
 
-  /* TEXT SAFETY (German Hyphenation) 
+  /* TEXT SAFETY (German Hyphenation)
   white-space: normal;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -578,13 +645,32 @@ h1 {
 
 /*//////////////////// Right sidebar content /////////////////////*/
 
+/*//////////////////// Logo /////////////////////*/
+
+.img-container {
+  display: block;
+  margin-bottom: 24px;
+  margin-top: 6px;
+  text-align: center;
+  width: 100%;
+}
+/* Responsive Image of logo */
+#logo-img {
+  width: 160px;
+  height: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+#logo-img:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
 .sidebar-tag {
   /* LAYOUT: The Centering Fix */
-  display: block; /* Must be block to accept auto margins */
-  width: fit-content; /* Shrinks the box to fit the text */
-  margin-left: auto; /* Push from left */
-  margin-right: auto; /* Push from right */
-  margin-bottom: 16px; /* Space below */
+  display: inline-block;
+  margin-left: 0;
+  margin-bottom: 8px; /* Space below */
 
   /* SHAPE & PADDING */
   padding: 4px 8px;
@@ -664,35 +750,112 @@ h1 {
   color: #475569;
 }
 
-/*//////////////////// Logo /////////////////////*/
+/* //////////////////// RIGHT SIDEBAR FOOTER //////////////////// */
 
-.img-container {
-  display: block;
-  margin-bottom: 24px;
-  text-align: center;
+/* 1. The Wrapper (Anchors everything to the bottom) */
+#right-sidebar-footer {
+  margin-top: auto; /* Push to bottom of flex container */
   width: 100%;
-}
-/* Responsive Image of logo */
-#logo-img {
-  width: 160px;
-  height: auto;
-  transition: transform 0.3s ease-in-out;
+
+  /* THE PERMANENT LINE */
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px; /* Space between line and content */
 }
 
-#logo-img:hover {
-  transform: scale(1.05);
-  cursor: pointer;
+/* //////////////////// LEGEND ANIMATION //////////////////// */
+
+/* 2. The Legend Container (Initial Hidden State) */
+.legend-container {
+  /* Copying the Allergy Filter mechanics */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+
+  /* Smooth Slide & Fade */
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease,
+    margin-bottom 0.3s ease;
+
+  margin-bottom: 0; /* No space when closed */
 }
 
+/* 3. The Visible State (Triggered by JS) */
+.legend-container.visible {
+  max-height: 150px; /* Enough space for the list */
+  opacity: 1;
+  margin-bottom: 16px; /* Space before Impressum */
+}
+
+/* //////////////////// LEGEND STYLING (The "Miniature Mimic") //////////////////// */
+
+.legend-header {
+  font-family: var(--body-font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 10px 0; /* Slightly more space */
+  text-transform: uppercase;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.legend-item span {
+  font-family: var(--body-font-family);
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.legend-swatch {
+  width: 20px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* Swatch Colors (Match your Table Cells exactly) */
+.primary-swatch {
+  box-shadow: inset 4px 0 0 0 var(--primary-recommendation-color),
+    inset 0 0 0 1.5px var(--primary-recommendation-color);
+  background-color: color-mix(
+    in srgb,
+    var(--primary-recommendation-color),
+    transparent 85%
+  );
+}
+
+.secondary-swatch {
+  box-shadow: inset 4px 0 0 0 var(--secondary-recommendation-color),
+    inset 0 0 0 1.5px var(--secondary-recommendation-color);
+  background-color: color-mix(
+    in srgb,
+    var(--secondary-recommendation-color),
+    transparent 85%
+  );
+}
+
+.tertiary-swatch {
+  box-shadow: inset 4px 0 0 0 var(--tertiary-recommendation-color),
+    inset 0 0 0 1.5px var(--tertiary-recommendation-color);
+  background-color: color-mix(
+    in srgb,
+    var(--tertiary-recommendation-color),
+    transparent 85%
+  );
+}
 /*//////////////////// Impressum /////////////////////*/
 
 /* New Impressum Styles */
 .impressum-container {
-  margin-top: auto; /* Pushes to bottom */
   text-align: center;
   font-size: 11px;
   width: 100%;
-  padding-bottom: 4px;
+  margin-top: 0;
+  padding-bottom: 0;
 }
 
 .impressum-container a {
@@ -964,19 +1127,51 @@ td.bacterial-group-start {
 }
 
 /* Recommendations Styles */
+/* Option 3 Refined: Tech Hybrid (4px Anchor + 1.5px Frame) */
+
+/* PRIMARY */
 .primary-recommendation {
-  font-weight: bold;
-  box-shadow: inset 0 0 0 6px var(--primary-recommendation-color);
+  box-shadow: inset 4px 0 0 0 var(--primary-recommendation-color),
+    /* The Anchor */ inset 0 0 0 1.5px var(--primary-recommendation-color); /* The Frame */
+
+  background-color: color-mix(
+    in srgb,
+    var(--primary-recommendation-color),
+    transparent 85%
+  ) !important;
+
+  position: relative;
+  z-index: 0;
 }
 
+/* SECONDARY */
 .secondary-recommendation {
-  font-weight: bold;
-  box-shadow: inset 0 0 0 6px var(--secondary-recommendation-color);
+  box-shadow: inset 4px 0 0 0 var(--secondary-recommendation-color),
+    inset 0 0 0 1.5px var(--secondary-recommendation-color);
+
+  background-color: color-mix(
+    in srgb,
+    var(--secondary-recommendation-color),
+    transparent 85%
+  ) !important;
+
+  position: relative;
+  z-index: 0;
 }
 
+/* TERTIARY */
 .tertiary-recommendation {
-  font-weight: bold;
-  box-shadow: inset 0 0 0 6px var(--tertiary-recommendation-color);
+  box-shadow: inset 4px 0 0 0 var(--tertiary-recommendation-color),
+    inset 0 0 0 1.5px var(--tertiary-recommendation-color);
+
+  background-color: color-mix(
+    in srgb,
+    var(--tertiary-recommendation-color),
+    transparent 85%
+  ) !important;
+
+  position: relative;
+  z-index: 0;
 }
 
 /* Antibiotic name cell hover style */
@@ -1140,58 +1335,24 @@ td.bacterial-group-start {
 
 /*////////////////////////////////////////////////////////*/
 
-/* Minimal styling for an inline pill marker */
+/* OPTIMIZED PILL MARKER (Slim Gradient Version) */
 .pill-marker {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
+  /* Back to slim dimensions */
   width: 13px;
-  height: 3.5px;
-  position: relative;
-  text-align: center;
+  height: 4px; /* Increased slightly from 3.5px for sharper pixel rendering, still slim */
+  margin-left: 5px;
   vertical-align: middle;
-  margin-left: 5px; /* space between antibiotic text and marker */
-  border: 1px solid #555; /* or a darker shade for contrast */
-  border-radius: 24px; /* pill shape */
-  overflow: hidden;
-  font-size: 6px;
-  font-weight: 800;
-  line-height: 7px;
-  color: #333; /* might adjust to #fff if your background is green */
-  cursor: default; /* if it's not clickable, otherwise pointer */
-  cursor: pointer;
-  /* Rotate the pill 45 degrees counterclockwise */
+
+  /* The seamless gradient background */
+  background: linear-gradient(90deg, #ffffff 50%, #555 50%);
+
+  border: 1px solid #555;
+  border-radius: 4px;
+
   transform: rotate(-45deg);
   transform-origin: center;
-}
-
-/* Half color, half transparent or white */
-
-/* Half color, half transparent or white */
-.pill-marker::before,
-.pill-marker::after {
-  height: 100%;
-
-  /* Center content within pseudo-elements */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* Remove any default margins or padding */
-  margin: 0;
-  padding: 0;
-}
-
-.pill-marker::before {
-  width: 45%;
-  content: "";
-  background-color: #fff; /* your extra accent color */
-  color: #fff;
-}
-
-.pill-marker::after {
-  width: 55%;
-  content: "";
-  background-color: #555;
-  color: #555;
+  /* Subtle shadow */
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
