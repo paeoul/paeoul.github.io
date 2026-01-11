@@ -24,7 +24,7 @@
 
   /* --- TABLE colors--- */
   --primary-recommendation-color: #00d26a; /* Malachite */
-  --secondary-recommendation-color: #eab308; /* OLD: f59e0b Amber */
+  --secondary-recommendation-color: #f59e0b; /* Amber */
   --tertiary-recommendation-color: #ea580c; /* Rust */
   --sensitivity-high-color: #a7dca7;
   --sensitivity-medium-color: #ffe594;
@@ -376,7 +376,7 @@ h1 {
   font-weight: 600;
   line-height: 1.4; /* loose leading for readability */
 
-  /* TEXT SAFETY (German Hyphenation) 
+  /* TEXT SAFETY (German Hyphenation)
   white-space: normal;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -899,7 +899,6 @@ table {
   border-collapse: collapse;
   width: auto;
   table-layout: fixed;
-  flex-shrink: 0;
   border-radius: 12px;
   overflow: hidden;
   background-color: var(--bg-card);
@@ -914,28 +913,25 @@ table {
 
 th,
 td {
-  /* Combined border properties into one line */
-  border: 1px solid var(--bg-card);
-
-  /* Combined padding: Top/Right/Bottom=4px, Left=5px */
-  padding: 4px 4px 4px 5px;
-
-  /* Defaults */
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--bg-card);
+  padding: 4px;
+  padding-left: 5px;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  /* Base font size (Data cells use this) */
   font-size: 8px;
 }
 
 th {
+  background-color: none;
   font-weight: normal;
   font-size: 12.5px;
 }
 
-/* 1. Group Names (e.g. "Penicilline") */
+/* Style for the group names */
 td.group-name {
   font-size: 14px;
   font-weight: bold;
@@ -945,39 +941,40 @@ td.group-name {
   vertical-align: middle;
 }
 
-/* 2. Antibiotic Names (e.g. "Amoxicillin") */
+/* Style for the antibiotic names */
 td.antibiotic-name {
-  font-size: 14px;
+  font-size: 12px;
   color: #000;
   text-align: left;
   cursor: pointer;
   position: relative;
+
+  /* for right alignment:
+ display: flex;  Enable Flexbox
+align-items: center; /* Vertically center the items
+justify-content: space-between; /* Space between text and pill marker
+padding-left: 12px; /* Optional: Adjust padding as needed */
 }
 
-/* 3. Bacteria Group Headers (e.g. "grampositiv") */
+/* Style for the bacteria group headers */
 th.bacteria-group {
   background-color: var(--bg-card);
   font-size: 14px;
   font-weight: bold;
-  /* REMOVED: text-align: center; (Inherited from 'th' global) */
+  text-align: center;
 }
 
-/* 4. Vertical Bacteria Headers (e.g. "E. coli") */
+/* Style for the table headers (bacterium names) */
 th.bacterium {
-  /* Vertical Text Logic */
   writing-mode: vertical-rl;
   text-orientation: mixed;
   white-space: normal;
-
-  /* Layout */
-  height: 170px;
-  vertical-align: middle;
-  overflow: visible;
-
-  /* Typography */
-  text-align: left;
-  font-size: 14px;
   padding: 4.5px;
+  vertical-align: middle;
+  height: 150px;
+  overflow: visible;
+  text-align: left;
+  /*    cursor: pointer;*/
 }
 
 /* Data cell styles */
@@ -1016,38 +1013,37 @@ td.bacterial-group-start {
   border-left-color: var(--bg-card);
 }
 
-/*////////// --- HOVER EFFECTS & HIGHLIGHTS --- */
-/* 1. Bacterium Header (Top) */
+/* Hover effects and highlights */
 .bacterium-name-hover {
-  box-shadow: 
-    /* Left Border */ inset 2px 0 0 0 #000,
-    /* Top Border */ inset 0 2px 0 0 #000,
-    /* Right Border */ inset -2px 0 0 0 #000,
-    /* The Background Tint (Underneath) */ inset 0 0 0 1000px
-      rgba(0, 0, 0, 0.05);
+  transition: filter 0.2s ease;
+  filter: brightness(120%);
+  box-shadow: inset 2px 0 0 0 #000, inset 0 2px 0 0 #000, inset -2px 0 0 0 #000;
 }
 
-/* 2. Antibiotic Name (Left) */
-td.antibiotic-name-hover {
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
+.highlighted-column.sensitivity-high {
+  filter: brightness(85%) saturate(120%);
 }
 
-/* 3. The Rows & Columns (The Tint) */
-/* Instead of filtering, we apply a transparent black layer inside the cell. */
-.highlighted-row,
-.highlighted-column {
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
-  color: #000;
-  will-change: box-shadow;
+.highlighted-column.sensitivity-medium {
+  filter: brightness(95%) saturate(150%);
 }
 
-/* 4. The Crosshair (Intersection) */
-/* When a cell is BOTH in the row and column, make it darker (10%) */
-.highlighted-row.highlighted-column {
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.25);
+.highlighted-column.sensitivity-low {
+  filter: brightness(95%) saturate(200%);
 }
 
-/* 6. Sensitivity Overrides (Keep these to preserve colors) */
+.highlighted-row td.sensitivity-high {
+  filter: brightness(85%) saturate(120%);
+}
+
+.highlighted-row td.sensitivity-medium {
+  filter: brightness(95%) saturate(150%);
+}
+
+.highlighted-row td.sensitivity-low {
+  filter: brightness(95%) saturate(200%);
+}
+
 .bacterium-low-sensitivity {
   background-color: var(--sensitivity-low-color) !important;
 }
@@ -1070,95 +1066,6 @@ td.antibiotic-name-hover {
 
 .antibiotic-high-sensitivity {
   background-color: var(--sensitivity-high-color) !important;
-}
-
-/* --- PREVALENCE AXIS (The Clinical Footer) --- */
-
-/* 1. The Ghost Row (The Breathable Gap) */
-.table-spacer-row td {
-  border: none !important;
-  background: transparent !important;
-  height: 24px;
-  padding: 0;
-  pointer-events: none;
-}
-
-/* 2. The Footer Container */
-tfoot {
-  /* No borders */
-}
-
-/* 3. The Axis Label (Left: "Häufigkeit") */
-.prevalence-label {
-  text-align: right;
-  padding-right: 16px;
-
-  font-family: var(--body-font-family);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-main);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-
-  background-color: transparent;
-  border: none !important;
-  vertical-align: middle;
-  /* Removed ::after - we use a real div in the data cell now */
-}
-
-/* 4. The Data Tick (The Measurement) */
-.prevalence-cell {
-  text-align: center;
-  vertical-align: top;
-  padding-top: 10px;
-
-  font-family: "Roboto Mono", monospace, sans-serif;
-  font-size: 16px;
-  color: var(--text-muted);
-
-  background-color: transparent;
-  border: none !important;
-  position: relative; /* Anchor for ticks */
-
-  /* CRITICAL: Ensures the start tick is never clipped */
-  overflow: visible !important;
-  /* SAFETY: Prevents text from breaking into two lines */
-  white-space: nowrap;
-}
-
-/* The Axis Line (Top - Continuous) */
-.prevalence-cell::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--text-main);
-}
-
-/* The Right Tick (End of every cell) */
-.prevalence-cell::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1px;
-  height: 6px;
-  background-color: var(--text-main);
-  z-index: 1;
-}
-
-/* 5. The Start Tick (Only for the first cell) */
-/* This is a real element, so it won't disappear */
-.left-tick {
-  position: absolute;
-  top: 0;
-  left: 0; /* Forces it to the very start of the data */
-  width: 1px;
-  height: 6px;
-  background-color: var(--text-main);
-  z-index: 2; /* Sits on top of everything */
 }
 
 /* Modal Styles */
@@ -1265,6 +1172,12 @@ tfoot {
 
   position: relative;
   z-index: 0;
+}
+
+/* Antibiotic name cell hover style */
+.antibiotic-name-hover {
+  transition: filter 0.2s ease;
+  filter: brightness(120%);
 }
 
 /*//////////////////// DYNAMIC HEADER /////////////////////*/

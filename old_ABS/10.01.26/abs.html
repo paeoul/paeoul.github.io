@@ -9,6 +9,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>DokuSwift: Resistenztabelle</title>
     <link rel="icon" href="DS_resize.png" type="image/png" />
     <link rel="stylesheet" href="styles.css" />
@@ -117,7 +118,7 @@
 
       <div id="header_table_container">
         <div id="header-container">
-          <h1 id="dynamic-header">Antibiotikaresistenztabelle</h1>
+          <h1 id="dynamic-header">Dynamische Antibiotikaresistenztabelle</h1>
           <div class="zoom-buttons">
             <div id="zoom-in" title="Vergrößern">+</div>
             <div id="zoom-out" title="Verkleinern">–</div>
@@ -629,26 +630,21 @@
       }
 
       // Maps to store references
-      // CHANGED to 'let' so we can reset them on resize
-      let bacteriumHeaderCells = {};
-      let dataCellsByBacterium = {};
-      let antibioticNameCells = {};
+      const bacteriumHeaderCells = {};
+      const dataCellsByBacterium = {};
+      const antibioticNameCells = {};
       let lockedAntibiotic = null;
 
       function highlightAntibiotic(antibiotic) {
         const antibioticNameCell = antibioticNameCells[antibiotic];
         if (!antibioticNameCell) return;
 
-        // 1. Highlight the Name Cell (Left)
         antibioticNameCell.classed("antibiotic-name-hover", true);
+        d3.select(antibioticNameCell.node().parentNode).classed(
+          "highlighted-row",
+          true
+        );
 
-        // 2. Highlight the Data Cells (The Row)
-        // FIX: Target the specific cells, NOT the parent TR
-        d3.select(antibioticNameCell.node().parentNode)
-          .selectAll("td.data-cell")
-          .classed("highlighted-row", true);
-
-        // 3. Highlight the Cross-Referencing Headers (Top)
         const entry = findAntibioticEntryByName(antibiotic);
         if (!entry) return;
 
@@ -680,16 +676,12 @@
         const antibioticNameCell = antibioticNameCells[antibiotic];
         if (!antibioticNameCell) return;
 
-        // 1. Un-highlight the Name Cell
         antibioticNameCell.classed("antibiotic-name-hover", false);
+        d3.select(antibioticNameCell.node().parentNode).classed(
+          "highlighted-row",
+          false
+        );
 
-        // 2. Un-highlight the Data Cells
-        // FIX: Target the specific cells, NOT the parent TR
-        d3.select(antibioticNameCell.node().parentNode)
-          .selectAll("td.data-cell")
-          .classed("highlighted-row", false);
-
-        // 3. Un-highlight the Headers
         const entry = findAntibioticEntryByName(antibiotic);
         if (!entry) return;
 
@@ -873,20 +865,11 @@
       }
 
       function createTable() {
-        // --- 1. CLEANUP & SETUP ---
+        // Remove existing table
         d3.select("#table-container").select("table").remove();
+
         const container = d3.select("#table-container");
-        // RESET REFERENCES & STATE (The "Clean Slate")
-        bacteriumHeaderCells = {};
-        dataCellsByBacterium = {};
-        antibioticNameCells = {};
 
-        // --- ADD THESE TWO LINES ---
-        lockedAntibiotic = null;
-        hideAntibioticTooltip();
-        // ---------------------------
-
-        // --- 2. DATA PREPARATION ---
         const bacteriaSet = new Set();
         const antibioticToGroup = {};
 
@@ -901,14 +884,12 @@
 
         let bacteria = Array.from(bacteriaSet);
 
-        // Filter bacteria
         if (selectedDisease) {
           bacteria = bacteria.filter(
             (bacterium) => bacterium in diseasePrevalenceData
           );
         }
 
-        // Sort bacteria
         bacteria.sort((a, b) => {
           const indexA = desiredOrderBacteria.indexOf(a);
           const indexB = desiredOrderBacteria.indexOf(b);
@@ -918,14 +899,15 @@
           return indexA - indexB;
         });
 
-        // Organize header groups
         let bacteriaGroupsOrdered = [];
         let currentGroup = null;
 
-        bacteria.forEach((bacterium) => {
+        bacteria.forEach((bacterium, index) => {
           const group = bacteriaGroups[bacterium] || "Unknown";
           const isGroupStart = group !== currentGroup;
-          if (isGroupStart) currentGroup = group;
+          if (isGroupStart) {
+            currentGroup = group;
+          }
           bacteriaGroupsOrdered.push({
             name: bacterium,
             group: group,
@@ -933,7 +915,6 @@
           });
         });
 
-        // Calculate Header Spans
         let groupSpans = [];
         currentGroup = null;
         let currentSpan = 0;
@@ -941,7 +922,10 @@
         bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
           if (bacteriumData.group !== currentGroup) {
             if (currentGroup !== null) {
-              groupSpans.push({ group: currentGroup, span: currentSpan });
+              groupSpans.push({
+                group: currentGroup,
+                span: currentSpan,
+              });
             }
             currentGroup = bacteriumData.group;
             currentSpan = 1;
@@ -949,11 +933,13 @@
             currentSpan++;
           }
           if (index === bacteriaGroupsOrdered.length - 1) {
-            groupSpans.push({ group: currentGroup, span: currentSpan });
+            groupSpans.push({
+              group: currentGroup,
+              span: currentSpan,
+            });
           }
         });
 
-        // Filter Antibiotics
         let antibiotics = desiredOrderAntibiotics
           .map((antibiotic) => {
             const group = antibioticToGroup[antibiotic];
@@ -963,21 +949,25 @@
                 antibiotic: antibiotic,
                 sensitivities: antibioticsData[group][antibiotic],
               };
+            } else {
+              return null;
             }
-            return null;
           })
           .filter((entry) => entry !== null);
 
         switch (filterMode) {
-          case 1: // Fokus
+          case 0:
+            break;
+          case 1:
             antibiotics = antibiotics.filter((entry) =>
               focusAntibioticsData.focus_antibiotics.includes(entry.antibiotic)
             );
             break;
-          case 2: // Empfehlung
+          case 2:
             if (
               selectedDisease &&
-              highFocusAntibioticsData?.high_focus_antibiotics
+              highFocusAntibioticsData &&
+              highFocusAntibioticsData.high_focus_antibiotics
             ) {
               antibiotics = antibiotics.filter((entry) =>
                 highFocusAntibioticsData.high_focus_antibiotics.includes(
@@ -990,54 +980,33 @@
 
         globalAntibioticsList = antibiotics;
 
-        // Count rowspan
         const groupCounts = {};
         antibiotics.forEach((entry) => {
-          groupCounts[entry.group] = (groupCounts[entry.group] || 0) + 1;
+          if (groupCounts[entry.group]) {
+            groupCounts[entry.group]++;
+          } else {
+            groupCounts[entry.group] = 1;
+          }
         });
 
-        // --- 3. MATH & WIDTHS ---
         const prevalenceData = diseasePrevalenceData;
         let totalPrevalence = 0;
-
         for (const bacterium of bacteria) {
           totalPrevalence += prevalenceData[bacterium] || 0;
         }
 
-        const isDefaultView = totalPrevalence === 0 || !selectedDisease;
-        if (isDefaultView) totalPrevalence = bacteria.length;
-
-        // --- NEW WIDTH CALCULATION (Safety Floor + Max Cap) ---
-
-        // 1. Calculate the available dynamic space
-        const availableSpace = window.innerWidth - 800;
-
-        // 2. Define Constraints
-        const minBacteriaWidth = 600; // SAFETY FLOOR: Prevents squishing on small screens
-        const maxBacteriaWidth = 1200; // CEILING: Prevents table getting too wide on huge screens
-
-        // 3. The Logic:
-        //    a. Take available space, but stop at 1500px.
-        //    b. If the result is less than 800px, force it up to 800px.
-        const totalBacteriaWidth = Math.max(
-          minBacteriaWidth,
-          Math.min(maxBacteriaWidth, availableSpace)
-        );
+        const totalBacteriaWidth = window.innerWidth - 800;
 
         const bacteriaWidths = {};
         for (const bacterium of bacteria) {
-          let rawVal = prevalenceData[bacterium] || 0;
-          if (isDefaultView) rawVal = 1;
-
-          const widthPx = (rawVal / totalPrevalence) * totalBacteriaWidth;
+          const prevalence = prevalenceData[bacterium] || 0;
+          const widthPx = (prevalence / totalPrevalence) * totalBacteriaWidth;
           bacteriaWidths[bacterium] = widthPx;
         }
 
-        // --- 4. BUILD TABLE ---
         const table = container.append("table");
-
-        // Colgroups
         const colgroup = table.append("colgroup");
+
         colgroup
           .append("col")
           .attr("class", "group-col")
@@ -1046,6 +1015,7 @@
           .append("col")
           .attr("class", "antibiotic-col")
           .style("width", "135px");
+
         colgroup
           .selectAll("col.bacterium-col")
           .data(bacteriaGroupsOrdered)
@@ -1054,20 +1024,22 @@
           .attr("class", "bacterium-col")
           .style("width", (d) => bacteriaWidths[d.name] + "px");
 
-        // THEAD
         const thead = table.append("thead");
         const groupHeaderRow = thead.append("tr");
         groupHeaderRow.append("th").attr("colspan", 2);
+
         groupHeaderRow
           .selectAll("th.bacteria-group")
           .data(groupSpans)
           .enter()
           .append("th")
-          .attr("class", (d, i) =>
-            i === 0 || i > 0
-              ? "bacteria-group bacterial-group-start"
-              : "bacteria-group"
-          )
+          .attr("class", (d, i) => {
+            let classes = "bacteria-group";
+            if (i === 0 || i > 0) {
+              classes += " bacterial-group-start";
+            }
+            return classes;
+          })
           .attr("colspan", (d) => d.span)
           .style(
             "background-color",
@@ -1078,14 +1050,19 @@
         const headerRow = thead.append("tr");
         headerRow.append("th").text("");
         headerRow.append("th").text("");
+
         headerRow
           .selectAll("th.bacterium")
           .data(bacteriaGroupsOrdered)
           .enter()
           .append("th")
-          .attr("class", (d) =>
-            d.isGroupStart ? "bacterium bacterial-group-start" : "bacterium"
-          )
+          .attr("class", (d) => {
+            let classes = "bacterium";
+            if (d.isGroupStart) {
+              classes += " bacterial-group-start";
+            }
+            return classes;
+          })
           .style(
             "background-color",
             (d) => bacteriaGroupColors[d.group] || "#f2f2f2"
@@ -1098,51 +1075,69 @@
             if (lockedAntibiotic !== null) return;
             const bacterium = d.name;
             d3.select(this).classed("bacterium-name-hover", true);
+
             const dataCells = dataCellsByBacterium[bacterium];
-            if (dataCells)
-              dataCells.forEach((cellData) =>
-                cellData.cell.classed("highlighted-column", true)
-              );
+            if (dataCells) {
+              dataCells.forEach((cellData) => {
+                cellData.cell.classed("highlighted-column", true);
+              });
+            }
+
             antibiotics.forEach((entry) => {
-              const sens = entry.sensitivities
+              const sensitivity = entry.sensitivities
                 ? entry.sensitivities[bacterium]
                 : null;
-              const abCell = antibioticNameCells[entry.antibiotic];
-              if (sens === 0.0)
-                abCell.classed("antibiotic-low-sensitivity", true);
-              else if (sens === 0.5)
-                abCell.classed("antibiotic-intermedium-sensitivity", true);
-              else if (sens === 1.0)
-                abCell.classed("antibiotic-high-sensitivity", true);
-              else if (sens === null)
-                abCell.classed("antibiotic-unknown-sensitivity", true);
+              const antibioticNameCell = antibioticNameCells[entry.antibiotic];
+              if (sensitivity === 0.0) {
+                antibioticNameCell.classed("antibiotic-low-sensitivity", true);
+              } else if (sensitivity === 0.5) {
+                antibioticNameCell.classed(
+                  "antibiotic-intermedium-sensitivity",
+                  true
+                );
+              } else if (sensitivity === 1.0) {
+                antibioticNameCell.classed("antibiotic-high-sensitivity", true);
+              } else if (sensitivity === null) {
+                antibioticNameCell.classed(
+                  "antibiotic-unknown-sensitivity",
+                  true
+                );
+              }
             });
           })
           .on("mouseout", function (event, d) {
             if (lockedAntibiotic !== null) return;
             const bacterium = d.name;
             d3.select(this).classed("bacterium-name-hover", false);
+
             const dataCells = dataCellsByBacterium[bacterium];
-            if (dataCells)
-              dataCells.forEach((cellData) =>
-                cellData.cell.classed("highlighted-column", false)
-              );
+            if (dataCells) {
+              dataCells.forEach((cellData) => {
+                cellData.cell.classed("highlighted-column", false);
+              });
+            }
+
             antibiotics.forEach((entry) => {
-              const abCell = antibioticNameCells[entry.antibiotic];
-              abCell
-                .classed("antibiotic-low-sensitivity", false)
-                .classed("antibiotic-intermedium-sensitivity", false)
-                .classed("antibiotic-high-sensitivity", false)
-                .classed("antibiotic-unknown-sensitivity", false);
+              const antibioticNameCell = antibioticNameCells[entry.antibiotic];
+              antibioticNameCell.classed("antibiotic-low-sensitivity", false);
+              antibioticNameCell.classed(
+                "antibiotic-intermedium-sensitivity",
+                false
+              );
+              antibioticNameCell.classed("antibiotic-high-sensitivity", false);
+              antibioticNameCell.classed(
+                "antibiotic-unknown-sensitivity",
+                false
+              );
             });
           });
 
-        // TBODY
         const tbody = table.append("tbody");
         let previousGroup = null;
 
         antibiotics.forEach((entry) => {
           const row = tbody.append("tr");
+
           if (entry.group !== previousGroup) {
             row.classed("antibiotic-group-start", true);
             row
@@ -1154,7 +1149,7 @@
             previousGroup = entry.group;
           }
 
-          const abCell = row
+          const antibioticNameCell = row
             .append("td")
             .attr("class", "antibiotic-name")
             .style("background-color", groupToColor[entry.group])
@@ -1163,43 +1158,54 @@
             .on("mouseover", function () {
               if (lockedAntibiotic !== null) return;
               d3.select(this).classed("antibiotic-name-hover", true);
-              // NEW FIX: Apply the class to the CELLS, not the ROW
-              d3.select(this.parentNode)
-                .selectAll("td.data-cell")
-                .classed("highlighted-row", true);
-              const sens = entry.sensitivities;
-              for (const b in sens) {
-                if (bacteriumHeaderCells[b]) {
-                  if (sens[b] === 0.0)
-                    bacteriumHeaderCells[b].classed(
+              d3.select(this.parentNode).classed("highlighted-row", true);
+
+              const sensitivities = entry.sensitivities;
+              for (const bacterium in sensitivities) {
+                if (sensitivities[bacterium] === 0.0) {
+                  if (bacteriumHeaderCells[bacterium]) {
+                    bacteriumHeaderCells[bacterium].classed(
                       "bacterium-low-sensitivity",
                       true
                     );
-                  else if (sens[b] === 0.5)
-                    bacteriumHeaderCells[b].classed(
+                  }
+                } else if (sensitivities[bacterium] === 0.5) {
+                  if (bacteriumHeaderCells[bacterium]) {
+                    bacteriumHeaderCells[bacterium].classed(
                       "bacterium-intermedium-sensitivity",
                       true
                     );
-                  else if (sens[b] === 1.0)
-                    bacteriumHeaderCells[b].classed(
+                  }
+                } else if (sensitivities[bacterium] === 1.0) {
+                  if (bacteriumHeaderCells[bacterium]) {
+                    bacteriumHeaderCells[bacterium].classed(
                       "bacterium-high-sensitivity",
                       true
                     );
+                  }
                 }
               }
             })
             .on("mouseout", function () {
               if (lockedAntibiotic !== null) return;
               d3.select(this).classed("antibiotic-name-hover", false);
-              d3.select(this.parentNode)
-                .selectAll("td.data-cell")
-                .classed("highlighted-row", false);
-              for (const b in entry.sensitivities) {
-                if (bacteriumHeaderCells[b]) {
-                  bacteriumHeaderCells[b]
-                    .classed("bacterium-low-sensitivity", false)
-                    .classed("bacterium-intermedium-sensitivity", false)
-                    .classed("bacterium-high-sensitivity", false);
+              d3.select(this.parentNode).classed("highlighted-row", false);
+
+              const sensitivities = entry.sensitivities;
+              for (const bacterium in sensitivities) {
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed(
+                    "bacterium-low-sensitivity",
+                    false
+                  );
+                  bacteriumHeaderCells[bacterium].classed(
+                    "bacterium-intermedium-sensitivity",
+                    false
+                  );
+                  bacteriumHeaderCells[bacterium].classed(
+                    "bacterium-high-sensitivity",
+                    false
+                  );
                 }
               }
             })
@@ -1213,105 +1219,124 @@
                 hideAntibioticTooltip();
                 const dose = getDoseForAntibiotic(antibioticName);
                 if (dose) {
-                  const ref = this.querySelector(".pill-marker") || this;
-                  showAntibioticTooltip(ref, dose);
+                  const pillMarker = this.querySelector(".pill-marker");
+                  const referenceElement = pillMarker || this;
+                  showAntibioticTooltip(referenceElement, dose);
                 }
               }
             });
 
           const dose = getDoseForAntibiotic(entry.antibiotic);
-          if (dose) abCell.append("span").attr("class", "pill-marker");
-          antibioticNameCells[entry.antibiotic] = abCell;
+          if (dose) {
+            antibioticNameCell.append("span").attr("class", "pill-marker");
+          }
 
-          bacteriaGroupsOrdered.forEach((bacteriumData) => {
+          antibioticNameCells[entry.antibiotic] = antibioticNameCell;
+
+          bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
             const bacterium = bacteriumData.name;
+            const isGroupStart = bacteriumData.isGroupStart;
             const sensitivity = entry.sensitivities[bacterium];
             const cell = row
               .append("td")
               .attr("class", () => {
-                let cls = "data-cell";
-                if (bacteriumData.isGroupStart) cls += " bacterial-group-start";
-                if (sensitivity === 1.0) cls += " sensitivity-high";
-                else if (sensitivity === 0.5) cls += " sensitivity-medium";
-                else if (sensitivity === 0.0) cls += " sensitivity-low";
-                else cls += " sensitivity-unknown";
-                return cls;
+                let classes = "data-cell";
+                if (isGroupStart) {
+                  classes += " bacterial-group-start";
+                }
+                if (sensitivity === 1.0) {
+                  classes += " sensitivity-high";
+                } else if (sensitivity === 0.5) {
+                  classes += " sensitivity-medium";
+                } else if (sensitivity === 0.0) {
+                  classes += " sensitivity-low";
+                } else if (sensitivity == null) {
+                  classes += " sensitivity-unknown";
+                }
+                return classes;
               })
               .datum({
                 antibiotic: entry.antibiotic,
                 bacterium: bacterium,
                 sensitivity: sensitivity,
               })
-              .text("")
-              .on("mouseover", function (e, d) {
+              .on("mouseover", function (event, d) {
                 if (lockedAntibiotic !== null) return;
+                const cellData = d3.select(this).datum();
+                const antibiotic = cellData.antibiotic;
+                const bacterium = cellData.bacterium;
 
-                // 1. Highlight THIS cell
                 d3.select(this).classed("data-cell-hover", true);
 
-                // 2. Highlight the Antibiotic Name (Left)
-                if (antibioticNameCells[d.antibiotic]) {
-                  antibioticNameCells[d.antibiotic].classed(
+                if (antibioticNameCells[antibiotic]) {
+                  antibioticNameCells[antibiotic].classed(
                     "antibiotic-name-hover",
                     true
                   );
-                  // REMOVED: The line that added 'highlighted-row' to the parentNode (TR)
+                  d3.select(
+                    antibioticNameCells[antibiotic].node().parentNode
+                  ).classed("highlighted-row", true);
                 }
 
-                // 3. Highlight the Bacterium Header (Top)
-                if (bacteriumHeaderCells[d.bacterium])
-                  bacteriumHeaderCells[d.bacterium].classed(
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed(
                     "bacterium-name-hover",
                     true
                   );
+                }
 
-                // 4. Highlight the Row (Data Cells ONLY)
                 d3.select(this.parentNode)
-                  .selectAll("td.data-cell") // Strictly target cells, not the TR
+                  .selectAll("td.data-cell")
                   .classed("highlighted-row", true);
 
-                // 5. Highlight the Column
-                if (dataCellsByBacterium[d.bacterium])
-                  dataCellsByBacterium[d.bacterium].forEach((c) =>
-                    c.cell.classed("highlighted-column", true)
-                  );
+                const dataCells = dataCellsByBacterium[bacterium];
+                if (dataCells) {
+                  dataCells.forEach((cellData) => {
+                    cellData.cell.classed("highlighted-column", true);
+                  });
+                }
               })
-              .on("mouseout", function (e, d) {
+              .on("mouseout", function (event, d) {
                 if (lockedAntibiotic !== null) return;
+                const cellData = d3.select(this).datum();
+                const antibiotic = cellData.antibiotic;
+                const bacterium = cellData.bacterium;
 
-                // 1. Un-highlight THIS cell
                 d3.select(this).classed("data-cell-hover", false);
 
-                // 2. Un-highlight Antibiotic Name
-                if (antibioticNameCells[d.antibiotic]) {
-                  antibioticNameCells[d.antibiotic].classed(
+                if (antibioticNameCells[antibiotic]) {
+                  antibioticNameCells[antibiotic].classed(
                     "antibiotic-name-hover",
                     false
                   );
-                  // REMOVED: The line that removed 'highlighted-row' from parentNode (TR)
+                  d3.select(
+                    antibioticNameCells[antibiotic].node().parentNode
+                  ).classed("highlighted-row", false);
                 }
 
-                // 3. Un-highlight Bacterium Header
-                if (bacteriumHeaderCells[d.bacterium])
-                  bacteriumHeaderCells[d.bacterium].classed(
+                if (bacteriumHeaderCells[bacterium]) {
+                  bacteriumHeaderCells[bacterium].classed(
                     "bacterium-name-hover",
                     false
                   );
+                }
 
-                // 4. Un-highlight Row
                 d3.select(this.parentNode)
                   .selectAll("td.data-cell")
                   .classed("highlighted-row", false);
 
-                // 5. Un-highlight Column
-                if (dataCellsByBacterium[d.bacterium])
-                  dataCellsByBacterium[d.bacterium].forEach((c) =>
-                    c.cell.classed("highlighted-column", false)
-                  );
+                const dataCells = dataCellsByBacterium[bacterium];
+                if (dataCells) {
+                  dataCells.forEach((cellData) => {
+                    cellData.cell.classed("highlighted-column", false);
+                  });
+                }
               });
 
-            if (!dataCellsByBacterium[bacterium])
+            cell.text("");
+            if (!dataCellsByBacterium[bacterium]) {
               dataCellsByBacterium[bacterium] = [];
+            }
             dataCellsByBacterium[bacterium].push({
               cell: cell,
               sensitivity: sensitivity,
@@ -1319,51 +1344,6 @@
             });
           });
         });
-
-        // --- 5. THE CLINICAL AXIS FOOTER ---
-        if (selectedDisease && !isDefaultView) {
-          const tfoot = table.append("tfoot");
-
-          // A. The Ghost Spacer Row
-          const spacerRow = tfoot
-            .append("tr")
-            .attr("class", "table-spacer-row");
-          spacerRow.append("td").attr("colspan", 2 + bacteria.length);
-
-          // B. The Axis Row
-          const prevalenceRow = tfoot
-            .append("tr")
-            .attr("class", "prevalence-row");
-
-          // Axis Label
-          prevalenceRow
-            .append("td")
-            .attr("class", "prevalence-label")
-            .attr("colspan", 2)
-            .text("Prävalenz");
-
-          // Axis Data Points
-          bacteriaGroupsOrdered.forEach((bacteriumData, index) => {
-            const bacterium = bacteriumData.name;
-            const rawVal = prevalenceData[bacterium] || 0;
-            const absolutePercentage = rawVal * 100;
-
-            let displayString = Math.round(absolutePercentage) + "%";
-            if (absolutePercentage > 0 && absolutePercentage < 1)
-              displayString = "<1%";
-            if (absolutePercentage === 0) displayString = "-";
-
-            const cell = prevalenceRow
-              .append("td")
-              .attr("class", "prevalence-cell")
-              .text(displayString);
-
-            // --- THE START TICK (Bulletproof) ---
-            if (index === 0) {
-              cell.append("div").attr("class", "left-tick");
-            }
-          });
-        }
 
         document.addEventListener("click", function (event) {
           if (!event.target.closest(".antibiotic-name")) {
@@ -1483,13 +1463,6 @@
         // 4. Clamp strictly between 0.25 and 2.0
         currentZoom = Math.max(0.25, Math.min(2.0, targetZoom));
 
-        // --- TRACKING ---
-        console.log(
-          `Zoom Level: ${currentZoom.toFixed(2)} (Natural Width: ${Math.round(
-            naturalTableWidth
-          )}px | Container: ${Math.round(containerRect.width)}px)`
-        );
-
         // 5. Apply the new zoom only once
         applyZoom();
       }
@@ -1500,23 +1473,17 @@
         const diseaseContainer = document.getElementById(
           "disease-selection-container"
         );
-        if (diseaseContainer) {
-          diseaseContainer.classList.add("animated");
-          setTimeout(() => {
-            diseaseContainer.classList.remove("animated");
-          }, 4000);
-        }
+        diseaseContainer.classList.add("animated");
 
-        // --- DEBOUNCED RESIZE ---
-        let resizeTimeout;
+        setTimeout(() => {
+          diseaseContainer.classList.remove("animated");
+        }, 4000);
+
         window.addEventListener("resize", function () {
-          // 1. Stop execution while user is still dragging
-          clearTimeout(resizeTimeout);
-
-          // 2. Wait for 100ms of "silence" then rebuild
-          resizeTimeout = setTimeout(function () {
-            createTable(); // Rebuilds table for new width & restores lock
-          }, 0);
+          if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
+          this.resizeTimeout = setTimeout(function () {
+            autoAdjustZoom();
+          }, 200);
         });
       });
     </script>

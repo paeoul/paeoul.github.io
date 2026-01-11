@@ -1,0 +1,34 @@
+{
+  "Ambulant erworbene Pneumonie": {
+    "dataFile": "CAP_antibiotics_data.json",
+    "prevalenceFile": "CAP_prevalence.json",
+    "recommendationsFile": "CAP_recommendations.json",
+    "severityLevels": ["Leichte Pneumonie", "Mittelschwere Pneumonie", "Schwere Pneumonie"],
+    "focusAntibioticsFile": "CAP_focus_antibiotics.json",
+    "highFocusAntibioticsFile": "CAP_high_focus_antibiotics.json",
+    "severityInfoFile": "CAP_guideline_info.json",
+    "severityImage": "CAP_schweregradeinteilung.jpg"
+  },
+  "Zystitis": {
+    "dataFile": "Zystitis_antibiotics_data.json",
+    "prevalenceFile": "Zystitis_prevalence.json",
+    "recommendationsFile": "Zystitis_recommendations.json",
+    "severityLevels": ["Akute unkomplizierte Zystitis bei Frauen ohne relevante Begleiterkrankungen", "Akute unkomplizierte Zystitis bei Schwangeren", "Akute unkomplizierte Zystitis bei jüngeren Männern"],
+    "focusAntibioticsFile": "Zystitis_focus_antibiotics.json",
+    "highFocusAntibioticsFile": "Zystitis_high_focus_antibiotics.json",
+    "severityInfoFile": "Zystitis_guideline_info.json",
+    "severityImage": "UTI_EInteilung.png"
+  },
+
+  "Pyelonephritis": {
+    "dataFile": "Pyelonephritis_antibiotics_data.json",
+    "prevalenceFile": "Pyelonephritis_prevalence.json",
+    "recommendationsFile": "Pyelonephritis_recommendations.json",
+    "severityLevels": ["Frauen ohne relevante Begleiterkrankungen mit akuter unkomplizierter Pyelonephritis", "Akute unkomplizierte Pyelonephritis bei Schwangeren", "Akute unkomplizierte Pyelonephritis bei jüngeren Männern"],
+    "focusAntibioticsFile": "Pyelonephritis_focus_antibiotics.json",
+    "highFocusAntibioticsFile": "Pyelonephritis_high_focus_antibiotics.json",
+    "severityInfoFile": "Pyelonephritis_guideline_info.json",
+    "severityImage": "UTI_EInteilung.png"
+  }
+
+}
